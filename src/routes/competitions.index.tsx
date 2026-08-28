@@ -1,0 +1,78 @@
+import { Link, createFileRoute } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
+
+import { StatusPill } from "@/components/competition/StatusPill";
+import { PageHeader, PublicShell } from "@/components/site/PublicShell";
+import { Button } from "@/components/ui/button";
+import { formatDateRange } from "@/domain/competition";
+import { listCompetitions } from "@/lib/competition-data";
+
+export const Route = createFileRoute("/competitions/")({
+  head: () => ({
+    meta: [
+      { title: "Competitions — Zik's Got Talent" },
+      {
+        name: "description",
+        content:
+          "Discover open and upcoming Zik's Got Talent competitions, entry windows, rounds and prize pools.",
+      },
+      { property: "og:title", content: "Competitions — Zik's Got Talent" },
+      {
+        property: "og:description",
+        content: "Open and upcoming Zik's Got Talent competitions, entry windows and rounds.",
+      },
+    ],
+  }),
+  component: Competitions,
+});
+
+function Competitions() {
+  const competitions = listCompetitions();
+
+  return (
+    <PublicShell>
+      <PageHeader
+        eyebrow="Discover"
+        title="Competitions"
+        intro="Every season is configured independently — categories, rounds, judging and voting are set per competition."
+      />
+      <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
+        <div className="grid gap-5 lg:grid-cols-2">
+          {competitions.map((competition) => (
+            <article key={competition.id} className="card-stage card-stage-hover p-7">
+              <div className="flex flex-wrap items-center gap-3">
+                <StatusPill status={competition.status} />
+                <span className="text-xs uppercase tracking-widest text-muted-foreground">
+                  {formatDateRange(competition.startsAt, competition.endsAt)}
+                </span>
+              </div>
+              <h2 className="mt-5 text-3xl">{competition.name}</h2>
+              <p className="mt-2 text-sm font-semibold text-primary">{competition.tagline}</p>
+              <p className="mt-4 text-sm text-muted-foreground">{competition.description}</p>
+              <dl className="mt-6 grid grid-cols-3 gap-4 border-t border-border/60 pt-5 text-sm">
+                <div>
+                  <dt className="eyebrow">Categories</dt>
+                  <dd className="mt-1 font-display text-2xl">{competition.stats.categories}</dd>
+                </div>
+                <div>
+                  <dt className="eyebrow">Rounds</dt>
+                  <dd className="mt-1 font-display text-2xl">{competition.rounds.length}</dd>
+                </div>
+                <div>
+                  <dt className="eyebrow">Prize pool</dt>
+                  <dd className="mt-1 font-display text-2xl">{competition.stats.prizePool}</dd>
+                </div>
+              </dl>
+              <Button asChild className="mt-7 bg-gold text-primary-foreground hover:opacity-90">
+                <Link to="/competitions/$slug" params={{ slug: competition.slug }}>
+                  View competition
+                  <ArrowRight className="ml-1 size-4" />
+                </Link>
+              </Button>
+            </article>
+          ))}
+        </div>
+      </section>
+    </PublicShell>
+  );
+}
