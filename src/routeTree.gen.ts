@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnnouncementsRouteImport } from './routes/announcements'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SponsorsRouteImport } from './routes/sponsors'
 import { Route as CategoriesIndexRouteImport } from './routes/categories.index'
@@ -20,6 +21,8 @@ import { Route as CompetitionsIndexRouteImport } from './routes/competitions.ind
 import { Route as CompetitionsSlugRouteImport } from './routes/competitions.$slug'
 import { Route as ContestantsIndexRouteImport } from './routes/contestants.index'
 import { Route as ContestantsHandleRouteImport } from './routes/contestants.$handle'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardSectionRouteImport } from './routes/dashboard.$section'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,6 +37,11 @@ const AnnouncementsRoute = AnnouncementsRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -76,19 +84,32 @@ const ContestantsHandleRoute = ContestantsHandleRouteImport.update({
   path: '/contestants/$handle',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardSectionRoute = DashboardSectionRouteImport.update({
+  id: '/$section',
+  path: '/$section',
+  getParentRoute: () => DashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/announcements': typeof AnnouncementsRoute
   '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/register': typeof RegisterRoute
   '/sponsors': typeof SponsorsRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/competitions/$slug': typeof CompetitionsSlugRoute
   '/contestants/$handle': typeof ContestantsHandleRoute
+  '/dashboard/$section': typeof DashboardSectionRoute
   '/categories/': typeof CategoriesIndexRoute
   '/competitions/': typeof CompetitionsIndexRoute
   '/contestants/': typeof ContestantsIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -99,23 +120,28 @@ export interface FileRoutesByTo {
   '/categories/$slug': typeof CategoriesSlugRoute
   '/competitions/$slug': typeof CompetitionsSlugRoute
   '/contestants/$handle': typeof ContestantsHandleRoute
+  '/dashboard/$section': typeof DashboardSectionRoute
   '/categories': typeof CategoriesIndexRoute
   '/competitions': typeof CompetitionsIndexRoute
   '/contestants': typeof ContestantsIndexRoute
+  '/dashboard': typeof DashboardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/announcements': typeof AnnouncementsRoute
   '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/register': typeof RegisterRoute
   '/sponsors': typeof SponsorsRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/competitions/$slug': typeof CompetitionsSlugRoute
   '/contestants/$handle': typeof ContestantsHandleRoute
+  '/dashboard/$section': typeof DashboardSectionRoute
   '/categories/': typeof CategoriesIndexRoute
   '/competitions/': typeof CompetitionsIndexRoute
   '/contestants/': typeof ContestantsIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -123,14 +149,17 @@ export interface FileRouteTypes {
     | '/'
     | '/announcements'
     | '/auth'
+    | '/dashboard'
     | '/register'
     | '/sponsors'
     | '/categories/$slug'
     | '/competitions/$slug'
     | '/contestants/$handle'
+    | '/dashboard/$section'
     | '/categories/'
     | '/competitions/'
     | '/contestants/'
+    | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -141,28 +170,34 @@ export interface FileRouteTypes {
     | '/categories/$slug'
     | '/competitions/$slug'
     | '/contestants/$handle'
+    | '/dashboard/$section'
     | '/categories'
     | '/competitions'
     | '/contestants'
+    | '/dashboard'
   id:
     | '__root__'
     | '/'
     | '/announcements'
     | '/auth'
+    | '/dashboard'
     | '/register'
     | '/sponsors'
     | '/categories/$slug'
     | '/competitions/$slug'
     | '/contestants/$handle'
+    | '/dashboard/$section'
     | '/categories/'
     | '/competitions/'
     | '/contestants/'
+    | '/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnnouncementsRoute: typeof AnnouncementsRoute
   AuthRoute: typeof AuthRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   RegisterRoute: typeof RegisterRoute
   SponsorsRoute: typeof SponsorsRoute
   CategoriesSlugRoute: typeof CategoriesSlugRoute
@@ -194,6 +229,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -252,13 +294,42 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContestantsHandleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/$section': {
+      id: '/dashboard/$section'
+      path: '/$section'
+      fullPath: '/dashboard/$section'
+      preLoaderRoute: typeof DashboardSectionRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
+
+interface DashboardRouteChildren {
+  DashboardSectionRoute: typeof DashboardSectionRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardSectionRoute: DashboardSectionRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnnouncementsRoute: AnnouncementsRoute,
   AuthRoute: AuthRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   RegisterRoute: RegisterRoute,
   SponsorsRoute: SponsorsRoute,
   CategoriesSlugRoute: CategoriesSlugRoute,
