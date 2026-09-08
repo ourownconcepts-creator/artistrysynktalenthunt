@@ -10,16 +10,25 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnnouncementsRouteImport } from './routes/announcements'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as SponsorsRouteImport } from './routes/sponsors'
 import { Route as CategoriesIndexRouteImport } from './routes/categories.index'
 import { Route as CategoriesSlugRouteImport } from './routes/categories.$slug'
 import { Route as CompetitionsIndexRouteImport } from './routes/competitions.index'
 import { Route as CompetitionsSlugRouteImport } from './routes/competitions.$slug'
+import { Route as ContestantsIndexRouteImport } from './routes/contestants.index'
+import { Route as ContestantsHandleRouteImport } from './routes/contestants.$handle'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnnouncementsRoute = AnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -30,6 +39,11 @@ const AuthRoute = AuthRouteImport.update({
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SponsorsRoute = SponsorsRouteImport.update({
+  id: '/sponsors',
+  path: '/sponsors',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CategoriesIndexRoute = CategoriesIndexRouteImport.update({
@@ -52,73 +66,111 @@ const CompetitionsSlugRoute = CompetitionsSlugRouteImport.update({
   path: '/competitions/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContestantsIndexRoute = ContestantsIndexRouteImport.update({
+  id: '/contestants/',
+  path: '/contestants/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContestantsHandleRoute = ContestantsHandleRouteImport.update({
+  id: '/contestants/$handle',
+  path: '/contestants/$handle',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/announcements': typeof AnnouncementsRoute
   '/auth': typeof AuthRoute
   '/register': typeof RegisterRoute
+  '/sponsors': typeof SponsorsRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/competitions/$slug': typeof CompetitionsSlugRoute
+  '/contestants/$handle': typeof ContestantsHandleRoute
   '/categories/': typeof CategoriesIndexRoute
   '/competitions/': typeof CompetitionsIndexRoute
+  '/contestants/': typeof ContestantsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/announcements': typeof AnnouncementsRoute
   '/auth': typeof AuthRoute
   '/register': typeof RegisterRoute
+  '/sponsors': typeof SponsorsRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/competitions/$slug': typeof CompetitionsSlugRoute
+  '/contestants/$handle': typeof ContestantsHandleRoute
   '/categories': typeof CategoriesIndexRoute
   '/competitions': typeof CompetitionsIndexRoute
+  '/contestants': typeof ContestantsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/announcements': typeof AnnouncementsRoute
   '/auth': typeof AuthRoute
   '/register': typeof RegisterRoute
+  '/sponsors': typeof SponsorsRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/competitions/$slug': typeof CompetitionsSlugRoute
+  '/contestants/$handle': typeof ContestantsHandleRoute
   '/categories/': typeof CategoriesIndexRoute
   '/competitions/': typeof CompetitionsIndexRoute
+  '/contestants/': typeof ContestantsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/announcements'
     | '/auth'
     | '/register'
+    | '/sponsors'
     | '/categories/$slug'
     | '/competitions/$slug'
+    | '/contestants/$handle'
     | '/categories/'
     | '/competitions/'
+    | '/contestants/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/announcements'
     | '/auth'
     | '/register'
+    | '/sponsors'
     | '/categories/$slug'
     | '/competitions/$slug'
+    | '/contestants/$handle'
     | '/categories'
     | '/competitions'
+    | '/contestants'
   id:
     | '__root__'
     | '/'
+    | '/announcements'
     | '/auth'
     | '/register'
+    | '/sponsors'
     | '/categories/$slug'
     | '/competitions/$slug'
+    | '/contestants/$handle'
     | '/categories/'
     | '/competitions/'
+    | '/contestants/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnnouncementsRoute: typeof AnnouncementsRoute
   AuthRoute: typeof AuthRoute
   RegisterRoute: typeof RegisterRoute
+  SponsorsRoute: typeof SponsorsRoute
   CategoriesSlugRoute: typeof CategoriesSlugRoute
   CompetitionsSlugRoute: typeof CompetitionsSlugRoute
+  ContestantsHandleRoute: typeof ContestantsHandleRoute
   CategoriesIndexRoute: typeof CategoriesIndexRoute
   CompetitionsIndexRoute: typeof CompetitionsIndexRoute
+  ContestantsIndexRoute: typeof ContestantsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -128,6 +180,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/announcements': {
+      id: '/announcements'
+      path: '/announcements'
+      fullPath: '/announcements'
+      preLoaderRoute: typeof AnnouncementsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -142,6 +201,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sponsors': {
+      id: '/sponsors'
+      path: '/sponsors'
+      fullPath: '/sponsors'
+      preLoaderRoute: typeof SponsorsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/categories/': {
@@ -172,17 +238,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompetitionsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contestants/': {
+      id: '/contestants/'
+      path: '/contestants'
+      fullPath: '/contestants/'
+      preLoaderRoute: typeof ContestantsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contestants/$handle': {
+      id: '/contestants/$handle'
+      path: '/contestants/$handle'
+      fullPath: '/contestants/$handle'
+      preLoaderRoute: typeof ContestantsHandleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnnouncementsRoute: AnnouncementsRoute,
   AuthRoute: AuthRoute,
   RegisterRoute: RegisterRoute,
+  SponsorsRoute: SponsorsRoute,
   CategoriesSlugRoute: CategoriesSlugRoute,
   CompetitionsSlugRoute: CompetitionsSlugRoute,
+  ContestantsHandleRoute: ContestantsHandleRoute,
   CategoriesIndexRoute: CategoriesIndexRoute,
   CompetitionsIndexRoute: CompetitionsIndexRoute,
+  ContestantsIndexRoute: ContestantsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
