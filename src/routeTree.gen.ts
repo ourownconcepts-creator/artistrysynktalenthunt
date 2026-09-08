@@ -10,11 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AnnouncementsRouteImport } from './routes/announcements'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as RulesRouteImport } from './routes/rules'
 import { Route as SponsorsRouteImport } from './routes/sponsors'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminSectionRouteImport } from './routes/admin.$section'
 import { Route as CategoriesIndexRouteImport } from './routes/categories.index'
 import { Route as CategoriesSlugRouteImport } from './routes/categories.$slug'
 import { Route as CompetitionsIndexRouteImport } from './routes/competitions.index'
@@ -27,6 +34,16 @@ import { Route as DashboardSectionRouteImport } from './routes/dashboard.$sectio
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnnouncementsRoute = AnnouncementsRouteImport.update({
@@ -44,15 +61,40 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RulesRoute = RulesRouteImport.update({
+  id: '/rules',
+  path: '/rules',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SponsorsRoute = SponsorsRouteImport.update({
   id: '/sponsors',
   path: '/sponsors',
   getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSectionRoute = AdminSectionRouteImport.update({
+  id: '/$section',
+  path: '/$section',
+  getParentRoute: () => AdminRoute,
 } as any)
 const CategoriesIndexRoute = CategoriesIndexRouteImport.update({
   id: '/categories/',
@@ -97,15 +139,22 @@ const DashboardSectionRoute = DashboardSectionRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/announcements': typeof AnnouncementsRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
+  '/rules': typeof RulesRoute
   '/sponsors': typeof SponsorsRoute
+  '/terms': typeof TermsRoute
+  '/admin/$section': typeof AdminSectionRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/competitions/$slug': typeof CompetitionsSlugRoute
   '/contestants/$handle': typeof ContestantsHandleRoute
   '/dashboard/$section': typeof DashboardSectionRoute
+  '/admin/': typeof AdminIndexRoute
   '/categories/': typeof CategoriesIndexRoute
   '/competitions/': typeof CompetitionsIndexRoute
   '/contestants/': typeof ContestantsIndexRoute
@@ -113,14 +162,20 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/announcements': typeof AnnouncementsRoute
   '/auth': typeof AuthRoute
+  '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
+  '/rules': typeof RulesRoute
   '/sponsors': typeof SponsorsRoute
+  '/terms': typeof TermsRoute
+  '/admin/$section': typeof AdminSectionRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/competitions/$slug': typeof CompetitionsSlugRoute
   '/contestants/$handle': typeof ContestantsHandleRoute
   '/dashboard/$section': typeof DashboardSectionRoute
+  '/admin': typeof AdminIndexRoute
   '/categories': typeof CategoriesIndexRoute
   '/competitions': typeof CompetitionsIndexRoute
   '/contestants': typeof ContestantsIndexRoute
@@ -129,15 +184,22 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/announcements': typeof AnnouncementsRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
+  '/rules': typeof RulesRoute
   '/sponsors': typeof SponsorsRoute
+  '/terms': typeof TermsRoute
+  '/admin/$section': typeof AdminSectionRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/competitions/$slug': typeof CompetitionsSlugRoute
   '/contestants/$handle': typeof ContestantsHandleRoute
   '/dashboard/$section': typeof DashboardSectionRoute
+  '/admin/': typeof AdminIndexRoute
   '/categories/': typeof CategoriesIndexRoute
   '/competitions/': typeof CompetitionsIndexRoute
   '/contestants/': typeof ContestantsIndexRoute
@@ -147,15 +209,22 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
+    | '/admin'
     | '/announcements'
     | '/auth'
     | '/dashboard'
+    | '/privacy'
     | '/register'
+    | '/rules'
     | '/sponsors'
+    | '/terms'
+    | '/admin/$section'
     | '/categories/$slug'
     | '/competitions/$slug'
     | '/contestants/$handle'
     | '/dashboard/$section'
+    | '/admin/'
     | '/categories/'
     | '/competitions/'
     | '/contestants/'
@@ -163,14 +232,20 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/announcements'
     | '/auth'
+    | '/privacy'
     | '/register'
+    | '/rules'
     | '/sponsors'
+    | '/terms'
+    | '/admin/$section'
     | '/categories/$slug'
     | '/competitions/$slug'
     | '/contestants/$handle'
     | '/dashboard/$section'
+    | '/admin'
     | '/categories'
     | '/competitions'
     | '/contestants'
@@ -178,15 +253,22 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
+    | '/admin'
     | '/announcements'
     | '/auth'
     | '/dashboard'
+    | '/privacy'
     | '/register'
+    | '/rules'
     | '/sponsors'
+    | '/terms'
+    | '/admin/$section'
     | '/categories/$slug'
     | '/competitions/$slug'
     | '/contestants/$handle'
     | '/dashboard/$section'
+    | '/admin/'
     | '/categories/'
     | '/competitions/'
     | '/contestants/'
@@ -195,11 +277,16 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AnnouncementsRoute: typeof AnnouncementsRoute
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRouteWithChildren
+  PrivacyRoute: typeof PrivacyRoute
   RegisterRoute: typeof RegisterRoute
+  RulesRoute: typeof RulesRoute
   SponsorsRoute: typeof SponsorsRoute
+  TermsRoute: typeof TermsRoute
   CategoriesSlugRoute: typeof CategoriesSlugRoute
   CompetitionsSlugRoute: typeof CompetitionsSlugRoute
   ContestantsHandleRoute: typeof ContestantsHandleRoute
@@ -215,6 +302,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/announcements': {
@@ -238,11 +339,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rules': {
+      id: '/rules'
+      path: '/rules'
+      fullPath: '/rules'
+      preLoaderRoute: typeof RulesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sponsors': {
@@ -251,6 +366,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/sponsors'
       preLoaderRoute: typeof SponsorsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/$section': {
+      id: '/admin/$section'
+      path: '/$section'
+      fullPath: '/admin/$section'
+      preLoaderRoute: typeof AdminSectionRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/categories/': {
       id: '/categories/'
@@ -311,6 +447,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminSectionRoute: typeof AdminSectionRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminSectionRoute: AdminSectionRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 interface DashboardRouteChildren {
   DashboardSectionRoute: typeof DashboardSectionRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
@@ -327,11 +475,16 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  AdminRoute: AdminRouteWithChildren,
   AnnouncementsRoute: AnnouncementsRoute,
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRouteWithChildren,
+  PrivacyRoute: PrivacyRoute,
   RegisterRoute: RegisterRoute,
+  RulesRoute: RulesRoute,
   SponsorsRoute: SponsorsRoute,
+  TermsRoute: TermsRoute,
   CategoriesSlugRoute: CategoriesSlugRoute,
   CompetitionsSlugRoute: CompetitionsSlugRoute,
   ContestantsHandleRoute: ContestantsHandleRoute,
