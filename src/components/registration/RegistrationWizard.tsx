@@ -84,12 +84,12 @@ export function RegistrationWizard({
 }: {
   competition: Competition;
   groups: CategoryGroup[];
-  initialCategory?: string;
+  initialCategory: string;
 }) {
   const [step, setStep] = useState(initialCategory ? 1 : 0);
   const [form, setForm] = useState<FormState>({
     ...EMPTY,
-    categorySlug: initialCategory ?? "",
+    categorySlug: initialCategory,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [identity, setIdentity] = useState<IdentityResolution | null>(null);
@@ -132,7 +132,7 @@ export function RegistrationWizard({
         const resolution = await getArtistrySynkClient().resolveIdentity({
           email: form.email,
           displayName: form.displayName,
-          primaryDiscipline: category?.name,
+          primaryDiscipline: category?.name ?? "",
         });
         setIdentity(resolution);
         toast.success(
@@ -486,7 +486,7 @@ function Field({
   children,
 }: {
   label: string;
-  error?: string;
+  error?: string | undefined;
   children: React.ReactNode;
 }) {
   return (
