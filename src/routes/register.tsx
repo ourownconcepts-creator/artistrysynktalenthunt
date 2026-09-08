@@ -45,7 +45,7 @@ function RegisterPage() {
         <RegistrationWizard
           competition={competition}
           groups={groups}
-          initialCategory={category}
+          initialCategory={category ?? ""}
         />
       </section>
     </PublicShell>

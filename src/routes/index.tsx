@@ -1,6 +1,7 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, BadgeCheck, Sparkles, Trophy, Users } from "lucide-react";
 
+import heroStage from "@/assets/hero-stage.jpg";
 import { CategoryGrid } from "@/components/competition/CategoryGrid";
 import { StatusPill } from "@/components/competition/StatusPill";
 import { PublicShell } from "@/components/site/PublicShell";
@@ -43,6 +44,17 @@ function Landing() {
       {/* Hero */}
       <section className="relative overflow-hidden stage-surface">
         <div className="pointer-events-none absolute inset-x-0 -top-52 h-[28rem] spotlight-glow animate-pulse-spot" aria-hidden />
+        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] lg:block" aria-hidden>
+          <img
+            src={heroStage}
+            alt=""
+            width={1280}
+            height={1600}
+            className="size-full object-cover object-center opacity-85"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/55 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/60" />
+        </div>
         <div className="relative mx-auto w-full max-w-7xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24">
           <div className="flex flex-wrap items-center gap-3">
             <StatusPill status={competition.status} />
@@ -51,7 +63,7 @@ function Landing() {
             </span>
           </div>
 
-          <h1 className="mt-7 max-w-4xl text-5xl sm:text-7xl lg:text-8xl">
+          <h1 className="relative mt-7 max-w-4xl lg:max-w-[42rem] text-5xl sm:text-7xl lg:text-8xl">
             Your talent
             <br />
             <span className="text-gold">deserves to be</span>
