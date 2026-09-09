@@ -4,6 +4,9 @@ import { Lock } from "lucide-react";
 import { Wordmark } from "@/components/brand/Wordmark";
 import { ADMIN_SECTIONS } from "@/domain/navigation";
 
+/** Sections that have their own live, database-backed page. */
+const LIVE_ADMIN_PAGES = ["competitions", "judging", "voting"];
+
 export const Route = createFileRoute("/admin")({
   component: AdminLayout,
 });
