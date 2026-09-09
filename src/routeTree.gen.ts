@@ -20,8 +20,12 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as SponsorsRouteImport } from './routes/sponsors'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as VoteRouteImport } from './routes/vote'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminSectionRouteImport } from './routes/admin.$section'
+import { Route as AdminCompetitionsRouteImport } from './routes/admin.competitions'
+import { Route as AdminJudgingRouteImport } from './routes/admin.judging'
+import { Route as AdminVotingRouteImport } from './routes/admin.voting'
 import { Route as CategoriesIndexRouteImport } from './routes/categories.index'
 import { Route as CategoriesSlugRouteImport } from './routes/categories.$slug'
 import { Route as CompetitionsIndexRouteImport } from './routes/competitions.index'
@@ -86,6 +90,11 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VoteRoute = VoteRouteImport.update({
+  id: '/vote',
+  path: '/vote',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -94,6 +103,21 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const AdminSectionRoute = AdminSectionRouteImport.update({
   id: '/$section',
   path: '/$section',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCompetitionsRoute = AdminCompetitionsRouteImport.update({
+  id: '/competitions',
+  path: '/competitions',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminJudgingRoute = AdminJudgingRouteImport.update({
+  id: '/judging',
+  path: '/judging',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVotingRoute = AdminVotingRouteImport.update({
+  id: '/voting',
+  path: '/voting',
   getParentRoute: () => AdminRoute,
 } as any)
 const CategoriesIndexRoute = CategoriesIndexRouteImport.update({
@@ -149,7 +173,11 @@ export interface FileRoutesByFullPath {
   '/rules': typeof RulesRoute
   '/sponsors': typeof SponsorsRoute
   '/terms': typeof TermsRoute
+  '/vote': typeof VoteRoute
   '/admin/$section': typeof AdminSectionRoute
+  '/admin/competitions': typeof AdminCompetitionsRoute
+  '/admin/judging': typeof AdminJudgingRoute
+  '/admin/voting': typeof AdminVotingRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/competitions/$slug': typeof CompetitionsSlugRoute
   '/contestants/$handle': typeof ContestantsHandleRoute
@@ -170,7 +198,11 @@ export interface FileRoutesByTo {
   '/rules': typeof RulesRoute
   '/sponsors': typeof SponsorsRoute
   '/terms': typeof TermsRoute
+  '/vote': typeof VoteRoute
   '/admin/$section': typeof AdminSectionRoute
+  '/admin/competitions': typeof AdminCompetitionsRoute
+  '/admin/judging': typeof AdminJudgingRoute
+  '/admin/voting': typeof AdminVotingRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/competitions/$slug': typeof CompetitionsSlugRoute
   '/contestants/$handle': typeof ContestantsHandleRoute
@@ -194,7 +226,11 @@ export interface FileRoutesById {
   '/rules': typeof RulesRoute
   '/sponsors': typeof SponsorsRoute
   '/terms': typeof TermsRoute
+  '/vote': typeof VoteRoute
   '/admin/$section': typeof AdminSectionRoute
+  '/admin/competitions': typeof AdminCompetitionsRoute
+  '/admin/judging': typeof AdminJudgingRoute
+  '/admin/voting': typeof AdminVotingRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/competitions/$slug': typeof CompetitionsSlugRoute
   '/contestants/$handle': typeof ContestantsHandleRoute
@@ -219,7 +255,11 @@ export interface FileRouteTypes {
     | '/rules'
     | '/sponsors'
     | '/terms'
+    | '/vote'
     | '/admin/$section'
+    | '/admin/competitions'
+    | '/admin/judging'
+    | '/admin/voting'
     | '/categories/$slug'
     | '/competitions/$slug'
     | '/contestants/$handle'
@@ -240,7 +280,11 @@ export interface FileRouteTypes {
     | '/rules'
     | '/sponsors'
     | '/terms'
+    | '/vote'
     | '/admin/$section'
+    | '/admin/competitions'
+    | '/admin/judging'
+    | '/admin/voting'
     | '/categories/$slug'
     | '/competitions/$slug'
     | '/contestants/$handle'
@@ -263,7 +307,11 @@ export interface FileRouteTypes {
     | '/rules'
     | '/sponsors'
     | '/terms'
+    | '/vote'
     | '/admin/$section'
+    | '/admin/competitions'
+    | '/admin/judging'
+    | '/admin/voting'
     | '/categories/$slug'
     | '/competitions/$slug'
     | '/contestants/$handle'
@@ -287,6 +335,7 @@ export interface RootRouteChildren {
   RulesRoute: typeof RulesRoute
   SponsorsRoute: typeof SponsorsRoute
   TermsRoute: typeof TermsRoute
+  VoteRoute: typeof VoteRoute
   CategoriesSlugRoute: typeof CategoriesSlugRoute
   CompetitionsSlugRoute: typeof CompetitionsSlugRoute
   ContestantsHandleRoute: typeof ContestantsHandleRoute
@@ -374,6 +423,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/vote': {
+      id: '/vote'
+      path: '/vote'
+      fullPath: '/vote'
+      preLoaderRoute: typeof VoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -386,6 +442,27 @@ declare module '@tanstack/react-router' {
       path: '/$section'
       fullPath: '/admin/$section'
       preLoaderRoute: typeof AdminSectionRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/competitions': {
+      id: '/admin/competitions'
+      path: '/competitions'
+      fullPath: '/admin/competitions'
+      preLoaderRoute: typeof AdminCompetitionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/judging': {
+      id: '/admin/judging'
+      path: '/judging'
+      fullPath: '/admin/judging'
+      preLoaderRoute: typeof AdminJudgingRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/voting': {
+      id: '/admin/voting'
+      path: '/voting'
+      fullPath: '/admin/voting'
+      preLoaderRoute: typeof AdminVotingRouteImport
       parentRoute: typeof AdminRoute
     }
     '/categories/': {
@@ -449,11 +526,17 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminSectionRoute: typeof AdminSectionRoute
+  AdminCompetitionsRoute: typeof AdminCompetitionsRoute
+  AdminJudgingRoute: typeof AdminJudgingRoute
+  AdminVotingRoute: typeof AdminVotingRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminSectionRoute: AdminSectionRoute,
+  AdminCompetitionsRoute: AdminCompetitionsRoute,
+  AdminJudgingRoute: AdminJudgingRoute,
+  AdminVotingRoute: AdminVotingRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
@@ -485,6 +568,7 @@ const rootRouteChildren: RootRouteChildren = {
   RulesRoute: RulesRoute,
   SponsorsRoute: SponsorsRoute,
   TermsRoute: TermsRoute,
+  VoteRoute: VoteRoute,
   CategoriesSlugRoute: CategoriesSlugRoute,
   CompetitionsSlugRoute: CompetitionsSlugRoute,
   ContestantsHandleRoute: ContestantsHandleRoute,

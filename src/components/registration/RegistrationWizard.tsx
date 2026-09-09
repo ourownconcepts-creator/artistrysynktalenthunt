@@ -13,7 +13,47 @@ import { findCategory, findGroupForCategory } from "@/domain/catalogue";
 import type { CategoryGroup, Competition } from "@/domain/types";
 import { ARTISTRYSYNK, getArtistrySynkClient } from "@/integrations/artistrysynk";
 import type { IdentityResolution } from "@/integrations/artistrysynk/types";
+import { supabase } from "@/integrations/supabase/client";
+import { submitEntry } from "@/lib/live-data";
 import { cn } from "@/lib/utils";
+
+/**
+ * Creates the entrant's account, or signs them into the existing one, so a
+ * second identity is never created for the same person.
+ */
+async function ensureAccount(
+  email: string,
+  password: string,
+): Promise<{ ok: true } | { ok: false; message: string }> {
+  const { data: current } = await supabase.auth.getUser();
+  if (current.user) return { ok: true };
+
+  const signUp = await supabase.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+  });
+
+  if (!signUp.error && signUp.data.session) return { ok: true };
+
+  const signIn = await supabase.auth.signInWithPassword({ email, password });
+  if (!signIn.error) return { ok: true };
+
+  if (!signUp.error && !signUp.data.session) {
+    return {
+      ok: false,
+      message: "Check your email to confirm your account, then come back and continue.",
+    };
+  }
+
+  return {
+    ok: false,
+    message:
+      signIn.error.message === "Invalid login credentials"
+        ? "That email already has an account — use its password to continue."
+        : signIn.error.message,
+  };
+}
 
 const STEPS = [
   "Category",
@@ -35,6 +75,7 @@ const personalSchema = z.object({
 const identitySchema = z.object({
   email: z.string().email("Enter a valid email address"),
   displayName: z.string().min(2, "Enter your stage or creative name"),
+  password: z.string().min(8, "Use at least 8 characters"),
 });
 
 const creativeSchema = z.object({
@@ -50,6 +91,7 @@ const auditionSchema = z.object({
 interface FormState {
   categorySlug: string;
   email: string;
+  password: string;
   displayName: string;
   fullName: string;
   phone: string;
@@ -65,6 +107,7 @@ interface FormState {
 const EMPTY: FormState = {
   categorySlug: "",
   email: "",
+  password: "",
   displayName: "",
   fullName: "",
   phone: "",
@@ -129,6 +172,11 @@ export function RegistrationWizard({
       if (!applyIssues(identitySchema.safeParse(form))) return;
       setBusy(true);
       try {
+        const account = await ensureAccount(form.email, form.password);
+        if (!account.ok) {
+          toast.error(account.message);
+          return;
+        }
         const resolution = await getArtistrySynkClient().resolveIdentity({
           email: form.email,
           displayName: form.displayName,
@@ -140,6 +188,9 @@ export function RegistrationWizard({
             ? `${ARTISTRYSYNK.brand} creative profile created`
             : `Connected to your existing ${ARTISTRYSYNK.brand} account`,
         );
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "We couldn't set up your account.");
+        return;
       } finally {
         setBusy(false);
       }
@@ -161,8 +212,9 @@ export function RegistrationWizard({
     }
     setBusy(true);
     try {
+      const client = getArtistrySynkClient();
       if (identity) {
-        await getArtistrySynkClient().upsertCreativeProfile(identity.identity.identityRef, {
+        await client.upsertCreativeProfile(identity.identity.identityRef, {
           displayName: form.displayName,
           bio: form.bio,
           location: form.location,
@@ -170,7 +222,24 @@ export function RegistrationWizard({
           isPublic: true,
         });
       }
+      await submitEntry({
+        categorySlug: form.categorySlug,
+        displayName: form.displayName,
+        fullName: form.fullName,
+        phone: form.phone,
+        email: form.email,
+        location: form.location,
+        dateOfBirth: form.dateOfBirth,
+        bio: form.bio,
+        experience: form.experience,
+        auditionUrl: form.auditionUrl,
+        auditionNotes: form.auditionNotes,
+        identityRef: identity?.identity.identityRef ?? null,
+        identityProvider: client.provider,
+      });
       setSubmitted(true);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Your entry could not be saved.");
     } finally {
       setBusy(false);
     }
@@ -182,16 +251,16 @@ export function RegistrationWizard({
         <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-success/15 text-success">
           <Check className="size-7" />
         </span>
-        <h2 className="mt-6 text-3xl">Application ready</h2>
+        <h2 className="mt-6 text-3xl">Entry submitted</h2>
         <p className="mt-3 text-muted-foreground">
-          Your {category?.name} application for {competition.name} is complete and your{" "}
+          Your {category?.name} entry for {competition.name} is saved and queued for review. Your{" "}
           {ARTISTRYSYNK.brand} creative profile is{" "}
           {identity?.outcome === "CREATED" ? "created" : "connected"}.
         </p>
         <p className="mt-4 rounded-lg border border-warning/40 bg-warning/10 p-4 text-left text-sm text-warning">
-          Phase 1 note: the competition backend is not connected yet, so this application is held in
-          your browser session only. Once the database is enabled it will be persisted, de-duplicated
-          and reviewed.
+          Your creative identity currently uses a clearly-marked stand-in while the real{" "}
+          {ARTISTRYSYNK.brand} connection details are pending. Nothing is duplicated — the entry
+          stores only a reference, so it links straight through once that connection is live.
         </p>
         <div className="mt-7 flex flex-wrap justify-center gap-3">
           <Button asChild className="bg-gold text-primary-foreground hover:opacity-90">
@@ -303,6 +372,19 @@ export function RegistrationWizard({
                 placeholder="How you want to be known"
               />
             </Field>
+            <Field label="Choose a password" error={errors["password"]}>
+              <Input
+                type="password"
+                autoComplete="new-password"
+                value={form.password}
+                onChange={(e) => set("password", e.target.value)}
+                placeholder="At least 8 characters"
+              />
+            </Field>
+            <p className="text-xs text-muted-foreground">
+              Already entered before? Use the same email and password and we&rsquo;ll connect you to
+              your existing account instead of creating a second one.
+            </p>
           </StepBody>
         )}
 
@@ -491,10 +573,14 @@ function Field({
 }) {
   return (
     <div className="space-y-2">
-      <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-        {label}
-      </Label>
-      {children}
+      {/* The label wraps the control so screen readers and keyboard users get
+          a real association without hand-managed ids. */}
+      <label className="block space-y-2">
+        <span className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">
+          {label}
+        </span>
+        {children}
+      </label>
       {error && <p className="text-xs font-semibold text-destructive">{error}</p>}
     </div>
   );

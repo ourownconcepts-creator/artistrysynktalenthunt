@@ -58,11 +58,11 @@ export const ADMIN_SECTIONS: SurfaceSection[] = [
     phase: "LATER",
   },
   {
-    slug: "judges",
-    label: "Judges",
-    summary: "Invite judges and assign them to categories and rounds.",
+    slug: "judging",
+    label: "Judging panel",
+    summary: "Appoint judges, score contestants and move them through rounds.",
     permission: "judge:manage",
-    phase: "LATER",
+    phase: "PHASE_1",
   },
   {
     slug: "scoring",

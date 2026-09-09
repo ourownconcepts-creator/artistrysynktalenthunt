@@ -4,6 +4,9 @@ import { Lock } from "lucide-react";
 import { Wordmark } from "@/components/brand/Wordmark";
 import { ADMIN_SECTIONS } from "@/domain/navigation";
 
+/** Sections that have their own live, database-backed page. */
+const LIVE_ADMIN_PAGES = ["competitions", "judging", "voting"];
+
 export const Route = createFileRoute("/admin")({
   component: AdminLayout,
 });
@@ -29,14 +32,24 @@ function AdminLayout() {
           <ul className="mt-1 space-y-0.5">
             {ADMIN_SECTIONS.map((section) => (
               <li key={section.slug}>
-                <Link
-                  to="/admin/$section"
-                  params={{ section: section.slug }}
-                  className="block rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-                  activeProps={{ className: "bg-sidebar-accent text-sidebar-primary" }}
-                >
-                  {section.label}
-                </Link>
+                {LIVE_ADMIN_PAGES.includes(section.slug) ? (
+                  <Link
+                    to={`/admin/${section.slug}` as "/admin/competitions"}
+                    className="block rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                    activeProps={{ className: "bg-sidebar-accent text-sidebar-primary" }}
+                  >
+                    {section.label}
+                  </Link>
+                ) : (
+                  <Link
+                    to="/admin/$section"
+                    params={{ section: section.slug }}
+                    className="block rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                    activeProps={{ className: "bg-sidebar-accent text-sidebar-primary" }}
+                  >
+                    {section.label}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>

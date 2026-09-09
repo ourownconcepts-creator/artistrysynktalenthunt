@@ -10,6 +10,7 @@ const NAV = [
   { to: "/competitions", label: "Competition" },
   { to: "/categories", label: "Categories" },
   { to: "/contestants", label: "Contestants" },
+  { to: "/vote", label: "Vote" },
   { to: "/announcements", label: "News" },
   { to: "/sponsors", label: "Sponsors" },
 ] as const;
