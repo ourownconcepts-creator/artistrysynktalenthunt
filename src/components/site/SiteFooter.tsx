@@ -30,6 +30,7 @@ export function SiteFooter() {
           <FooterColumn
             title="Explore"
             links={[
+              { to: "/how-it-works", label: "How It Works" },
               { to: "/contestants", label: "Contestants" },
               { to: "/announcements", label: "Announcements" },
               { to: "/sponsors", label: "Sponsors" },
@@ -48,7 +49,7 @@ export function SiteFooter() {
               rel="noreferrer noopener"
               className="mt-3 inline-block text-sm font-semibold text-primary hover:underline"
             >
-              artistrysynk.app
+              {ARTISTRYSYNK.site.replace(/^https?:\/\//, "")}
             </a>
           </div>
         </div>
