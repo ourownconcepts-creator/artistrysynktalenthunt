@@ -1,65 +1,120 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
-import { ExternalLink, Share2 } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ExternalLink, Heart, Loader2, Share2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 import { Button } from "@/components/ui/button";
+import { useSession } from "@/hooks/useSession";
 import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
-import { getPublicContestant } from "@/lib/competition-data";
+import { VOTE_MESSAGES, castVote, fetchPublicContestant } from "@/lib/live-data";
 
 export const Route = createFileRoute("/contestants/$handle")({
-  loader: ({ params }) => {
-    const contestant = getPublicContestant(params.handle);
-    if (!contestant) throw notFound();
-    return { contestant };
-  },
-  head: ({ loaderData }) => {
-    if (!loaderData) {
-      return { meta: [{ title: "Contestant unavailable" }, { name: "robots", content: "noindex" }] };
-    }
-    const { contestant } = loaderData;
-    const description = `${contestant.displayName} — ${contestant.categoryName} contestant from ${contestant.location}. ${contestant.bio}`;
-    return {
-      meta: [
-        { title: `${contestant.displayName} — Zik's Got Talent` },
-        { name: "description", content: description.slice(0, 155) },
-        { property: "og:title", content: `${contestant.displayName} — Zik's Got Talent` },
-        { property: "og:description", content: description.slice(0, 155) },
-      ],
-    };
-  },
+  head: ({ params }) => ({
+    meta: [
+      { title: `${params.handle} — Zik's Got Talent contestant` },
+      {
+        name: "description",
+        content: `Zik's Got Talent Season One contestant profile for ${params.handle}. Public profile, approved media and competition stage.`,
+      },
+      { property: "og:title", content: `${params.handle} — Zik's Got Talent contestant` },
+      {
+        property: "og:description",
+        content: `Season One contestant profile, competition stage and public vote.`,
+      },
+      { property: "og:type", content: "profile" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: ContestantProfile,
 });
 
 function ContestantProfile() {
-  const { contestant } = Route.useLoaderData();
+  const { handle } = Route.useParams();
+  const { user } = useSession();
+  const queryClient = useQueryClient();
+
+  const contestant = useQuery({
+    queryKey: ["public-contestant", handle],
+    queryFn: () => fetchPublicContestant(handle),
+  });
+
+  const vote = useMutation({
+    mutationFn: () => castVote(handle),
+    onSuccess: (result) => {
+      if (result.ok) {
+        toast.success(`Vote counted. ${result.votesRemainingToday} left today.`);
+        void queryClient.invalidateQueries({ queryKey: ["public-contestant", handle] });
+        return;
+      }
+      toast.error(VOTE_MESSAGES[result.reason ?? "WINDOW_CLOSED"]);
+    },
+    onError: () => toast.error("Your vote could not be counted."),
+  });
 
   async function share() {
     const url = typeof window === "undefined" ? "" : window.location.href;
     if (typeof navigator !== "undefined" && navigator.share) {
-      await navigator.share({ title: contestant.displayName, url });
+      await navigator.share({ title: handle, url });
       return;
     }
     await navigator.clipboard?.writeText(url);
     toast.success("Profile link copied");
   }
 
+  if (contestant.isLoading) {
+    return (
+      <PublicShell>
+        <section className="mx-auto w-full max-w-3xl px-4 py-24 sm:px-6">
+          <p className="text-sm text-muted-foreground">Loading profile…</p>
+        </section>
+      </PublicShell>
+    );
+  }
+
+  if (!contestant.data) {
+    return (
+      <PublicShell>
+        <PageHeader
+          eyebrow="Contestant"
+          title="Profile unavailable"
+          intro="This contestant profile is not public. Profiles appear once an entry is approved by moderators."
+        />
+      </PublicShell>
+    );
+  }
+
+  const c = contestant.data;
+
   return (
     <PublicShell>
       <PageHeader
-        eyebrow={`${contestant.groupName} · ${contestant.categoryName}`}
-        title={contestant.displayName}
-        intro={contestant.bio}
+        eyebrow={`${c.group_name} · ${c.category_name}`}
+        title={c.display_name}
+        intro={c.bio}
       >
         <div className="flex flex-wrap items-center gap-3">
           <span className="rounded-full border border-primary/50 bg-primary/15 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-primary">
             Zik&rsquo;s Got Talent contestant
           </span>
           <span className="text-xs uppercase tracking-widest text-muted-foreground">
-            {contestant.location}
+            {c.location}
           </span>
           <Button size="sm" variant="outline" onClick={share}>
             <Share2 className="mr-1 size-4" /> Share
+          </Button>
+          <Button
+            size="sm"
+            className="bg-heat text-accent-foreground hover:opacity-90"
+            disabled={!user || vote.isPending}
+            onClick={() => vote.mutate()}
+          >
+            {vote.isPending ? (
+              <Loader2 className="mr-1 size-4 animate-spin" />
+            ) : (
+              <Heart className="mr-1 size-4" />
+            )}
+            Vote ({c.vote_count})
           </Button>
         </div>
       </PageHeader>
@@ -67,20 +122,11 @@ function ContestantProfile() {
       <section className="mx-auto grid w-full max-w-7xl gap-5 px-4 py-16 sm:px-6 lg:grid-cols-3">
         <article className="card-stage p-6">
           <p className="eyebrow">Competition status</p>
-          <p className="mt-3 font-display text-2xl">{contestant.stage}</p>
+          <p className="mt-3 font-display text-2xl">{c.stage}</p>
         </article>
         <article className="card-stage p-6">
-          <p className="eyebrow">Badges</p>
-          <ul className="mt-3 flex flex-wrap gap-2">
-            {contestant.badges.map((badge) => (
-              <li
-                key={badge}
-                className="rounded-full border border-border px-3 py-1 text-xs font-semibold"
-              >
-                {badge}
-              </li>
-            ))}
-          </ul>
+          <p className="eyebrow">Public votes</p>
+          <p className="mt-3 font-display text-2xl">{c.vote_count}</p>
         </article>
         <article className="card-stage p-6">
           <p className="eyebrow">Creative identity</p>
