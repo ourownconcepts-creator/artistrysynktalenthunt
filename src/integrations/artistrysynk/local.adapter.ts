@@ -1,4 +1,5 @@
-import type { ArtistrySynkClient } from "./client";
+import { artistrysynkProfileUrl } from "@/config/app";
+import type { ArtistrySynkIdentityProvider } from "./client";
 import type {
   ArtistrySynkIdentity,
   CreateIdentityInput,
@@ -33,7 +34,7 @@ function refFor(email: string): string {
   return `local_${hash.toString(36)}`;
 }
 
-export class LocalArtistrySynkAdapter implements ArtistrySynkClient {
+export class LocalArtistrySynkAdapter implements ArtistrySynkIdentityProvider {
   readonly provider = "local" as const;
 
   async findIdentityByEmail(email: string): Promise<ArtistrySynkIdentity | null> {
@@ -75,6 +76,15 @@ export class LocalArtistrySynkAdapter implements ArtistrySynkClient {
     links.set(localUserId, identityRef);
   }
 
+  async isIdentityLinked(localUserId: string): Promise<boolean> {
+    return links.has(localUserId);
+  }
+
+  async getLinkedIdentity(localUserId: string): Promise<ArtistrySynkIdentity | null> {
+    const ref = links.get(localUserId);
+    return ref ? identities.get(ref) ?? null : null;
+  }
+
   async getCreativeProfile(identityRef: string): Promise<CreativeProfile | null> {
     return profiles.get(identityRef) ?? null;
   }
@@ -100,10 +110,8 @@ export class LocalArtistrySynkAdapter implements ArtistrySynkClient {
   }
 
   profileUrl(identityRef: string): string {
-    // Canonical destination pattern is owned by ArtistrySynk; until the real
-    // handle contract is available we point at the platform root.
-    return identities.get(identityRef)?.handle
-      ? `https://artistrysynk.app/${identities.get(identityRef)!.handle}`
-      : "https://artistrysynk.app";
+    // The canonical destination pattern is owned by ArtistrySynk and comes from
+    // configuration — never hard-coded here.
+    return artistrysynkProfileUrl(identities.get(identityRef)?.handle ?? null);
   }
 }

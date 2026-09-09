@@ -49,7 +49,7 @@ function About() {
             rel="noreferrer noopener"
             className="mt-4 inline-block text-sm font-bold text-primary hover:underline"
           >
-            artistrysynk.app
+            {ARTISTRYSYNK.site.replace(/^https?:\/\//, "")}
           </a>
         </article>
       </section>
