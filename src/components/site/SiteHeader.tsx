@@ -9,10 +9,11 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/s
 const NAV = [
   { to: "/competitions", label: "Competition" },
   { to: "/categories", label: "Categories" },
+  { to: "/how-it-works", label: "How It Works" },
   { to: "/contestants", label: "Contestants" },
-  { to: "/vote", label: "Vote" },
   { to: "/announcements", label: "News" },
   { to: "/sponsors", label: "Sponsors" },
+  { to: "/about", label: "About" },
 ] as const;
 
 export function SiteHeader() {
