@@ -17,7 +17,8 @@ export const Route = createFileRoute("/admin/voting")({
       { title: "Voting controls — Zik's Got Talent admin" },
       {
         name: "description",
-        content: "Configure the voting model, judge and public weighting, voting window and limits.",
+        content:
+          "Configure the voting model, judge and public weighting, voting window and limits.",
       },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Voting controls — Zik's Got Talent admin" },
@@ -77,7 +78,9 @@ function VotingControls() {
           voting_model: form.voting_model,
           judge_weight: form.judge_weight,
           public_weight: form.public_weight,
-          voting_opens_at: form.voting_opens_at ? new Date(form.voting_opens_at).toISOString() : null,
+          voting_opens_at: form.voting_opens_at
+            ? new Date(form.voting_opens_at).toISOString()
+            : null,
           voting_closes_at: form.voting_closes_at
             ? new Date(form.voting_closes_at).toISOString()
             : null,
@@ -93,7 +96,9 @@ function VotingControls() {
       void queryClient.invalidateQueries({ queryKey: ["competition"] });
     },
     onError: (error) =>
-      toast.error(error instanceof Error ? error.message : "Only admins can change voting settings."),
+      toast.error(
+        error instanceof Error ? error.message : "Only admins can change voting settings.",
+      ),
   });
 
   if (!ready || competition.isLoading) {
@@ -112,7 +117,9 @@ function VotingControls() {
       </header>
 
       {!user && (
-        <p className="card-stage p-6 text-sm text-warning">Sign in with an admin account to edit.</p>
+        <p className="card-stage p-6 text-sm text-warning">
+          Sign in with an admin account to edit.
+        </p>
       )}
 
       <section className="card-stage grid gap-5 p-6 sm:grid-cols-2">

@@ -6,12 +6,7 @@ import { toast } from "sonner";
 import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/useSession";
-import {
-  VOTE_MESSAGES,
-  castVote,
-  fetchCompetition,
-  fetchPublicContestants,
-} from "@/lib/live-data";
+import { VOTE_MESSAGES, castVote, fetchCompetition, fetchPublicContestants } from "@/lib/live-data";
 
 export const Route = createFileRoute("/vote")({
   head: () => ({
@@ -25,7 +20,8 @@ export const Route = createFileRoute("/vote")({
       { property: "og:title", content: "Vote — Zik's Got Talent" },
       {
         property: "og:description",
-        content: "Cast your public vote. Limited votes per person, per day, verified accounts only.",
+        content:
+          "Cast your public vote. Limited votes per person, per day, verified accounts only.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -87,8 +83,8 @@ function VotePage() {
             <span>Voting is open. Votes are tied to your account and rate limited.</span>
           ) : (
             <span className="text-warning">
-              Public voting opens when the live rounds begin — an admin sets the voting window in the
-              control centre.
+              Public voting opens when the live rounds begin — an admin sets the voting window in
+              the control centre.
             </span>
           )}
           {ready && !user && (

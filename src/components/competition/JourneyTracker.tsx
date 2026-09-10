@@ -13,7 +13,8 @@ export function JourneyTracker({ steps }: { steps: ApplicationJourneyStep[] }) {
               className={cn(
                 "flex size-7 items-center justify-center rounded-full border",
                 step.state === "DONE" && "border-success/50 bg-success/15 text-success",
-                step.state === "CURRENT" && "border-primary/60 bg-primary/15 text-primary animate-pulse-spot",
+                step.state === "CURRENT" &&
+                  "border-primary/60 bg-primary/15 text-primary animate-pulse-spot",
                 step.state === "UPCOMING" && "border-border text-muted-foreground",
               )}
             >

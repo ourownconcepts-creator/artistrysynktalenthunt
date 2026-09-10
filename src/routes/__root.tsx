@@ -88,7 +88,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Zik's Got Talent" },
       {
         property: "og:description",
-        content: "A national multi-category talent competition. Your talent deserves to be discovered.",
+        content:
+          "A national multi-category talent competition. Your talent deserves to be discovered.",
       },
       { property: "og:site_name", content: "Zik's Got Talent" },
       { property: "og:type", content: "website" },

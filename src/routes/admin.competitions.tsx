@@ -126,7 +126,9 @@ function CompetitionDetails() {
       </header>
 
       {!user && (
-        <p className="card-stage p-6 text-sm text-warning">Sign in with an admin account to edit.</p>
+        <p className="card-stage p-6 text-sm text-warning">
+          Sign in with an admin account to edit.
+        </p>
       )}
 
       <section className="card-stage grid gap-5 p-6 sm:grid-cols-2">

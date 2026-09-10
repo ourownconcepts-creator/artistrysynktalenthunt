@@ -18,7 +18,8 @@ export const ADMIN_SECTIONS: SurfaceSection[] = [
   {
     slug: "competitions",
     label: "Competitions",
-    summary: "Create seasons, set dates and registration windows, move status through the lifecycle.",
+    summary:
+      "Create seasons, set dates and registration windows, move status through the lifecycle.",
     permission: "competition:configure",
     phase: "PHASE_1",
   },
@@ -136,12 +137,40 @@ export interface DashboardSection {
 }
 
 export const DASHBOARD_SECTIONS: DashboardSection[] = [
-  { slug: "application", label: "My Application", summary: "Everything you submitted, and what is still needed." },
-  { slug: "audition", label: "My Audition", summary: "Your audition media and its moderation status." },
-  { slug: "status", label: "Competition Status", summary: "Where you are in the competition right now." },
-  { slug: "announcements", label: "Announcements", summary: "Updates for contestants in your competition." },
+  {
+    slug: "application",
+    label: "My Application",
+    summary: "Everything you submitted, and what is still needed.",
+  },
+  {
+    slug: "audition",
+    label: "My Audition",
+    summary: "Your audition media and its moderation status.",
+  },
+  {
+    slug: "status",
+    label: "Competition Status",
+    summary: "Where you are in the competition right now.",
+  },
+  {
+    slug: "announcements",
+    label: "Announcements",
+    summary: "Updates for contestants in your competition.",
+  },
   { slug: "voting", label: "Voting", summary: "Voting windows, rules and your results when open." },
-  { slug: "profile", label: "My Creative Profile", summary: "Your permanent ArtistrySynk creative profile." },
-  { slug: "notifications", label: "Notifications", summary: "Your delivery preferences and history." },
-  { slug: "rules", label: "Competition Rules", summary: "The rules, eligibility and consent you accepted." },
+  {
+    slug: "profile",
+    label: "My Creative Profile",
+    summary: "Your permanent ArtistrySynk creative profile.",
+  },
+  {
+    slug: "notifications",
+    label: "Notifications",
+    summary: "Your delivery preferences and history.",
+  },
+  {
+    slug: "rules",
+    label: "Competition Rules",
+    summary: "The rules, eligibility and consent you accepted.",
+  },
 ];

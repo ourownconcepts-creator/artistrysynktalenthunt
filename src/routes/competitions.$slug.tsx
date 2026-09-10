@@ -18,7 +18,9 @@ export const Route = createFileRoute("/competitions/$slug")({
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Competition unavailable" }, { name: "robots", content: "noindex" }] };
+      return {
+        meta: [{ title: "Competition unavailable" }, { name: "robots", content: "noindex" }],
+      };
     }
     const { competition } = loaderData;
     return {
@@ -40,7 +42,11 @@ function CompetitionDetail() {
 
   return (
     <PublicShell>
-      <PageHeader eyebrow={competition.tagline} title={competition.name} intro={competition.description}>
+      <PageHeader
+        eyebrow={competition.tagline}
+        title={competition.name}
+        intro={competition.description}
+      >
         <div className="flex flex-wrap items-center gap-3">
           <StatusPill status={competition.status} />
           <span className="text-xs uppercase tracking-widest text-muted-foreground">

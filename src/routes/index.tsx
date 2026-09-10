@@ -10,7 +10,11 @@ import { Button } from "@/components/ui/button";
 import { daysUntil, formatDateRange, isRegistrationOpen } from "@/domain/competition";
 import { describeVoting } from "@/domain/voting";
 import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
-import { getFeaturedCompetition, listAnnouncements, listCategoryGroups } from "@/lib/competition-data";
+import {
+  getFeaturedCompetition,
+  listAnnouncements,
+  listCategoryGroups,
+} from "@/lib/competition-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -43,8 +47,14 @@ function Landing() {
     <PublicShell>
       {/* Hero */}
       <section className="relative overflow-hidden stage-surface">
-        <div className="pointer-events-none absolute inset-x-0 -top-52 h-[28rem] spotlight-glow animate-pulse-spot" aria-hidden />
-        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] lg:block" aria-hidden>
+        <div
+          className="pointer-events-none absolute inset-x-0 -top-52 h-[28rem] spotlight-glow animate-pulse-spot"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] lg:block"
+          aria-hidden
+        >
           <img
             src={heroStage}
             alt=""
@@ -89,13 +99,18 @@ function Landing() {
             </Button>
             {open && (
               <span className="text-sm text-muted-foreground">
-                Registration closes in <span className="font-bold text-primary">{closingIn} days</span>
+                Registration closes in{" "}
+                <span className="font-bold text-primary">{closingIn} days</span>
               </span>
             )}
           </div>
 
           <dl className="mt-14 grid grid-cols-2 gap-6 border-t border-border/60 pt-8 sm:grid-cols-4">
-            <Stat label="Talent categories" value={String(competition.stats.categories)} icon={Sparkles} />
+            <Stat
+              label="Talent categories"
+              value={String(competition.stats.categories)}
+              icon={Sparkles}
+            />
             <Stat label="Cities" value={String(competition.stats.cities)} icon={Users} />
             <Stat label="Prize pool" value={competition.stats.prizePool} icon={Trophy} />
             <Stat label="Rounds" value={String(competition.rounds.length)} icon={BadgeCheck} />
@@ -160,9 +175,12 @@ function Landing() {
       <section className="border-y border-border/70 bg-surface/50">
         <div className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6">
           <p className="eyebrow">The road to the final</p>
-          <h2 className="mt-3 text-3xl sm:text-4xl">{competition.rounds.length} configurable rounds</h2>
+          <h2 className="mt-3 text-3xl sm:text-4xl">
+            {competition.rounds.length} configurable rounds
+          </h2>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            Judging is weighted {describeVoting(competition.voting).toLowerCase()} once public voting opens.
+            Judging is weighted {describeVoting(competition.voting).toLowerCase()} once public
+            voting opens.
           </p>
           <ol className="mt-9 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {competition.rounds.map((round) => (
@@ -207,15 +225,23 @@ function Landing() {
 
       {/* CTA */}
       <section className="relative overflow-hidden border-t border-border/70 stage-surface">
-        <div className="pointer-events-none absolute inset-x-0 -bottom-40 h-80 spotlight-glow" aria-hidden />
+        <div
+          className="pointer-events-none absolute inset-x-0 -bottom-40 h-80 spotlight-glow"
+          aria-hidden
+        />
         <div className="relative mx-auto w-full max-w-4xl px-4 py-24 text-center sm:px-6">
           <h2 className="text-4xl sm:text-6xl">
             One entry. <span className="text-gold">One shot.</span>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-muted-foreground">
-            Registration is free and takes about ten minutes. You can save your application and finish it later.
+            Registration is free and takes about ten minutes. You can save your application and
+            finish it later.
           </p>
-          <Button asChild size="lg" className="mt-8 bg-heat text-accent-foreground hover:opacity-90">
+          <Button
+            asChild
+            size="lg"
+            className="mt-8 bg-heat text-accent-foreground hover:opacity-90"
+          >
             <Link to="/register">
               Start my application
               <ArrowRight className="ml-1 size-4" />

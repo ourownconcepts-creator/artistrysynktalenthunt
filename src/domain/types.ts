@@ -16,13 +16,7 @@ export type CompetitionStatus =
   | "ARCHIVED";
 
 export type ApplicationStatus =
-  | "DRAFT"
-  | "SUBMITTED"
-  | "UNDER_REVIEW"
-  | "APPROVED"
-  | "REJECTED"
-  | "WITHDRAWN"
-  | "DISQUALIFIED";
+  "DRAFT" | "SUBMITTED" | "UNDER_REVIEW" | "APPROVED" | "REJECTED" | "WITHDRAWN" | "DISQUALIFIED";
 
 export type SubmissionType = "VIDEO" | "AUDIO" | "IMAGE" | "DOCUMENT" | "LINK";
 export type ModerationStatus = "PENDING" | "APPROVED" | "REJECTED";
