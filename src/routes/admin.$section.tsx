@@ -3,7 +3,13 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { StatusPill } from "@/components/competition/StatusPill";
 import { ADMIN_SECTIONS } from "@/domain/navigation";
 import { describeVoting } from "@/domain/voting";
-import { getFeaturedCompetition, listAnnouncements, listBadges, listCategoryGroups, listSponsors } from "@/lib/competition-data";
+import {
+  getFeaturedCompetition,
+  listAnnouncements,
+  listBadges,
+  listCategoryGroups,
+  listSponsors,
+} from "@/lib/competition-data";
 
 export const Route = createFileRoute("/admin/$section")({
   loader: ({ params }) => {
@@ -182,7 +188,11 @@ function Table({ head, rows }: { head: string[]; rows: React.ReactNode[][] }) {
             {row.map((cell, cellIndex) => (
               <td
                 key={cellIndex}
-                className={cellIndex === 0 ? "px-3 py-2.5 font-semibold" : "px-3 py-2.5 text-muted-foreground"}
+                className={
+                  cellIndex === 0
+                    ? "px-3 py-2.5 font-semibold"
+                    : "px-3 py-2.5 text-muted-foreground"
+                }
               >
                 {cell}
               </td>

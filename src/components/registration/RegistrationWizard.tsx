@@ -352,10 +352,7 @@ export function RegistrationWizard({
         )}
 
         {step === 1 && (
-          <StepBody
-            title="Create or connect your identity"
-            hint={ARTISTRYSYNK.promise}
-          >
+          <StepBody title="Create or connect your identity" hint={ARTISTRYSYNK.promise}>
             <Field label="Email address" error={errors["email"]}>
               <Input
                 type="email"
@@ -389,7 +386,10 @@ export function RegistrationWizard({
         )}
 
         {step === 2 && (
-          <StepBody title="Personal information" hint="Private. Only reviewers and you can see this.">
+          <StepBody
+            title="Personal information"
+            hint="Private. Only reviewers and you can see this."
+          >
             <Field label="Full legal name" error={errors["fullName"]}>
               <Input value={form.fullName} onChange={(e) => set("fullName", e.target.value)} />
             </Field>

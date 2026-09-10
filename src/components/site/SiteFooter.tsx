@@ -13,9 +13,7 @@ export function SiteFooter() {
         <div className="grid gap-10 border-t border-border/60 pt-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Wordmark />
-            <p className="mt-4 max-w-xs text-sm text-muted-foreground">
-              {ARTISTRYSYNK.ecosystem}
-            </p>
+            <p className="mt-4 max-w-xs text-sm text-muted-foreground">{ARTISTRYSYNK.ecosystem}</p>
           </div>
 
           <FooterColumn
@@ -86,7 +84,10 @@ function FooterColumn({
       <ul className="mt-4 space-y-2.5 text-sm">
         {links.map((link) => (
           <li key={link.to}>
-            <Link to={link.to} className="text-muted-foreground transition-colors hover:text-foreground">
+            <Link
+              to={link.to}
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
               {link.label}
             </Link>
           </li>

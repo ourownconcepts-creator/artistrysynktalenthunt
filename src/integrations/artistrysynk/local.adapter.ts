@@ -82,7 +82,7 @@ export class LocalArtistrySynkAdapter implements ArtistrySynkIdentityProvider {
 
   async getLinkedIdentity(localUserId: string): Promise<ArtistrySynkIdentity | null> {
     const ref = links.get(localUserId);
-    return ref ? identities.get(ref) ?? null : null;
+    return ref ? (identities.get(ref) ?? null) : null;
   }
 
   async getCreativeProfile(identityRef: string): Promise<CreativeProfile | null> {

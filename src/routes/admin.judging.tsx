@@ -28,7 +28,10 @@ export const Route = createFileRoute("/admin/judging")({
   head: () => ({
     meta: [
       { title: "Judging panel — Zik's Got Talent admin" },
-      { name: "description", content: "Score contestants and move them through competition rounds." },
+      {
+        name: "description",
+        content: "Score contestants and move them through competition rounds.",
+      },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Judging panel — Zik's Got Talent admin" },
       { property: "og:description", content: "Score contestants and manage round progression." },
@@ -55,9 +58,7 @@ function JudgingPanel() {
     enabled: Boolean(competition.data?.id),
   });
 
-  const isStaff = (roles.data ?? []).some((r) =>
-    ["SUPER_ADMIN", "ADMIN", "MODERATOR"].includes(r),
-  );
+  const isStaff = (roles.data ?? []).some((r) => ["SUPER_ADMIN", "ADMIN", "MODERATOR"].includes(r));
   const isJudge = (roles.data ?? []).includes("JUDGE");
 
   const claim = useMutation({
@@ -147,7 +148,9 @@ function JudgingPanel() {
                   )}
                   <Button
                     size="sm"
-                    onClick={() => setOpenId(openId === row.application_id ? null : row.application_id)}
+                    onClick={() =>
+                      setOpenId(openId === row.application_id ? null : row.application_id)
+                    }
                   >
                     {openId === row.application_id ? (
                       <>
@@ -162,7 +165,9 @@ function JudgingPanel() {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => decide.mutate({ id: row.application_id, outcome: "ADVANCED" })}
+                        onClick={() =>
+                          decide.mutate({ id: row.application_id, outcome: "ADVANCED" })
+                        }
                       >
                         Advance
                       </Button>
@@ -191,7 +196,8 @@ function JudgingPanel() {
           ))
         ) : (
           <p className="text-sm text-muted-foreground">
-            Nothing assigned to you yet. Admins assign judges, and entries appear here as they arrive.
+            Nothing assigned to you yet. Admins assign judges, and entries appear here as they
+            arrive.
           </p>
         )}
       </section>

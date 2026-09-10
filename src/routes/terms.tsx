@@ -40,8 +40,8 @@ function Terms() {
           contexts.
         </Section>
         <Section title="Conduct and integrity">
-          Vote manipulation, plagiarism, impersonation and abuse result in disqualification. Integrity
-          reviews are logged and auditable.
+          Vote manipulation, plagiarism, impersonation and abuse result in disqualification.
+          Integrity reviews are logged and auditable.
         </Section>
         <Section title="Data and identity">
           Registration creates or connects an ArtistrySynk creative identity. Private application

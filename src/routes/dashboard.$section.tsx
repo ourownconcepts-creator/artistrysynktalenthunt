@@ -5,11 +5,7 @@ import { APPLICATION_STATUS_LABELS } from "@/domain/competition";
 import { DASHBOARD_SECTIONS } from "@/domain/navigation";
 import { describeVoting } from "@/domain/voting";
 import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
-import {
-  getCompetitionBySlug,
-  getMyApplication,
-  listAnnouncements,
-} from "@/lib/competition-data";
+import { getCompetitionBySlug, getMyApplication, listAnnouncements } from "@/lib/competition-data";
 
 export const Route = createFileRoute("/dashboard/$section")({
   loader: ({ params }) => {
@@ -26,7 +22,10 @@ export const Route = createFileRoute("/dashboard/$section")({
         content: loaderData?.section.summary ?? "Contestant dashboard",
       },
       { property: "og:title", content: loaderData?.section.label ?? "Zik's Got Talent" },
-      { property: "og:description", content: loaderData?.section.summary ?? "Contestant dashboard" },
+      {
+        property: "og:description",
+        content: loaderData?.section.summary ?? "Contestant dashboard",
+      },
     ],
   }),
   component: DashboardSectionPage,
@@ -49,7 +48,10 @@ function DashboardSectionPage() {
         {section.slug === "application" && (
           <dl className="divide-y divide-border/60 text-sm">
             <Row label="Competition" value={application.competitionName} />
-            <Row label="Category" value={`${application.groupName} · ${application.categoryName}`} />
+            <Row
+              label="Category"
+              value={`${application.groupName} · ${application.categoryName}`}
+            />
             <Row label="Status" value={APPLICATION_STATUS_LABELS[application.status]} />
             <Row
               label="Submitted"
@@ -104,7 +106,9 @@ function DashboardSectionPage() {
               {competition.voting.votesPerUserPerDay} per person per day, sign-in required, rate
               limited and fully audited.
             </p>
-            <p>Voting opens at the Top 20 round. You&rsquo;ll be notified when your window opens.</p>
+            <p>
+              Voting opens at the Top 20 round. You&rsquo;ll be notified when your window opens.
+            </p>
           </div>
         )}
 
@@ -128,7 +132,9 @@ function DashboardSectionPage() {
               <li key={channel} className="flex items-center justify-between gap-4">
                 <span>{channel}</span>
                 <span className="text-xs uppercase tracking-widest">
-                  {channel === "In-app" || channel === "Email" ? "Planned for launch" : "Later phase"}
+                  {channel === "In-app" || channel === "Email"
+                    ? "Planned for launch"
+                    : "Later phase"}
                 </span>
               </li>
             ))}

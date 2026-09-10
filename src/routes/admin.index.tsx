@@ -37,9 +37,17 @@ function AdminHome() {
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Metric label="Applications" value="0" note="Awaiting database" />
-        <Metric label="Categories" value={String(competition.stats.categories)} note="Configurable" />
+        <Metric
+          label="Categories"
+          value={String(competition.stats.categories)}
+          note="Configurable"
+        />
         <Metric label="Rounds" value={String(competition.rounds.length)} note="Configurable" />
-        <Metric label="Active sponsors" value={String(sponsors.length)} note="ArtistrySynk × Chow" />
+        <Metric
+          label="Active sponsors"
+          value={String(sponsors.length)}
+          note="ArtistrySynk × Chow"
+        />
       </div>
 
       <section>
@@ -95,8 +103,8 @@ function AdminHome() {
           </table>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          These permissions are mirrored for the interface only. Every action is re-authorised on the
-          server and by row-level policies once the backend is connected.
+          These permissions are mirrored for the interface only. Every action is re-authorised on
+          the server and by row-level policies once the backend is connected.
         </p>
       </section>
     </div>

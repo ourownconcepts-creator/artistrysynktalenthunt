@@ -69,7 +69,9 @@ export interface CriterionRow {
   weight: number;
 }
 
-export async function fetchCompetition(slug: string = SEASON_SLUG): Promise<LiveCompetition | null> {
+export async function fetchCompetition(
+  slug: string = SEASON_SLUG,
+): Promise<LiveCompetition | null> {
   const { data, error } = await supabase
     .from("competitions")
     .select("*")
@@ -133,7 +135,10 @@ export async function fetchMyApplication() {
 export async function fetchMyRoles(): Promise<string[]> {
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return [];
-  const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", auth.user.id);
+  const { data, error } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", auth.user.id);
   if (error) return [];
   return (data ?? []).map((r) => r.role as string);
 }
@@ -313,7 +318,10 @@ export async function saveScores(
   if (error) throw error;
 }
 
-export async function decideRound(applicationId: string, outcome: "ADVANCED" | "ELIMINATED" | "HELD") {
+export async function decideRound(
+  applicationId: string,
+  outcome: "ADVANCED" | "ELIMINATED" | "HELD",
+) {
   const { data, error } = await supabase.rpc("advance_application", {
     _application_id: applicationId,
     _outcome: outcome,

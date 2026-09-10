@@ -23,11 +23,7 @@ export function isVotingWindowOpen(config: VotingConfig, now = new Date()): bool
  * explain *why* a vote is unavailable — it never authorises a vote.
  */
 export type VoteRejection =
-  | "WINDOW_CLOSED"
-  | "NOT_AUTHENTICATED"
-  | "DAILY_LIMIT_REACHED"
-  | "RATE_LIMITED"
-  | "DUPLICATE";
+  "WINDOW_CLOSED" | "NOT_AUTHENTICATED" | "DAILY_LIMIT_REACHED" | "RATE_LIMITED" | "DUPLICATE";
 
 export const VOTE_REJECTION_MESSAGES: Record<VoteRejection, string> = {
   WINDOW_CLOSED: "Voting is not open right now.",
