@@ -16,8 +16,7 @@
 - Stage-change and entry alert emails sent through QueenSMTP.
 
 ## Open (blocked)
-- Branded sender domain for sign-in confirmation and password-reset emails —
-  waiting on the user to complete the email domain setup dialog, then the
-  branded sign-in templates get scaffolded and styled.
+- Branded sign-in emails from notify.ziksgottalent.com are built and styled;
+  they start sending as soon as the domain's DNS check finishes.
 - Approve the Demo Connect Act entry — waiting on the user to approve the
   ArtistrySynk consent so the linked profile can be verified first.
