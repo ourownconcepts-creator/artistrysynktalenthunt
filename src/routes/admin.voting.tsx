@@ -10,6 +10,13 @@ import { Label } from "@/components/ui/label";
 import { useMyRoles, useSession } from "@/hooks/useSession";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchCompetition } from "@/lib/live-data";
+import {
+  closeVotingNow,
+  describeResult,
+  fetchSuspiciousVoters,
+  fetchVoteTotals,
+  voidVotes,
+} from "@/lib/operations";
 
 export const Route = createFileRoute("/admin/voting")({
   head: () => ({
@@ -217,6 +224,200 @@ function VotingControls() {
             </p>
           )}
         </div>
+      </section>
+
+      <VoteOperations
+        competitionId={competition.data?.id ?? null}
+        competitionSlug={competition.data?.slug ?? null}
+        isAdmin={isAdmin}
+      />
+    </div>
+  );
+}
+
+/**
+ * Live vote operations: totals, unusual voter activity and voiding votes.
+ * Every void needs a reason and is written to the audit log by the database.
+ */
+function VoteOperations({
+  competitionId,
+  competitionSlug,
+  isAdmin,
+}: {
+  competitionId: string | null;
+  competitionSlug: string | null;
+  isAdmin: boolean;
+}) {
+  const queryClient = useQueryClient();
+  const [voidReason, setVoidReason] = useState("");
+
+  const totals = useQuery({
+    queryKey: ["vote-totals", competitionSlug],
+    queryFn: () => fetchVoteTotals({ competitionSlug }),
+    enabled: Boolean(competitionSlug),
+  });
+  const suspicious = useQuery({
+    queryKey: ["suspicious-voters", competitionSlug],
+    queryFn: () => fetchSuspiciousVoters(competitionSlug ?? undefined),
+    enabled: Boolean(competitionSlug),
+  });
+
+  function refresh() {
+    void queryClient.invalidateQueries({ queryKey: ["vote-totals"] });
+    void queryClient.invalidateQueries({ queryKey: ["suspicious-voters"] });
+    void queryClient.invalidateQueries({ queryKey: ["ops-snapshot"] });
+    void queryClient.invalidateQueries({ queryKey: ["public-contestants"] });
+  }
+
+  const closeNow = useMutation({
+    mutationFn: () => closeVotingNow(competitionId!, voidReason),
+    onSuccess: (result) => {
+      if (result.ok) {
+        toast.success("Voting closed");
+        void queryClient.invalidateQueries({ queryKey: ["competition"] });
+        refresh();
+      } else toast.error(describeResult(result));
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "That action was refused."),
+  });
+
+  const voidFor = useMutation({
+    mutationFn: (target: { applicationId?: string; voterId?: string }) =>
+      voidVotes(voidReason, target),
+    onSuccess: (result) => {
+      if (result.ok) {
+        toast.success(`${result.voided ?? 0} vote(s) voided`);
+        setVoidReason("");
+        refresh();
+      } else toast.error(describeResult(result));
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "That action was refused."),
+  });
+
+  return (
+    <div className="space-y-8">
+      <section className="card-stage space-y-4 p-6">
+        <div>
+          <h2 className="text-2xl">Vote operations</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Voided votes stop counting everywhere immediately — public tallies, results and limits.
+            Voting is not yet ready for a large public campaign: email verification and stronger
+            abuse controls are still outstanding.
+          </p>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="void-reason">Reason (required before voiding or closing)</Label>
+          <Input
+            id="void-reason"
+            value={voidReason}
+            placeholder="e.g. Duplicate accounts from one device"
+            onChange={(e) => setVoidReason(e.target.value)}
+          />
+        </div>
+        <Button
+          variant="outline"
+          disabled={!isAdmin || !competitionId || !voidReason.trim() || closeNow.isPending}
+          onClick={() => closeNow.mutate()}
+        >
+          {closeNow.isPending && <Loader2 className="mr-1 size-4 animate-spin" />}
+          Close voting now
+        </Button>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-2xl">Vote totals</h2>
+        {totals.isLoading ? (
+          <p className="text-sm text-muted-foreground">Loading totals…</p>
+        ) : totals.data?.length ? (
+          <div className="card-stage overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border/60 text-left">
+                  <th className="px-4 py-3 font-semibold">Contestant</th>
+                  <th className="px-4 py-3 font-semibold">Category</th>
+                  <th className="px-4 py-3 font-semibold">Round</th>
+                  <th className="px-4 py-3 font-semibold">Valid</th>
+                  <th className="px-4 py-3 font-semibold">Voided</th>
+                  <th className="px-4 py-3 font-semibold">Voters</th>
+                  <th className="px-4 py-3 font-semibold">Last vote</th>
+                  <th className="px-4 py-3 font-semibold" />
+                </tr>
+              </thead>
+              <tbody>
+                {totals.data.map((row) => (
+                  <tr key={row.application_id} className="border-b border-border/40 last:border-0">
+                    <td className="px-4 py-3 font-semibold">{row.display_name}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.category_name}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.round_name}</td>
+                    <td className="px-4 py-3 font-bold text-primary">{row.valid_votes}</td>
+                    <td className="px-4 py-3">{row.voided_votes}</td>
+                    <td className="px-4 py-3">{row.distinct_voters}</td>
+                    <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
+                      {row.last_vote_at ? new Date(row.last_vote_at).toLocaleString() : "—"}
+                    </td>
+                    <td className="px-4 py-3">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={!isAdmin || !voidReason.trim() || voidFor.isPending}
+                        onClick={() => voidFor.mutate({ applicationId: row.application_id })}
+                      >
+                        Void all
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">No votes have been cast yet.</p>
+        )}
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-2xl">Unusual voter activity</h2>
+        <p className="text-sm text-muted-foreground">
+          A simple review aid, not fraud detection: voters ranked by how many different contestants
+          they voted for.
+        </p>
+        {suspicious.data?.length ? (
+          <div className="card-stage overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border/60 text-left">
+                  <th className="px-4 py-3 font-semibold">Voter</th>
+                  <th className="px-4 py-3 font-semibold">Today</th>
+                  <th className="px-4 py-3 font-semibold">Last hour</th>
+                  <th className="px-4 py-3 font-semibold">Contestants</th>
+                  <th className="px-4 py-3 font-semibold" />
+                </tr>
+              </thead>
+              <tbody>
+                {suspicious.data.map((row) => (
+                  <tr key={row.voter_id} className="border-b border-border/40 last:border-0">
+                    <td className="px-4 py-3">{row.voter_email ?? row.voter_id}</td>
+                    <td className="px-4 py-3">{row.votes_today}</td>
+                    <td className="px-4 py-3">{row.votes_last_hour}</td>
+                    <td className="px-4 py-3">{row.distinct_contestants}</td>
+                    <td className="px-4 py-3">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={!isAdmin || !voidReason.trim() || voidFor.isPending}
+                        onClick={() => voidFor.mutate({ voterId: row.voter_id })}
+                      >
+                        Void this voter's votes
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">Nothing to review.</p>
+        )}
       </section>
     </div>
   );

@@ -55,6 +55,12 @@ export interface RoundRow {
   judging_enabled: boolean;
   voting_enabled: boolean;
   submission_requirements: string;
+  status: string;
+  judging_opens_at: string | null;
+  judging_closes_at: string | null;
+  score_deadline_at: string | null;
+  decided_at: string | null;
+  closed_at: string | null;
 }
 
 export interface GroupRow {

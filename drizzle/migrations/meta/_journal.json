@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1789118894394,
+      "tag": "0000_phase3_competition_operations",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789119420335,
+      "tag": "0001_moderator_application_review",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789119463106,
+      "tag": "0002_moderator_review_flags_only",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1789119551735,
+      "tag": "0003_allow_reopen_registration",
+      "breakpoints": true
+    }
+  ]
+}
