@@ -73,8 +73,15 @@ export function requireArtistrySynkConfig(): ArtistrySynkConfig {
   return config;
 }
 
+/** Basic credential for the API client (Integration API calls). */
 function basic(config: ArtistrySynkConfig): string {
   const raw = `${config.clientId}:${config.clientSecret}`;
+  return `Basic ${Buffer.from(raw, "utf8").toString("base64")}`;
+}
+
+/** Basic credential for the sign-in client (token endpoint only). */
+function signinBasic(config: ArtistrySynkConfig): string {
+  const raw = `${config.signinClientId}:${config.signinClientSecret}`;
   return `Basic ${Buffer.from(raw, "utf8").toString("base64")}`;
 }
 
