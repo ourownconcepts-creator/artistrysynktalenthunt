@@ -40,8 +40,27 @@ import {
   saveSponsor,
   setCategoryActive,
   slugifyHandle,
+  grantRoleByEmail,
+  revokeRoleByEmail,
+  listTeam,
 } from "@/lib/live-data";
+import {
+  PROGRESS_STATES,
+  PROGRESS_STATE_LABELS,
+  SUBMISSION_STATE_LABELS,
+  describeResult,
+  decideRoundResult,
+  fetchAdminApplications,
+  fetchRoundResults,
+  fetchScoreCorrections,
+  fetchSuspiciousVoters,
+  setApplicationState,
+  voidVotes,
+} from "@/lib/operations";
+import { ROLE_LABELS } from "@/domain/roles";
+import { notifyContestant } from "@/lib/notify";
 import { sendAnnouncementEmail, type EmailSendSummary } from "@/lib/email.functions";
+
 
 export const Route = createFileRoute("/admin/$section")({
   loader: ({ params }) => {
