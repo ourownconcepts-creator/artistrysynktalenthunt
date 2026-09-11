@@ -412,6 +412,7 @@ export function RegistrationWizard({
               Already entered before? Use the same email and password and we&rsquo;ll connect you to
               your existing account instead of creating a second one.
             </p>
+            <ConnectArtistrySynk enabled={accountReady} onChange={setConnection} />
           </StepBody>
         )}
 
