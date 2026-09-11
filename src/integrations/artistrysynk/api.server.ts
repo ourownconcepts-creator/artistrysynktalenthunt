@@ -16,9 +16,16 @@ export interface ArtistrySynkConfig {
   /** Origin that serves the resource metadata and the integration API. */
   baseUrl: string;
   integrationUrl: string;
+  /** API client — direct server-to-server Integration API calls (Basic auth). */
   clientId: string;
   clientSecret: string;
+  /** Sign-in client — user approval flow and the authorization-code exchange. */
+  signinClientId: string;
+  signinClientSecret: string;
 }
+
+/** Default API client identifier (public value, not a secret). */
+const DEFAULT_API_CLIENT_ID = "zgt-prod-aa3c2403c67a4cb6";
 
 export class ArtistrySynkError extends Error {
   constructor(
