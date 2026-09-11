@@ -66,16 +66,20 @@ function ApplicationReview() {
   }
 
   const review = useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       id,
       decision,
     }: {
       id: string;
       decision: "APPROVED" | "REJECTED" | "CORRECTION_REQUESTED" | "UNDER_REVIEW";
-    }) => reviewApplication(id, decision, reason),
+    }) => {
+      const result = await reviewApplication(id, decision, reason);
+      if (result.ok) await notifyContestant(id, decision, reason);
+      return result;
+    },
     onSuccess: (result) => {
       if (result.ok) {
-        toast.success("Decision recorded");
+        toast.success("Decision recorded — the contestant has been emailed");
         setReason("");
         refresh();
       } else toast.error(describeResult(result));
@@ -84,11 +88,14 @@ function ApplicationReview() {
   });
 
   const changeState = useMutation({
-    mutationFn: ({ id, state }: { id: string; state: string }) =>
-      setApplicationState(id, state, reason),
+    mutationFn: async ({ id, state }: { id: string; state: string }) => {
+      const result = await setApplicationState(id, state, reason);
+      if (result.ok) await notifyContestant(id, state, reason);
+      return result;
+    },
     onSuccess: (result) => {
       if (result.ok) {
-        toast.success("Contestant state updated");
+        toast.success("Contestant state updated — the contestant has been emailed");
         setReason("");
         refresh();
       } else toast.error(describeResult(result));
