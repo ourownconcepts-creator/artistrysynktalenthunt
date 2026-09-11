@@ -10,6 +10,7 @@ import { useSession } from "@/hooks/useSession";
 import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
 import { getArtistrySynkConnection } from "@/lib/artistrysynk.functions";
 import { buildJourney, fetchMyApplication, fetchRounds } from "@/lib/live-data";
+import { PROGRESS_STATE_LABELS } from "@/lib/operations";
 
 /**
  * The ArtistrySynk portal: the page a connected creative lands on from their
