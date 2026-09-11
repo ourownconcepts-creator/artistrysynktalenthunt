@@ -61,7 +61,7 @@ function SubmissionReview() {
   });
 
   const moderate = useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       id,
       state,
       publish,
