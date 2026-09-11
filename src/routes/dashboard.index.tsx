@@ -77,7 +77,7 @@ function DashboardHome() {
           You are signed in, but you have not entered a competition yet.
         </p>
         <Button asChild className="mt-6 bg-gold text-primary-foreground hover:opacity-90">
-          <Link to="/register">Enter Season One</Link>
+          <Link to="/register">Enter the competition</Link>
         </Button>
       </div>
     );
