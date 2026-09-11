@@ -18,6 +18,18 @@ import {
   reviewApplication,
   setApplicationState,
 } from "@/lib/operations";
+import { sendApplicationStatusEmail } from "@/lib/email.functions";
+
+/** Emails the contestant about a decision. A mail failure never blocks the decision. */
+async function notifyContestant(applicationId: string, status: string, note: string) {
+  try {
+    await sendApplicationStatusEmail({
+      data: { applicationId, status, ...(note.trim() ? { note: note.trim() } : {}) },
+    });
+  } catch {
+    /* decision is recorded; the email can be resent */
+  }
+}
 
 export const Route = createFileRoute("/admin/applications")({
   head: () => ({
@@ -66,16 +78,20 @@ function ApplicationReview() {
   }
 
   const review = useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       id,
       decision,
     }: {
       id: string;
       decision: "APPROVED" | "REJECTED" | "CORRECTION_REQUESTED" | "UNDER_REVIEW";
-    }) => reviewApplication(id, decision, reason),
+    }) => {
+      const result = await reviewApplication(id, decision, reason);
+      if (result.ok) await notifyContestant(id, decision, reason);
+      return result;
+    },
     onSuccess: (result) => {
       if (result.ok) {
-        toast.success("Decision recorded");
+        toast.success("Decision recorded — the contestant has been emailed");
         setReason("");
         refresh();
       } else toast.error(describeResult(result));
@@ -84,11 +100,14 @@ function ApplicationReview() {
   });
 
   const changeState = useMutation({
-    mutationFn: ({ id, state }: { id: string; state: string }) =>
-      setApplicationState(id, state, reason),
+    mutationFn: async ({ id, state }: { id: string; state: string }) => {
+      const result = await setApplicationState(id, state, reason);
+      if (result.ok) await notifyContestant(id, state, reason);
+      return result;
+    },
     onSuccess: (result) => {
       if (result.ok) {
-        toast.success("Contestant state updated");
+        toast.success("Contestant state updated — the contestant has been emailed");
         setReason("");
         refresh();
       } else toast.error(describeResult(result));

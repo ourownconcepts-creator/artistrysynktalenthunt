@@ -16,6 +16,7 @@ import type { ArtistrySynkConnection } from "@/integrations/artistrysynk/types";
 import { supabase } from "@/integrations/supabase/client";
 import type { GroupedCategories, LiveCompetition, RequirementRow } from "@/lib/live-data";
 import { fetchRequirements, submitEntry } from "@/lib/live-data";
+import { sendEntryEmails } from "@/lib/email.functions";
 import { cn } from "@/lib/utils";
 
 /**
@@ -266,6 +267,12 @@ export function RegistrationWizard({
         identityRef: linked?.identityRef ?? null,
         identityProvider: linked ? "artistrysynk" : "unlinked",
       });
+      // Confirmation email + organiser alert. A mail failure must never lose an entry.
+      try {
+        await sendEntryEmails();
+      } catch {
+        /* the entry is saved; the email can be resent later */
+      }
       setSubmitted(true);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Your entry could not be saved.");

@@ -41,6 +41,7 @@ import {
   setCategoryActive,
   slugifyHandle,
 } from "@/lib/live-data";
+import { sendAnnouncementEmail, type EmailSendSummary } from "@/lib/email.functions";
 
 export const Route = createFileRoute("/admin/$section")({
   loader: ({ params }) => {
@@ -828,6 +829,20 @@ function AnnouncementsPanel({ competitionId }: { competitionId: string | null })
     mutationFn: saveAnnouncement,
     ...useSaver(["admin-announcements", "announcements"], "Announcement"),
   });
+  const email = useMutation({
+    mutationFn: (announcementId: string) =>
+      sendAnnouncementEmail({ data: { announcementId } }),
+    onSuccess: (result: EmailSendSummary) => {
+      if (!result.configured) {
+        toast.error("Email sending is not configured yet.");
+      } else if (result.sent === 0) {
+        toast.error("No contestant email addresses were available.");
+      } else {
+        toast.success(`Emailed ${result.sent} contestant${result.sent === 1 ? "" : "s"}`);
+      }
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "The emails could not be sent."),
+  });
 
   return (
     <div className="space-y-5">
@@ -849,6 +864,16 @@ function AnnouncementsPanel({ competitionId }: { competitionId: string | null })
               >
                 Edit
               </Button>
+              {announcement.audience === "CONTESTANTS" && announcement.is_published && (
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  disabled={email.isPending}
+                  onClick={() => email.mutate(announcement.id)}
+                >
+                  {email.isPending ? "Sending…" : "Email contestants"}
+                </Button>
+              )}
             </li>
           ))}
         </ul>
