@@ -193,6 +193,14 @@ export async function saveLink(input: {
   profile: ArtistrySynkProfileProjection | null;
 }): Promise<void> {
   const db = await admin();
+  const profileSnapshot = input.profile
+    ? {
+        display_name: input.profile.display_name,
+        username: input.profile.username,
+        avatar_url: input.profile.avatar_url,
+        location: input.profile.location,
+      }
+    : {};
   const { error } = await db.from("artistrysynk_links").upsert(
     {
       user_id: input.userId,
@@ -202,12 +210,20 @@ export async function saveLink(input: {
       scopes: input.scopes,
       status: "LINKED",
       linked_at: input.linkedAt,
-      profile_snapshot: input.profile ?? {},
+      profile_snapshot: profileSnapshot,
       snapshot_at: input.profile ? new Date().toISOString() : null,
     },
     { onConflict: "user_id" },
   );
   if (error) throw error;
+  const { error: auditError } = await db.from("audit_log").insert({
+    actor_id: input.userId,
+    action: "artistrysynk.connect",
+    entity: "artistrysynk_link",
+    entity_id: input.userId,
+    detail: { identity_ref: input.identityId, scopes: input.scopes },
+  });
+  if (auditError) throw auditError;
 }
 
 export async function markRevoked(userId: string): Promise<void> {
@@ -217,6 +233,14 @@ export async function markRevoked(userId: string): Promise<void> {
     .update({ status: "REVOKED", profile_snapshot: {}, snapshot_at: null })
     .eq("user_id", userId);
   if (error) throw error;
+  const { error: auditError } = await db.from("audit_log").insert({
+    actor_id: userId,
+    action: "artistrysynk.disconnect",
+    entity: "artistrysynk_link",
+    entity_id: userId,
+    detail: {},
+  });
+  if (auditError) throw auditError;
 }
 
 /** Attach (or clear) the verified identity reference on the entrant's entries. */

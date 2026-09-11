@@ -32,4 +32,9 @@ describe("ArtistrySynk PKCE", () => {
     expect(isValidCodeVerifier("")).toBe(false);
     expect(isValidCodeVerifier("short")).toBe(false);
   });
+
+  test("rejects values outside the base64url protocol alphabet", () => {
+    expect(isValidState(`${"s".repeat(31)}+`)).toBe(false);
+    expect(isValidCodeVerifier(`${"v".repeat(63)}=`)).toBe(false);
+  });
 });
