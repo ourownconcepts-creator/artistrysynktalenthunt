@@ -1,6 +1,9 @@
 # Zik's Got Talent — roadmap
 
 ## Done
+- Admin panel complete: contestant records, round shortlists, moderation
+  (flagged voting, media queue, score corrections) and settings (team roles,
+  integrations) now live alongside the existing admin sections.
 - ArtistrySynk portal at `/artistrysynk`: a connected creative sees their entry,
   entry code, status and round progress, with links to the fuller dashboard
   views. Linked from the dashboard profile page.

@@ -40,8 +40,27 @@ import {
   saveSponsor,
   setCategoryActive,
   slugifyHandle,
+  grantRoleByEmail,
+  revokeRoleByEmail,
+  listTeam,
 } from "@/lib/live-data";
+import {
+  PROGRESS_STATES,
+  PROGRESS_STATE_LABELS,
+  SUBMISSION_STATE_LABELS,
+  describeResult,
+  decideRoundResult,
+  fetchAdminApplications,
+  fetchRoundResults,
+  fetchScoreCorrections,
+  fetchSuspiciousVoters,
+  setApplicationState,
+  voidVotes,
+} from "@/lib/operations";
+import { ROLE_LABELS } from "@/domain/roles";
+import { notifyContestant } from "@/lib/notify";
 import { sendAnnouncementEmail, type EmailSendSummary } from "@/lib/email.functions";
+
 
 export const Route = createFileRoute("/admin/$section")({
   loader: ({ params }) => {
@@ -86,15 +105,15 @@ function AdminSectionPage() {
       {section.slug === "announcements" && <AnnouncementsPanel competitionId={competitionId} />}
       {section.slug === "badges" && <BadgesPanel competitionId={competitionId} />}
       {section.slug === "audit-logs" && <AuditPanel />}
-
-      {section.phase === "LATER" && section.slug !== "audit-logs" && (
-        <div className="card-stage p-5">
-          <p className="text-sm text-muted-foreground">
-            This area is intentionally not built yet. Its data model, permissions and audit rules
-            are already defined, so it can be added without reshaping the foundation.
-          </p>
-        </div>
+      {section.slug === "contestants" && (
+        <ContestantsPanel competitionSlug={competition.data?.slug ?? null} />
       )}
+      {section.slug === "shortlists" && <ShortlistsPanel competitionId={competitionId} />}
+      {section.slug === "moderation" && (
+        <ModerationPanel competitionSlug={competition.data?.slug ?? null} />
+      )}
+      {section.slug === "settings" && <SettingsPanel />}
+
     </div>
   );
 }
@@ -1157,4 +1176,529 @@ function toLocal(value?: string | null): string {
 
 function fromLocal(value: string): string | null {
   return value ? new Date(value).toISOString() : null;
+}
+
+/* ---------------------------- Contestants ---------------------------- */
+
+const CONTESTANT_ACTIONS = ["WITHDRAWN", "DISQUALIFIED", "APPROVED", "ROUND_ACTIVE"] as const;
+
+function ContestantsPanel({ competitionSlug }: { competitionSlug: string | null }) {
+  const client = useQueryClient();
+  const [progress, setProgress] = useState("");
+  const [search, setSearch] = useState("");
+  const [reason, setReason] = useState("");
+  const [openId, setOpenId] = useState<string | null>(null);
+
+  const rows = useQuery({
+    queryKey: ["admin-applications", competitionSlug, progress],
+    queryFn: () =>
+      fetchAdminApplications({ competitionSlug, progressState: progress || null }),
+    enabled: Boolean(competitionSlug),
+  });
+
+  const change = useMutation({
+    mutationFn: async ({ id, state }: { id: string; state: string }) => {
+      const result = await setApplicationState(id, state, reason);
+      if (result.ok) await notifyContestant(id, state, reason);
+      return result;
+    },
+    onSuccess: (result) => {
+      if (!result.ok) {
+        toast.error(describeResult(result));
+        return;
+      }
+      toast.success("Contestant record updated");
+      setReason("");
+      setOpenId(null);
+      void client.invalidateQueries({ queryKey: ["admin-applications"] });
+      void client.invalidateQueries({ queryKey: ["public-contestants"] });
+    },
+    onError: (error: unknown) =>
+      toast.error(error instanceof Error ? error.message : "That change was refused."),
+  });
+
+  if (!competitionSlug) return <NoCompetition />;
+
+  const term = search.trim().toLowerCase();
+  const list = (rows.data ?? []).filter(
+    (row) =>
+      !term ||
+      row.display_name.toLowerCase().includes(term) ||
+      row.handle.toLowerCase().includes(term),
+  );
+
+  return (
+    <Panel
+      title="Contestant records"
+      description="Every contestant in this competition, with suspension, withdrawal and disqualification controls. Each change is emailed to the contestant and written to the audit log."
+    >
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Search name or handle" value={search} onChange={setSearch} />
+        <SelectField
+          label="Filter by stage"
+          value={progress}
+          onChange={setProgress}
+          options={[
+            { value: "", label: "All stages" },
+            ...PROGRESS_STATES.map((state) => ({
+              value: state,
+              label: PROGRESS_STATE_LABELS[state] ?? state,
+            })),
+          ]}
+        />
+      </div>
+
+      <div className="mt-5 divide-y divide-border/60">
+        {rows.isLoading && <p className="py-3 text-sm text-muted-foreground">Loading…</p>}
+        {rows.isError && (
+          <p className="py-3 text-sm text-muted-foreground">
+            You need contestant management access to view this list.
+          </p>
+        )}
+        {!rows.isLoading && list.length === 0 && (
+          <p className="py-3 text-sm text-muted-foreground">No contestants match that filter.</p>
+        )}
+        {list.map((row) => (
+          <div key={row.id} className="py-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-semibold">
+                  {row.display_name}{" "}
+                  <span className="text-xs text-muted-foreground">@{row.handle}</span>
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {row.category_name} · {PROGRESS_STATE_LABELS[row.progress_state] ?? row.progress_state}{" "}
+                  · media {SUBMISSION_STATE_LABELS[row.submission_state] ?? row.submission_state}
+                  {row.round_name ? ` · ${row.round_name}` : ""}
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setOpenId(openId === row.id ? null : row.id)}
+              >
+                {openId === row.id ? "Close" : "Manage"}
+              </Button>
+            </div>
+
+            {openId === row.id && (
+              <div className="mt-3 space-y-3 rounded-md border border-border/60 p-3">
+                <AreaField label="Reason (recorded and emailed)" value={reason} onChange={setReason} rows={2} />
+                <div className="flex flex-wrap gap-2">
+                  {CONTESTANT_ACTIONS.map((state) => (
+                    <Button
+                      key={state}
+                      size="sm"
+                      variant={state === "DISQUALIFIED" ? "destructive" : "outline"}
+                      disabled={change.isPending || row.progress_state === state}
+                      onClick={() => change.mutate({ id: row.id, state })}
+                    >
+                      {PROGRESS_STATE_LABELS[state] ?? state}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </Panel>
+  );
+}
+
+/* ---------------------------- Shortlists ---------------------------- */
+
+function ShortlistsPanel({ competitionId }: { competitionId: string | null }) {
+  const client = useQueryClient();
+  const [roundId, setRoundId] = useState("");
+  const [reason, setReason] = useState("");
+
+  const rounds = useQuery({
+    queryKey: ["rounds", competitionId],
+    queryFn: () => fetchRounds(competitionId as string),
+    enabled: Boolean(competitionId),
+  });
+
+  const activeRound = roundId || rounds.data?.[0]?.id || "";
+
+  const results = useQuery({
+    queryKey: ["round-results", activeRound],
+    queryFn: () => fetchRoundResults(activeRound),
+    enabled: Boolean(activeRound),
+  });
+
+  const decide = useMutation({
+    mutationFn: async ({
+      id,
+      outcome,
+    }: {
+      id: string;
+      outcome: "ADVANCED" | "ELIMINATED" | "HELD";
+    }) => {
+      const result = await decideRoundResult(id, outcome, reason);
+      if (result.ok) await notifyContestant(id, outcome, reason);
+      return result;
+    },
+    onSuccess: (result) => {
+      if (!result.ok) {
+        toast.error(describeResult(result));
+        return;
+      }
+      toast.success("Decision recorded");
+      setReason("");
+      void client.invalidateQueries({ queryKey: ["round-results"] });
+      void client.invalidateQueries({ queryKey: ["admin-applications"] });
+    },
+    onError: (error: unknown) =>
+      toast.error(error instanceof Error ? error.message : "That decision was refused."),
+  });
+
+  if (!competitionId) return <NoCompetition />;
+
+  const list = results.data ?? [];
+  const undecided = list.filter((row) => !row.outcome).length;
+
+  return (
+    <Panel
+      title="Round shortlist"
+      description="Ranked standing for a round, combining judge scores and public votes. Advance, hold or eliminate contestants here."
+    >
+      <div className="grid gap-4 sm:grid-cols-2">
+        <SelectField
+          label="Round"
+          value={activeRound}
+          onChange={setRoundId}
+          options={(rounds.data ?? []).map((round) => ({
+            value: round.id,
+            label: `${round.sequence}. ${round.name}`,
+          }))}
+        />
+        <AreaField label="Reason for the decision" value={reason} onChange={setReason} rows={2} />
+      </div>
+
+      <p className="mt-4 text-xs uppercase tracking-widest text-muted-foreground">
+        {list.length} contestants · {undecided} awaiting a decision
+      </p>
+
+      <div className="mt-3 divide-y divide-border/60">
+        {results.isLoading && <p className="py-3 text-sm text-muted-foreground">Loading…</p>}
+        {results.isError && (
+          <p className="py-3 text-sm text-muted-foreground">
+            You need progression access to view this standing.
+          </p>
+        )}
+        {!results.isLoading && list.length === 0 && (
+          <p className="py-3 text-sm text-muted-foreground">
+            No contestants are in this round yet.
+          </p>
+        )}
+        {list.map((row, index) => (
+          <div key={row.application_id} className="flex flex-wrap items-center justify-between gap-3 py-3">
+            <div className="min-w-0">
+              <p className="font-semibold">
+                <span className="text-muted-foreground">{index + 1}.</span> {row.display_name}{" "}
+                <span className="text-xs text-muted-foreground">@{row.handle}</span>
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {row.category_name} · judges {Number(row.judge_score ?? 0).toFixed(1)} (
+                {row.judges_scored} scored) · votes {row.public_votes} · combined{" "}
+                {Number(row.combined ?? 0).toFixed(1)}
+                {row.outcome ? ` · ${PROGRESS_STATE_LABELS[row.outcome] ?? row.outcome}` : ""}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                size="sm"
+                disabled={decide.isPending}
+                onClick={() => decide.mutate({ id: row.application_id, outcome: "ADVANCED" })}
+              >
+                Advance
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={decide.isPending}
+                onClick={() => decide.mutate({ id: row.application_id, outcome: "HELD" })}
+              >
+                Hold
+              </Button>
+              <Button
+                size="sm"
+                variant="destructive"
+                disabled={decide.isPending}
+                onClick={() => decide.mutate({ id: row.application_id, outcome: "ELIMINATED" })}
+              >
+                Eliminate
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Panel>
+  );
+}
+
+/* ---------------------------- Moderation ---------------------------- */
+
+function ModerationPanel({ competitionSlug }: { competitionSlug: string | null }) {
+  const client = useQueryClient();
+  const [reason, setReason] = useState("");
+
+  const flagged = useQuery({
+    queryKey: ["suspicious-voters", competitionSlug],
+    queryFn: () => fetchSuspiciousVoters(competitionSlug ?? undefined),
+  });
+  const pending = useQuery({
+    queryKey: ["admin-applications", competitionSlug, "PENDING_REVIEW-media"],
+    queryFn: () =>
+      fetchAdminApplications({ competitionSlug, submissionState: "PENDING_REVIEW" }),
+    enabled: Boolean(competitionSlug),
+  });
+  const corrections = useQuery({
+    queryKey: ["score-corrections"],
+    queryFn: () => fetchScoreCorrections(),
+  });
+
+  const void_ = useMutation({
+    mutationFn: (voterId: string) => voidVotes(reason, { voterId }),
+    onSuccess: (result) => {
+      if (!result.ok) {
+        toast.error(describeResult(result));
+        return;
+      }
+      toast.success(`${result.voided ?? 0} votes voided`);
+      setReason("");
+      void client.invalidateQueries({ queryKey: ["suspicious-voters"] });
+      void client.invalidateQueries({ queryKey: ["vote-totals"] });
+    },
+    onError: (error: unknown) =>
+      toast.error(error instanceof Error ? error.message : "Those votes could not be voided."),
+  });
+
+  return (
+    <div className="space-y-6">
+      <Panel
+        title="Suspicious voting activity"
+        description="Accounts with unusual voting volume in this competition. Voiding keeps the vote record and marks it invalid."
+      >
+        <AreaField label="Reason for voiding" value={reason} onChange={setReason} rows={2} />
+        <div className="mt-4 divide-y divide-border/60">
+          {flagged.isLoading && <p className="py-3 text-sm text-muted-foreground">Loading…</p>}
+          {flagged.isError && (
+            <p className="py-3 text-sm text-muted-foreground">
+              You need moderation access to view flagged activity.
+            </p>
+          )}
+          {!flagged.isLoading && (flagged.data ?? []).length === 0 && (
+            <p className="py-3 text-sm text-muted-foreground">Nothing looks unusual right now.</p>
+          )}
+          {(flagged.data ?? []).map((row) => (
+            <div
+              key={row.voter_id}
+              className="flex flex-wrap items-center justify-between gap-3 py-3"
+            >
+              <div className="min-w-0">
+                <p className="font-semibold">{row.voter_email ?? "Account"}</p>
+                <p className="text-xs text-muted-foreground">
+                  {row.votes_today} today · {row.votes_last_hour} in the last hour ·{" "}
+                  {row.distinct_contestants} contestants
+                </p>
+              </div>
+              <Button
+                size="sm"
+                variant="destructive"
+                disabled={!reason.trim() || void_.isPending}
+                onClick={() => void_.mutate(row.voter_id)}
+              >
+                Void their votes
+              </Button>
+            </div>
+          ))}
+        </div>
+      </Panel>
+
+      <Panel
+        title="Media awaiting review"
+        description="Audition material that no moderator has cleared yet. Full review happens in Submissions."
+      >
+        <div className="divide-y divide-border/60">
+          {!pending.isLoading && (pending.data ?? []).length === 0 && (
+            <p className="py-3 text-sm text-muted-foreground">Nothing is waiting for review.</p>
+          )}
+          {(pending.data ?? []).map((row) => (
+            <div key={row.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
+              <div className="min-w-0">
+                <p className="font-semibold">{row.display_name}</p>
+                <p className="truncate text-xs text-muted-foreground">
+                  {row.category_name} · {row.audition_url}
+                </p>
+              </div>
+              <span className="text-xs uppercase tracking-widest text-warning">
+                {SUBMISSION_STATE_LABELS[row.submission_state] ?? row.submission_state}
+              </span>
+            </div>
+          ))}
+        </div>
+      </Panel>
+
+      <Panel
+        title="Score corrections"
+        description="Every locked score a judge or admin has corrected, with the reason given."
+      >
+        <div className="divide-y divide-border/60">
+          {corrections.isError && (
+            <p className="py-3 text-sm text-muted-foreground">
+              You need integrity access to view corrections.
+            </p>
+          )}
+          {!corrections.isLoading && (corrections.data ?? []).length === 0 && (
+            <p className="py-3 text-sm text-muted-foreground">No scores have been corrected.</p>
+          )}
+          {(corrections.data ?? []).map((row) => (
+            <div key={row.id} className="py-3 text-sm">
+              <p className="font-semibold">
+                @{row.handle} · {row.criterion_name}{" "}
+                <span className="text-muted-foreground">
+                  {row.previous_value} → {row.corrected_value}
+                </span>
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {new Date(row.created_at).toLocaleString()} · judge {row.judge_email ?? "—"} ·
+                corrected by {row.corrected_by_email ?? "—"} · {row.reason}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Panel>
+    </div>
+  );
+}
+
+/* ---------------------------- Settings ---------------------------- */
+
+const GRANTABLE_ROLES = ["ADMIN", "MODERATOR", "JUDGE", "SPONSOR_MANAGER"] as const;
+
+function SettingsPanel() {
+  const client = useQueryClient();
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState<string>("MODERATOR");
+
+  const team = useQuery({ queryKey: ["team"], queryFn: listTeam });
+
+  const grant = useMutation({
+    mutationFn: () => grantRoleByEmail(email.trim(), role),
+    onSuccess: (result) => {
+      if (!result.ok) {
+        toast.error("No account uses that email yet — ask them to sign up first.");
+        return;
+      }
+      toast.success("Role granted");
+      setEmail("");
+      void client.invalidateQueries({ queryKey: ["team"] });
+    },
+    onError: () => toast.error("Only administrators can change roles."),
+  });
+
+  const revoke = useMutation({
+    mutationFn: (input: { email: string; role: string }) =>
+      revokeRoleByEmail(input.email, input.role),
+    onSuccess: () => {
+      toast.success("Role removed");
+      void client.invalidateQueries({ queryKey: ["team"] });
+    },
+    onError: () => toast.error("Only administrators can change roles."),
+  });
+
+  return (
+    <div className="space-y-6">
+      <Panel
+        title="Team and roles"
+        description="Roles decide what each account can do. Every grant and removal is checked on the server and written to the audit log."
+      >
+        <div className="grid gap-4 sm:grid-cols-[2fr,1fr,auto] sm:items-end">
+          <Field
+            label="Account email"
+            value={email}
+            onChange={setEmail}
+            type="email"
+            placeholder="name@example.com"
+            hint="The person must already have a Zik's Got Talent account."
+          />
+          <SelectField
+            label="Role"
+            value={role}
+            onChange={setRole}
+            options={GRANTABLE_ROLES.map((value) => ({
+              value,
+              label: ROLE_LABELS[value] ?? value,
+            }))}
+          />
+          <Button onClick={() => grant.mutate()} disabled={!email.trim() || grant.isPending}>
+            Grant role
+          </Button>
+        </div>
+
+        <div className="mt-5 divide-y divide-border/60">
+          {team.isLoading && <p className="py-3 text-sm text-muted-foreground">Loading…</p>}
+          {team.isError && (
+            <p className="py-3 text-sm text-muted-foreground">
+              You need administrator access to manage the team.
+            </p>
+          )}
+          {(team.data ?? []).map((member) => (
+            <div
+              key={`${member.user_id}-${member.role}`}
+              className="flex flex-wrap items-center justify-between gap-3 py-3"
+            >
+              <div className="min-w-0">
+                <p className="font-semibold">{member.display_name || member.email}</p>
+                <p className="text-xs text-muted-foreground">
+                  {member.email} · {ROLE_LABELS[member.role as keyof typeof ROLE_LABELS] ?? member.role}
+                </p>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={revoke.isPending || !member.email}
+                onClick={() =>
+                  revoke.mutate({ email: member.email as string, role: member.role })
+                }
+              >
+                Remove role
+              </Button>
+            </div>
+          ))}
+        </div>
+      </Panel>
+
+      <Panel
+        title="Integrations"
+        description="How this platform connects to the rest of the ecosystem."
+      >
+        <ul className="space-y-3 text-sm">
+          <li className="rounded-md border border-border/60 p-3">
+            <p className="font-semibold">ArtistrySynk creative identity</p>
+            <p className="text-xs text-muted-foreground">
+              Contestants connect their own ArtistrySynk account from their dashboard. Zik's Got
+              Talent never creates or stores a second identity — only a verified reference.
+            </p>
+          </li>
+          <li className="rounded-md border border-border/60 p-3">
+            <p className="font-semibold">Entry and stage emails</p>
+            <p className="text-xs text-muted-foreground">
+              Confirmations, decisions and stage changes are delivered by QueenSMTP from the
+              configured sender address.
+            </p>
+          </li>
+          <li className="rounded-md border border-border/60 p-3">
+            <p className="font-semibold">Sign-in emails</p>
+            <p className="text-xs text-muted-foreground">
+              Account confirmation and password resets are sent by the platform's own sign-in
+              system.
+            </p>
+          </li>
+        </ul>
+      </Panel>
+    </div>
+  );
 }

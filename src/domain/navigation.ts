@@ -57,7 +57,7 @@ export const ADMIN_SECTIONS: SurfaceSection[] = [
     label: "Contestants",
     summary: "Manage contestant records, suspensions and disqualifications.",
     permission: "contestant:suspend",
-    phase: "LATER",
+    phase: "PHASE_1",
   },
   {
     slug: "submissions",
@@ -85,7 +85,7 @@ export const ADMIN_SECTIONS: SurfaceSection[] = [
     label: "Shortlists",
     summary: "Build round shortlists and advance contestants.",
     permission: "shortlist:manage",
-    phase: "LATER",
+    phase: "PHASE_1",
   },
   {
     slug: "voting",
@@ -120,7 +120,7 @@ export const ADMIN_SECTIONS: SurfaceSection[] = [
     label: "Moderation",
     summary: "Handle reports, flagged media and integrity reviews.",
     permission: "application:moderate",
-    phase: "LATER",
+    phase: "PHASE_1",
   },
   {
     slug: "audit-logs",
@@ -134,7 +134,7 @@ export const ADMIN_SECTIONS: SurfaceSection[] = [
     label: "Settings",
     summary: "Platform settings, integrations and notification channels.",
     permission: "settings:manage",
-    phase: "LATER",
+    phase: "PHASE_1",
   },
 ];
 
