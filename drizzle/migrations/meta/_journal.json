@@ -15,6 +15,13 @@
       "when": 1789119420335,
       "tag": "0001_moderator_application_review",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789119463106,
+      "tag": "0002_moderator_review_flags_only",
+      "breakpoints": true
     }
   ]
 }
