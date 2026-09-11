@@ -42,8 +42,7 @@ function SubmissionReview() {
   const { user, ready } = useSession();
   const roles = useMyRoles();
   const isAdmin = (roles.data ?? []).some((r) => ["SUPER_ADMIN", "ADMIN"].includes(r));
-  const isStaff =
-    isAdmin || (roles.data ?? []).some((r) => ["MODERATOR"].includes(r));
+  const isStaff = isAdmin || (roles.data ?? []).some((r) => ["MODERATOR"].includes(r));
   const queryClient = useQueryClient();
 
   const [filter, setFilter] = useState("PENDING_REVIEW");
