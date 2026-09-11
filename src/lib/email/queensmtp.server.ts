@@ -71,10 +71,16 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
     });
 
     const payload = (await response.json().catch(() => null)) as
-      | { id?: string; status?: string; error?: string; message?: string }
+      | {
+          success?: boolean;
+          id?: string;
+          data?: { id?: string };
+          error?: string;
+          message?: string;
+        }
       | null;
 
-    if (!response.ok) {
+    if (!response.ok || payload?.success === false) {
       console.error("[queensmtp] send failed", response.status, payload?.error ?? payload?.message);
       return {
         sent: false,
@@ -83,7 +89,7 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
       };
     }
 
-    return { sent: true, id: payload?.id ?? null };
+    return { sent: true, id: payload?.data?.id ?? payload?.id ?? null };
   } catch (error) {
     console.error("[queensmtp] transport error", error);
     return {
