@@ -206,7 +206,7 @@ function CategoriesPanel({ competitionId }: { competitionId: string | null }) {
             label="Name"
             value={draft.name ?? ""}
             onChange={(value) =>
-              setDraft({ ...draft, name: value, slug: draft.id ? draft.slug : slugifyHandle(value) })
+              setDraft({ ...draft, name: value, slug: draft.id ? (draft.slug ?? "") : slugifyHandle(value) })
             }
           />
           <Field
@@ -313,7 +313,7 @@ function RequirementsPanel({ categoryId }: { categoryId: string }) {
           label="Requirement label"
           value={draft.label ?? ""}
           onChange={(value) =>
-            setDraft({ ...draft, label: value, key: draft.id ? draft.key : slugifyHandle(value) })
+            setDraft({ ...draft, label: value, key: draft.id ? (draft.key ?? "") : slugifyHandle(value) })
           }
         />
         <Field
@@ -435,7 +435,7 @@ function RoundsPanel({ competitionId }: { competitionId: string | null }) {
             label="Name"
             value={draft.name ?? ""}
             onChange={(value) =>
-              setDraft({ ...draft, name: value, slug: draft.id ? draft.slug : slugifyHandle(value) })
+              setDraft({ ...draft, name: value, slug: draft.id ? (draft.slug ?? "") : slugifyHandle(value) })
             }
           />
           <Field
@@ -947,7 +947,7 @@ function BadgesPanel({ competitionId }: { competitionId: string | null }) {
             label="Badge name"
             value={draft.name ?? ""}
             onChange={(value) =>
-              setDraft({ ...draft, name: value, slug: draft.id ? draft.slug : slugifyHandle(value) })
+              setDraft({ ...draft, name: value, slug: draft.id ? (draft.slug ?? "") : slugifyHandle(value) })
             }
           />
           <Field
