@@ -53,13 +53,12 @@ describe("ArtistrySynk link transport", () => {
 
   test("sends the same verifier during token exchange", async () => {
     const verifier = "v".repeat(64);
-    let requestNumber = 0;
-    globalThis.fetch = vi.fn(async (_input: string | URL | Request, init?: RequestInit) => {
-      requestNumber += 1;
-      if (requestNumber === 1) {
+    globalThis.fetch = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith("/.well-known/oauth-protected-resource")) {
         return Response.json({ authorization_servers: ["https://issuer.example"] });
       }
-      if (requestNumber === 2) {
+      if (url.endsWith("/.well-known/openid-configuration")) {
         return Response.json({
           issuer: "https://issuer.example",
           authorization_endpoint: "https://issuer.example/authorize",
@@ -81,13 +80,12 @@ describe("ArtistrySynk link transport", () => {
   });
 
   test("rejects an incorrect verifier at token exchange", async () => {
-    let requestNumber = 0;
-    globalThis.fetch = vi.fn(async () => {
-      requestNumber += 1;
-      if (requestNumber === 1) {
+    globalThis.fetch = vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.endsWith("/.well-known/oauth-protected-resource")) {
         return Response.json({ authorization_servers: ["https://other-issuer.example"] });
       }
-      if (requestNumber === 2) {
+      if (url.endsWith("/.well-known/openid-configuration")) {
         return Response.json({
           issuer: "https://other-issuer.example",
           authorization_endpoint: "https://other-issuer.example/authorize",
