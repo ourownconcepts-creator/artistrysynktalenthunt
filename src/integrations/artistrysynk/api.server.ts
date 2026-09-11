@@ -240,14 +240,14 @@ export async function exchangeCode(
     grant_type: "authorization_code",
     code: input.code,
     redirect_uri: input.redirectUri,
-    client_id: config.clientId,
+    client_id: config.signinClientId,
   });
   let res: Response;
   try {
     res = await fetch(tokenEndpoint, {
       method: "POST",
       headers: {
-        Authorization: basic(config),
+        Authorization: signinBasic(config),
         "Content-Type": "application/x-www-form-urlencoded",
         Accept: "application/json",
       },
