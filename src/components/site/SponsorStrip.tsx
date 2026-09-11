@@ -13,7 +13,7 @@ export function SponsorStrip({
 }: {
   placement?: string;
   className?: string;
-  competitionId?: string;
+  competitionId?: string | undefined;
 }) {
   const query = useSponsors(placement, competitionId);
   const sponsors = query.data ?? [];
