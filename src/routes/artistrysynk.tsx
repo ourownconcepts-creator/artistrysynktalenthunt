@@ -60,10 +60,14 @@ function ArtistrySynkPortalPage() {
     retry: false,
   });
 
+  // The competition team changes stages in the admin panel; this portal keeps
+  // itself current so a contestant sees the change without a manual reload.
   const application = useQuery({
     queryKey: ["my-application", user?.id ?? "anon"],
     queryFn: fetchMyApplication,
     enabled: Boolean(user),
+    refetchOnWindowFocus: true,
+    refetchInterval: 60_000,
   });
 
   const app = application.data ?? null;
@@ -175,6 +179,10 @@ function ArtistrySynkPortalPage() {
                     <Row label="Entry code" value={app.reference_code ?? "—"} />
                     <Row label="Status" value={STATUS_LABELS[app.status] ?? app.status} />
                     <Row
+                      label="Progress"
+                      value={PROGRESS_STATE_LABELS[app.progress_state] ?? app.progress_state}
+                    />
+                    <Row
                       label="Current stage"
                       value={app.competition_rounds?.name ?? "Registration"}
                     />
@@ -186,6 +194,18 @@ function ArtistrySynkPortalPage() {
                           : "Not submitted"
                       }
                     />
+                    <Row
+                      label="Last decision"
+                      value={
+                        app.updated_at ? new Date(app.updated_at).toLocaleString("en-GB") : "—"
+                      }
+                    />
+                    {(app.state_reason || app.review_reason) && (
+                      <Row
+                        label="Note from the team"
+                        value={app.state_reason || app.review_reason || ""}
+                      />
+                    )}
                   </dl>
                 ) : (
                   <>
