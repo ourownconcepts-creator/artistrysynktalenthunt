@@ -473,6 +473,26 @@ function RoundsPanel({ competitionId }: { competitionId: string | null }) {
             value={toLocal(draft.closes_at)}
             onChange={(value) => setDraft({ ...draft, closes_at: fromLocal(value) })}
           />
+          <Field
+            label="Judging opens"
+            type="datetime-local"
+            value={toLocal(draft.judging_opens_at)}
+            onChange={(value) => setDraft({ ...draft, judging_opens_at: fromLocal(value) })}
+            hint="Judges cannot score before this time."
+          />
+          <Field
+            label="Judging closes"
+            type="datetime-local"
+            value={toLocal(draft.judging_closes_at)}
+            onChange={(value) => setDraft({ ...draft, judging_closes_at: fromLocal(value) })}
+          />
+          <Field
+            label="Score submission deadline"
+            type="datetime-local"
+            value={toLocal(draft.score_deadline_at)}
+            onChange={(value) => setDraft({ ...draft, score_deadline_at: fromLocal(value) })}
+            hint="After this time the server refuses new or changed scores."
+          />
           <AreaField
             label="Description"
             value={draft.description ?? ""}
