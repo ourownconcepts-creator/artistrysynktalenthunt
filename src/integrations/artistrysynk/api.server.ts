@@ -127,7 +127,9 @@ interface Envelope<T> {
   };
 }
 
-function validationDetails(error: Envelope<unknown>["error"]): Array<{ field: string; issue: string }> {
+function validationDetails(
+  error: Envelope<unknown>["error"],
+): Array<{ field: string; issue: string }> {
   if (!error) return [];
   const details = Array.isArray(error.details) ? error.details : [error];
   return details.flatMap((detail) =>
@@ -146,7 +148,8 @@ async function readEnvelope<T>(res: Response): Promise<T> {
     body = null;
   }
   if (!res.ok || body?.error) {
-    const code = body?.error?.code ?? (res.status === 503 ? "temporarily_unavailable" : "api_error");
+    const code =
+      body?.error?.code ?? (res.status === 503 ? "temporarily_unavailable" : "api_error");
     throw new ArtistrySynkError(
       code,
       body?.error?.message ?? `ArtistrySynk request failed (${res.status}).`,
@@ -325,13 +328,18 @@ export async function exchangeCode(
   if (!res.ok) {
     const code =
       typeof parsed["error"] === "string" ? (parsed["error"] as string) : "invalid_request";
-    throw new ArtistrySynkError(code, "The ArtistrySynk authorization could not be completed.", res.status);
+    throw new ArtistrySynkError(
+      code,
+      "The ArtistrySynk authorization could not be completed.",
+      res.status,
+    );
   }
   const accessToken = parsed["access_token"];
   if (typeof accessToken !== "string") {
     throw new ArtistrySynkError("invalid_token", "ArtistrySynk returned no access token.", 401);
   }
-  const expiresIn = typeof parsed["expires_in"] === "number" ? (parsed["expires_in"] as number) : 300;
+  const expiresIn =
+    typeof parsed["expires_in"] === "number" ? (parsed["expires_in"] as number) : 300;
   const scope = typeof parsed["scope"] === "string" ? (parsed["scope"] as string).split(/\s+/) : [];
   return { accessToken, expiresAt: Date.now() + expiresIn * 1000, scope };
 }

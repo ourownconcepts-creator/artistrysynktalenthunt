@@ -10,7 +10,10 @@ import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import type { ArtistrySynkConnectResult, ArtistrySynkConnection } from "@/integrations/artistrysynk/types";
+import type {
+  ArtistrySynkConnectResult,
+  ArtistrySynkConnection,
+} from "@/integrations/artistrysynk/types";
 
 function requestOrigin(): string {
   const request = getRequest();
@@ -23,9 +26,7 @@ function requestOrigin(): string {
 export const getArtistrySynkConnection = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<ArtistrySynkConnection> => {
-    const { getArtistrySynkProvider } = await import(
-      "@/integrations/artistrysynk/provider.server"
-    );
+    const { getArtistrySynkProvider } = await import("@/integrations/artistrysynk/provider.server");
     return getArtistrySynkProvider().getConnection(context.userId);
   });
 
@@ -37,9 +38,8 @@ export const startArtistrySynkConnection = createServerFn({ method: "POST" })
     }): Promise<
       { ok: true; authorizationUrl: string } | { ok: false; reason: string; message: string }
     > => {
-      const { getArtistrySynkProvider } = await import(
-        "@/integrations/artistrysynk/provider.server"
-      );
+      const { getArtistrySynkProvider } =
+        await import("@/integrations/artistrysynk/provider.server");
       const { resolveReturnOrigin } = await import("@/integrations/artistrysynk/api.server");
       try {
         const { authorizationUrl } = await getArtistrySynkProvider().beginConnection(
@@ -69,21 +69,19 @@ export const startArtistrySynkConnection = createServerFn({ method: "POST" })
 export const completeArtistrySynkConnection = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { code: string; state: string }) =>
-    z.object({ code: z.string().min(1).max(4096), state: z.string().min(16).max(512) }).parse(input),
+    z
+      .object({ code: z.string().min(1).max(4096), state: z.string().min(16).max(512) })
+      .parse(input),
   )
   .handler(async ({ data, context }): Promise<ArtistrySynkConnectResult> => {
-    const { getArtistrySynkProvider } = await import(
-      "@/integrations/artistrysynk/provider.server"
-    );
+    const { getArtistrySynkProvider } = await import("@/integrations/artistrysynk/provider.server");
     return getArtistrySynkProvider().completeConnection(context.userId, data);
   });
 
 export const disconnectArtistrySynk = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<{ ok: true }> => {
-    const { getArtistrySynkProvider } = await import(
-      "@/integrations/artistrysynk/provider.server"
-    );
+    const { getArtistrySynkProvider } = await import("@/integrations/artistrysynk/provider.server");
     await getArtistrySynkProvider().disconnect(context.userId);
     return { ok: true };
   });

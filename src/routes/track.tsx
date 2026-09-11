@@ -124,7 +124,9 @@ function TrackPage() {
 
             <dl className="mt-6 grid gap-4 border-t border-border/70 pt-6 sm:grid-cols-3">
               <div>
-                <dt className="text-xs uppercase tracking-wide text-muted-foreground">Entry code</dt>
+                <dt className="text-xs uppercase tracking-wide text-muted-foreground">
+                  Entry code
+                </dt>
                 <dd className="mt-1 font-semibold">{state.entry.referenceCode}</dd>
               </div>
               <div>
