@@ -237,14 +237,19 @@ function DashboardSectionPage() {
                 </dl>
               )}
               <ConnectArtistrySynk enabled={Boolean(user)} />
-              <a
-                href={ARTISTRYSYNK.site}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="inline-block font-bold text-primary hover:underline"
-              >
-                Open {ARTISTRYSYNK.brand}
-              </a>
+              <div className="flex flex-wrap items-center gap-4">
+                <Link to="/artistrysynk" className="font-bold text-primary hover:underline">
+                  Open your {ARTISTRYSYNK.brand} portal
+                </Link>
+                <a
+                  href={ARTISTRYSYNK.site}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="font-bold text-primary hover:underline"
+                >
+                  Open {ARTISTRYSYNK.brand}
+                </a>
+              </div>
             </div>
           )}
 

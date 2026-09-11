@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AnnouncementsRouteImport } from './routes/announcements'
+import { Route as ArtistrysynkRouteImport } from './routes/artistrysynk'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
@@ -60,6 +61,11 @@ const AdminRoute = AdminRouteImport.update({
 const AnnouncementsRoute = AnnouncementsRouteImport.update({
   id: '/announcements',
   path: '/announcements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArtistrysynkRoute = ArtistrysynkRouteImport.update({
+  id: '/artistrysynk',
+  path: '/artistrysynk',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -208,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/announcements': typeof AnnouncementsRoute
+  '/artistrysynk': typeof ArtistrysynkRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/how-it-works': typeof HowItWorksRoute
@@ -241,6 +248,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/announcements': typeof AnnouncementsRoute
+  '/artistrysynk': typeof ArtistrysynkRoute
   '/auth': typeof AuthRoute
   '/how-it-works': typeof HowItWorksRoute
   '/judge': typeof JudgeRoute
@@ -275,6 +283,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/announcements': typeof AnnouncementsRoute
+  '/artistrysynk': typeof ArtistrysynkRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/how-it-works': typeof HowItWorksRoute
@@ -311,6 +320,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/announcements'
+    | '/artistrysynk'
     | '/auth'
     | '/dashboard'
     | '/how-it-works'
@@ -344,6 +354,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/announcements'
+    | '/artistrysynk'
     | '/auth'
     | '/how-it-works'
     | '/judge'
@@ -377,6 +388,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/announcements'
+    | '/artistrysynk'
     | '/auth'
     | '/dashboard'
     | '/how-it-works'
@@ -412,6 +424,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   AnnouncementsRoute: typeof AnnouncementsRoute
+  ArtistrysynkRoute: typeof ArtistrysynkRoute
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   HowItWorksRoute: typeof HowItWorksRoute
@@ -460,6 +473,13 @@ declare module '@tanstack/react-router' {
       path: '/announcements'
       fullPath: '/announcements'
       preLoaderRoute: typeof AnnouncementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/artistrysynk': {
+      id: '/artistrysynk'
+      path: '/artistrysynk'
+      fullPath: '/artistrysynk'
+      preLoaderRoute: typeof ArtistrysynkRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -704,6 +724,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   AnnouncementsRoute: AnnouncementsRoute,
+  ArtistrysynkRoute: ArtistrysynkRoute,
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRouteWithChildren,
   HowItWorksRoute: HowItWorksRoute,
