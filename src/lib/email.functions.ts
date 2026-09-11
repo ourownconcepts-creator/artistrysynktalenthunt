@@ -34,7 +34,9 @@ export const sendEntryEmails = createServerFn({ method: "POST" })
 
     const { data, error } = await context.supabase
       .from("applications")
-      .select("display_name, handle, email, phone, location, categories(name), competitions(name)")
+      .select(
+        "display_name, handle, email, phone, location, reference_code, categories(name), competitions(name)",
+      )
       .eq("user_id", context.userId)
       .order("created_at", { ascending: false })
       .limit(1)

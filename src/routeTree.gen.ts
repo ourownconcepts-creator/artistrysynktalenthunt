@@ -22,6 +22,7 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as SponsorsRouteImport } from './routes/sponsors'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as TrackRouteImport } from './routes/track'
 import { Route as VoteRouteImport } from './routes/vote'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminSectionRouteImport } from './routes/admin.$section'
@@ -104,6 +105,11 @@ const SponsorsRoute = SponsorsRouteImport.update({
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrackRoute = TrackRouteImport.update({
+  id: '/track',
+  path: '/track',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VoteRoute = VoteRouteImport.update({
@@ -211,6 +217,7 @@ export interface FileRoutesByFullPath {
   '/rules': typeof RulesRoute
   '/sponsors': typeof SponsorsRoute
   '/terms': typeof TermsRoute
+  '/track': typeof TrackRoute
   '/vote': typeof VoteRoute
   '/admin/$section': typeof AdminSectionRoute
   '/admin/applications': typeof AdminApplicationsRoute
@@ -242,6 +249,7 @@ export interface FileRoutesByTo {
   '/rules': typeof RulesRoute
   '/sponsors': typeof SponsorsRoute
   '/terms': typeof TermsRoute
+  '/track': typeof TrackRoute
   '/vote': typeof VoteRoute
   '/admin/$section': typeof AdminSectionRoute
   '/admin/applications': typeof AdminApplicationsRoute
@@ -276,6 +284,7 @@ export interface FileRoutesById {
   '/rules': typeof RulesRoute
   '/sponsors': typeof SponsorsRoute
   '/terms': typeof TermsRoute
+  '/track': typeof TrackRoute
   '/vote': typeof VoteRoute
   '/admin/$section': typeof AdminSectionRoute
   '/admin/applications': typeof AdminApplicationsRoute
@@ -311,6 +320,7 @@ export interface FileRouteTypes {
     | '/rules'
     | '/sponsors'
     | '/terms'
+    | '/track'
     | '/vote'
     | '/admin/$section'
     | '/admin/applications'
@@ -342,6 +352,7 @@ export interface FileRouteTypes {
     | '/rules'
     | '/sponsors'
     | '/terms'
+    | '/track'
     | '/vote'
     | '/admin/$section'
     | '/admin/applications'
@@ -375,6 +386,7 @@ export interface FileRouteTypes {
     | '/rules'
     | '/sponsors'
     | '/terms'
+    | '/track'
     | '/vote'
     | '/admin/$section'
     | '/admin/applications'
@@ -409,6 +421,7 @@ export interface RootRouteChildren {
   RulesRoute: typeof RulesRoute
   SponsorsRoute: typeof SponsorsRoute
   TermsRoute: typeof TermsRoute
+  TrackRoute: typeof TrackRoute
   VoteRoute: typeof VoteRoute
   CategoriesSlugRoute: typeof CategoriesSlugRoute
   CompetitionsSlugRoute: typeof CompetitionsSlugRoute
@@ -510,6 +523,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/track': {
+      id: '/track'
+      path: '/track'
+      fullPath: '/track'
+      preLoaderRoute: typeof TrackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/vote': {
@@ -693,6 +713,7 @@ const rootRouteChildren: RootRouteChildren = {
   RulesRoute: RulesRoute,
   SponsorsRoute: SponsorsRoute,
   TermsRoute: TermsRoute,
+  TrackRoute: TrackRoute,
   VoteRoute: VoteRoute,
   CategoriesSlugRoute: CategoriesSlugRoute,
   CompetitionsSlugRoute: CompetitionsSlugRoute,

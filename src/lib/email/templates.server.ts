@@ -58,10 +58,19 @@ export interface EntryEmailData {
   competitionName: string;
   categoryName: string;
   handle: string;
+  referenceCode?: string | null;
 }
 
 export function entryConfirmationEmail(data: EntryEmailData) {
   const dashboard = `${siteUrl()}/dashboard`;
+  const track = `${siteUrl()}/track`;
+  const code = data.referenceCode ?? null;
+  const codeBlock = code
+    ? `<p style="${P}"><strong>Your entry code:</strong> <span style="font-family:monospace;font-size:18px;letter-spacing:1px;">${escapeHtml(code)}</span><br />Keep this. With your email address it lets you check your stage at ${track} without signing in.</p>`
+    : "";
+  const codeText = code
+    ? `\n\nYour entry code: ${code}\nCheck your stage any time at ${track} using this code and your email address.`
+    : "";
   return {
     subject: `Your ${data.competitionName} entry is in`,
     html: shell({
@@ -71,10 +80,11 @@ export function entryConfirmationEmail(data: EntryEmailData) {
         paragraphs(
           `We've received your entry for ${data.competitionName} in the ${data.categoryName} category.\n\nOur team reviews every audition submission. You'll get an email as soon as your entry is reviewed and whenever you move to a new round.`,
         ) +
+        codeBlock +
         `<p style="${P}"><strong>Your contestant page:</strong> ${siteUrl()}/contestants/${data.handle}</p>`,
       cta: { label: "Open your dashboard", href: dashboard },
     }),
-    text: `You're in, ${data.displayName}.\n\nWe've received your entry for ${data.competitionName} in the ${data.categoryName} category. You'll get an email once it's reviewed and whenever you move to a new round.\n\nYour dashboard: ${dashboard}\nYour contestant page: ${siteUrl()}/contestants/${data.handle}`,
+    text: `You're in, ${data.displayName}.\n\nWe've received your entry for ${data.competitionName} in the ${data.categoryName} category. You'll get an email once it's reviewed and whenever you move to a new round.${codeText}\n\nYour dashboard: ${dashboard}\nYour contestant page: ${siteUrl()}/contestants/${data.handle}`,
   };
 }
 
