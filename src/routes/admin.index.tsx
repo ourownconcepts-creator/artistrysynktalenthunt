@@ -5,7 +5,9 @@ import { StatusPill } from "@/components/competition/StatusPill";
 import { ADMIN_SECTIONS } from "@/domain/navigation";
 import { ROLES, ROLE_LABELS, ROLE_PERMISSIONS } from "@/domain/roles";
 import { useCategoryGroups, useCompetition, useRounds } from "@/hooks/useCompetition";
-import { fetchPublicContestants, fetchSponsors } from "@/lib/live-data";
+import { fetchPublicContestants, fetchSponsors, fetchAnnouncements, fetchAuditFeed } from "@/lib/live-data";
+import { ROUND_STATUS_LABELS, fetchOpsSnapshot } from "@/lib/operations";
+import { useSession } from "@/hooks/useSession";
 
 export const Route = createFileRoute("/admin/")({
   head: () => ({
@@ -37,6 +39,27 @@ function AdminHome() {
     enabled: Boolean(competition.data?.slug),
   });
 
+  const { user } = useSession();
+  const ops = useQuery({
+    queryKey: ["ops-snapshot", competition.data?.slug],
+    queryFn: () => fetchOpsSnapshot(competition.data?.slug),
+    enabled: Boolean(user) && Boolean(competition.data?.slug),
+    retry: false,
+  });
+  const announcements = useQuery({
+    queryKey: ["announcements", competition.data?.id, "admin"],
+    queryFn: () => fetchAnnouncements({ competitionId: competition.data?.id }),
+    enabled: Boolean(competition.data?.id),
+  });
+  const audit = useQuery({
+    queryKey: ["audit", "recent"],
+    queryFn: () => fetchAuditFeed({ limit: 8 }),
+    enabled: Boolean(user),
+    retry: false,
+  });
+  const snapshot = ops.data?.ok ? ops.data : null;
+  const progress = snapshot?.round_progress ?? {};
+
   const categoryCount = (groups.data ?? []).reduce((sum, g) => sum + g.categories.length, 0);
 
   return (
@@ -49,23 +72,98 @@ function AdminHome() {
         {competition.data && <StatusPill status={competition.data.status} />}
       </header>
 
+      {ops.isError && (
+        <p className="card-stage p-6 text-sm text-warning">
+          Sign in with a staff account to see live operational figures.
+        </p>
+      )}
+
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <Metric
+          label="Registrations"
+          value={String(snapshot?.registrations ?? 0)}
+          note="Entries received"
+        />
+        <Metric
+          label="Applications pending"
+          value={String(snapshot?.applications_pending ?? 0)}
+          note="Awaiting a decision"
+        />
+        <Metric
+          label="Auditions pending"
+          value={String(snapshot?.submissions_pending ?? 0)}
+          note="Awaiting moderation"
+        />
+        <Metric
+          label="Current round"
+          value={snapshot?.current_round?.name ?? "None"}
+          note={
+            snapshot?.current_round
+              ? (ROUND_STATUS_LABELS[snapshot.current_round.status] ??
+                snapshot.current_round.status)
+              : "No round active"
+          }
+        />
+        <Metric
+          label="Judging progress"
+          value={`${progress.judging_complete ?? 0}/${progress.contestants_in_round ?? 0}`}
+          note={`${progress.judging_pending ?? 0} pending · ${progress.assigned_judges ?? 0} judges`}
+        />
+        <Metric
+          label="Voting"
+          value={snapshot?.voting_live ? "Open" : "Closed"}
+          note={`${snapshot?.votes_valid ?? 0} valid · ${snapshot?.votes_voided ?? 0} voided`}
+        />
+        <Metric
+          label="Pending decisions"
+          value={String(progress.unresolved ?? 0)}
+          note={`${progress.advanced ?? 0} advanced · ${progress.eliminated ?? 0} eliminated`}
+        />
         <Metric
           label="Public contestants"
           value={String(contestants.data?.length ?? 0)}
-          note="Approved and visible"
+          note={`${categoryCount} categories · ${sponsors.data?.length ?? 0} sponsors`}
         />
-        <Metric label="Categories" value={String(categoryCount)} note="Configurable" />
-        <Metric
-          label="Rounds"
-          value={String((rounds.data ?? []).filter((r) => r.is_active).length)}
-          note="Configurable"
-        />
-        <Metric
-          label="Active sponsors"
-          value={String(sponsors.data?.length ?? 0)}
-          note="Configurable"
-        />
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <section>
+          <h2 className="text-2xl">Recent announcements</h2>
+          <ul className="mt-4 space-y-2">
+            {(announcements.data ?? []).slice(0, 5).map((item) => (
+              <li key={item.id} className="card-stage p-4">
+                <p className="font-semibold">{item.title}</p>
+                <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
+                  {item.audience.toLowerCase()} ·{" "}
+                  {item.is_published ? "published" : "scheduled"} ·{" "}
+                  {new Date(item.published_at).toLocaleDateString()}
+                </p>
+              </li>
+            ))}
+            {(announcements.data ?? []).length === 0 && (
+              <li className="text-sm text-muted-foreground">No announcements yet.</li>
+            )}
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-2xl">Recent audit events</h2>
+          <ul className="mt-4 space-y-2">
+            {(audit.data ?? []).slice(0, 8).map((row) => (
+              <li key={row.id} className="card-stage p-4 text-sm">
+                <p className="font-semibold">{row.action}</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {row.actor_email ?? "system"} · {new Date(row.created_at).toLocaleString()}
+                </p>
+              </li>
+            ))}
+            {(audit.data ?? []).length === 0 && (
+              <li className="text-sm text-muted-foreground">
+                No audit events visible to your account.
+              </li>
+            )}
+          </ul>
+        </section>
       </div>
 
       <section>
@@ -74,8 +172,7 @@ function AdminHome() {
           {ADMIN_SECTIONS.map((section) => (
             <Link
               key={section.slug}
-              to="/admin/$section"
-              params={{ section: section.slug }}
+              to={`/admin/${section.slug}` as "/admin/lifecycle"}
               className="card-stage card-stage-hover block p-5"
             >
               <div className="flex items-center justify-between gap-3">
