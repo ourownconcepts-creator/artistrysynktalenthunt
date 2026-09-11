@@ -16,6 +16,7 @@ import {
   fetchAdminApplications,
   reviewSubmission,
 } from "@/lib/operations";
+import { sendApplicationStatusEmail } from "@/lib/email.functions";
 
 export const Route = createFileRoute("/admin/submissions")({
   head: () => ({
