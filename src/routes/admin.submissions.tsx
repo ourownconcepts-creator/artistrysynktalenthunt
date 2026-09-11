@@ -16,7 +16,7 @@ import {
   fetchAdminApplications,
   reviewSubmission,
 } from "@/lib/operations";
-import { sendApplicationStatusEmail } from "@/lib/email.functions";
+import { notifyContestant } from "@/lib/notify";
 
 export const Route = createFileRoute("/admin/submissions")({
   head: () => ({
@@ -73,13 +73,7 @@ function SubmissionReview() {
       const result = await reviewSubmission(id, state, { reason, publish: publish ?? false });
       if (result.ok) {
         // A mail failure must never undo a recorded moderation decision.
-        try {
-          await sendApplicationStatusEmail({
-            data: { applicationId: id, status: state, ...(reason.trim() ? { note: reason.trim() } : {}) },
-          });
-        } catch {
-          /* decision stands; the email can be resent */
-        }
+        await notifyContestant(id, state, reason);
       }
       return result;
     },

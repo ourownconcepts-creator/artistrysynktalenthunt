@@ -26,6 +26,7 @@ import {
   setCompetitionStatus,
   setRoundStatus,
 } from "@/lib/operations";
+import { notifyContestant } from "@/lib/notify";
 
 export const Route = createFileRoute("/admin/lifecycle")({
   head: () => ({
