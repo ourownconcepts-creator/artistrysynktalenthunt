@@ -41,6 +41,7 @@ import {
   setCategoryActive,
   slugifyHandle,
 } from "@/lib/live-data";
+import { sendAnnouncementEmail, type EmailSendSummary } from "@/lib/email.functions";
 
 export const Route = createFileRoute("/admin/$section")({
   loader: ({ params }) => {
@@ -831,7 +832,7 @@ function AnnouncementsPanel({ competitionId }: { competitionId: string | null })
   const email = useMutation({
     mutationFn: (announcementId: string) =>
       sendAnnouncementEmail({ data: { announcementId } }),
-    onSuccess: (result) => {
+    onSuccess: (result: EmailSendSummary) => {
       if (!result.configured) {
         toast.error("Email sending is not configured yet.");
       } else if (result.sent === 0) {
@@ -863,6 +864,16 @@ function AnnouncementsPanel({ competitionId }: { competitionId: string | null })
               >
                 Edit
               </Button>
+              {announcement.audience === "CONTESTANTS" && announcement.is_published && (
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  disabled={email.isPending}
+                  onClick={() => email.mutate(announcement.id)}
+                >
+                  {email.isPending ? "Sending…" : "Email contestants"}
+                </Button>
+              )}
             </li>
           ))}
         </ul>
