@@ -16,6 +16,7 @@ import { Route as AnnouncementsRouteImport } from './routes/announcements'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as JudgeRouteImport } from './routes/judge'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as RulesRouteImport } from './routes/rules'
@@ -24,8 +25,11 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as VoteRouteImport } from './routes/vote'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminSectionRouteImport } from './routes/admin.$section'
+import { Route as AdminApplicationsRouteImport } from './routes/admin.applications'
 import { Route as AdminCompetitionsRouteImport } from './routes/admin.competitions'
 import { Route as AdminJudgingRouteImport } from './routes/admin.judging'
+import { Route as AdminLifecycleRouteImport } from './routes/admin.lifecycle'
+import { Route as AdminSubmissionsRouteImport } from './routes/admin.submissions'
 import { Route as AdminVotingRouteImport } from './routes/admin.voting'
 import { Route as CategoriesIndexRouteImport } from './routes/categories.index'
 import { Route as CategoriesSlugRouteImport } from './routes/categories.$slug'
@@ -71,6 +75,11 @@ const HowItWorksRoute = HowItWorksRouteImport.update({
   path: '/how-it-works',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JudgeRoute = JudgeRouteImport.update({
+  id: '/judge',
+  path: '/judge',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -111,6 +120,11 @@ const AdminSectionRoute = AdminSectionRouteImport.update({
   path: '/$section',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminApplicationsRoute = AdminApplicationsRouteImport.update({
+  id: '/applications',
+  path: '/applications',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCompetitionsRoute = AdminCompetitionsRouteImport.update({
   id: '/competitions',
   path: '/competitions',
@@ -119,6 +133,16 @@ const AdminCompetitionsRoute = AdminCompetitionsRouteImport.update({
 const AdminJudgingRoute = AdminJudgingRouteImport.update({
   id: '/judging',
   path: '/judging',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLifecycleRoute = AdminLifecycleRouteImport.update({
+  id: '/lifecycle',
+  path: '/lifecycle',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSubmissionsRoute = AdminSubmissionsRouteImport.update({
+  id: '/submissions',
+  path: '/submissions',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminVotingRoute = AdminVotingRouteImport.update({
@@ -175,6 +199,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/how-it-works': typeof HowItWorksRoute
+  '/judge': typeof JudgeRoute
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/rules': typeof RulesRoute
@@ -182,8 +207,11 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/vote': typeof VoteRoute
   '/admin/$section': typeof AdminSectionRoute
+  '/admin/applications': typeof AdminApplicationsRoute
   '/admin/competitions': typeof AdminCompetitionsRoute
   '/admin/judging': typeof AdminJudgingRoute
+  '/admin/lifecycle': typeof AdminLifecycleRoute
+  '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/voting': typeof AdminVotingRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/competitions/$slug': typeof CompetitionsSlugRoute
@@ -201,6 +229,7 @@ export interface FileRoutesByTo {
   '/announcements': typeof AnnouncementsRoute
   '/auth': typeof AuthRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/judge': typeof JudgeRoute
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/rules': typeof RulesRoute
@@ -208,8 +237,11 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/vote': typeof VoteRoute
   '/admin/$section': typeof AdminSectionRoute
+  '/admin/applications': typeof AdminApplicationsRoute
   '/admin/competitions': typeof AdminCompetitionsRoute
   '/admin/judging': typeof AdminJudgingRoute
+  '/admin/lifecycle': typeof AdminLifecycleRoute
+  '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/voting': typeof AdminVotingRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/competitions/$slug': typeof CompetitionsSlugRoute
@@ -230,6 +262,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/how-it-works': typeof HowItWorksRoute
+  '/judge': typeof JudgeRoute
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/rules': typeof RulesRoute
@@ -237,8 +270,11 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/vote': typeof VoteRoute
   '/admin/$section': typeof AdminSectionRoute
+  '/admin/applications': typeof AdminApplicationsRoute
   '/admin/competitions': typeof AdminCompetitionsRoute
   '/admin/judging': typeof AdminJudgingRoute
+  '/admin/lifecycle': typeof AdminLifecycleRoute
+  '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/voting': typeof AdminVotingRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/competitions/$slug': typeof CompetitionsSlugRoute
@@ -260,6 +296,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/how-it-works'
+    | '/judge'
     | '/privacy'
     | '/register'
     | '/rules'
@@ -267,8 +304,11 @@ export interface FileRouteTypes {
     | '/terms'
     | '/vote'
     | '/admin/$section'
+    | '/admin/applications'
     | '/admin/competitions'
     | '/admin/judging'
+    | '/admin/lifecycle'
+    | '/admin/submissions'
     | '/admin/voting'
     | '/categories/$slug'
     | '/competitions/$slug'
@@ -286,6 +326,7 @@ export interface FileRouteTypes {
     | '/announcements'
     | '/auth'
     | '/how-it-works'
+    | '/judge'
     | '/privacy'
     | '/register'
     | '/rules'
@@ -293,8 +334,11 @@ export interface FileRouteTypes {
     | '/terms'
     | '/vote'
     | '/admin/$section'
+    | '/admin/applications'
     | '/admin/competitions'
     | '/admin/judging'
+    | '/admin/lifecycle'
+    | '/admin/submissions'
     | '/admin/voting'
     | '/categories/$slug'
     | '/competitions/$slug'
@@ -314,6 +358,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/how-it-works'
+    | '/judge'
     | '/privacy'
     | '/register'
     | '/rules'
@@ -321,8 +366,11 @@ export interface FileRouteTypes {
     | '/terms'
     | '/vote'
     | '/admin/$section'
+    | '/admin/applications'
     | '/admin/competitions'
     | '/admin/judging'
+    | '/admin/lifecycle'
+    | '/admin/submissions'
     | '/admin/voting'
     | '/categories/$slug'
     | '/competitions/$slug'
@@ -343,6 +391,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   HowItWorksRoute: typeof HowItWorksRoute
+  JudgeRoute: typeof JudgeRoute
   PrivacyRoute: typeof PrivacyRoute
   RegisterRoute: typeof RegisterRoute
   RulesRoute: typeof RulesRoute
@@ -408,6 +457,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HowItWorksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/judge': {
+      id: '/judge'
+      path: '/judge'
+      fullPath: '/judge'
+      preLoaderRoute: typeof JudgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
@@ -464,6 +520,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSectionRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/applications': {
+      id: '/admin/applications'
+      path: '/applications'
+      fullPath: '/admin/applications'
+      preLoaderRoute: typeof AdminApplicationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/competitions': {
       id: '/admin/competitions'
       path: '/competitions'
@@ -476,6 +539,20 @@ declare module '@tanstack/react-router' {
       path: '/judging'
       fullPath: '/admin/judging'
       preLoaderRoute: typeof AdminJudgingRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/lifecycle': {
+      id: '/admin/lifecycle'
+      path: '/lifecycle'
+      fullPath: '/admin/lifecycle'
+      preLoaderRoute: typeof AdminLifecycleRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/submissions': {
+      id: '/admin/submissions'
+      path: '/submissions'
+      fullPath: '/admin/submissions'
+      preLoaderRoute: typeof AdminSubmissionsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/voting': {
@@ -546,16 +623,22 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminSectionRoute: typeof AdminSectionRoute
+  AdminApplicationsRoute: typeof AdminApplicationsRoute
   AdminCompetitionsRoute: typeof AdminCompetitionsRoute
   AdminJudgingRoute: typeof AdminJudgingRoute
+  AdminLifecycleRoute: typeof AdminLifecycleRoute
+  AdminSubmissionsRoute: typeof AdminSubmissionsRoute
   AdminVotingRoute: typeof AdminVotingRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminSectionRoute: AdminSectionRoute,
+  AdminApplicationsRoute: AdminApplicationsRoute,
   AdminCompetitionsRoute: AdminCompetitionsRoute,
   AdminJudgingRoute: AdminJudgingRoute,
+  AdminLifecycleRoute: AdminLifecycleRoute,
+  AdminSubmissionsRoute: AdminSubmissionsRoute,
   AdminVotingRoute: AdminVotingRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
@@ -584,6 +667,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRouteWithChildren,
   HowItWorksRoute: HowItWorksRoute,
+  JudgeRoute: JudgeRoute,
   PrivacyRoute: PrivacyRoute,
   RegisterRoute: RegisterRoute,
   RulesRoute: RulesRoute,
