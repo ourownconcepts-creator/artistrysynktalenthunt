@@ -27,6 +27,34 @@ export interface ArtistrySynkConfig {
 /** Default API client identifier (public value, not a secret). */
 const DEFAULT_API_CLIENT_ID = "zgt-prod-aa3c2403c67a4cb6";
 
+/**
+ * Return addresses registered with ArtistrySynk, production first. ArtistrySynk
+ * rejects any redirect URI that is not registered, so an unrecognised request
+ * origin (a new preview host, a proxy) falls back to the production address
+ * rather than failing the contestant's connection.
+ */
+const DEFAULT_RETURN_ORIGINS = [
+  "https://ziksgottalent.com",
+  "https://www.ziksgottalent.com",
+  "https://ziks-talent-hub.lovable.app",
+  "https://id-preview--57a568da-433d-4f73-85aa-4a73b9e6aa83.lovable.app",
+];
+
+export function registeredReturnOrigins(): string[] {
+  const raw = process.env["ARTISTRYSYNK_RETURN_ORIGINS"];
+  const configured = (raw ? raw.split(",") : [])
+    .map((value) => value.trim().replace(/\/+$/, ""))
+    .filter(Boolean);
+  return configured.length > 0 ? configured : DEFAULT_RETURN_ORIGINS;
+}
+
+/** Pick the registered return origin for this request. */
+export function resolveReturnOrigin(requestOrigin: string | null): string {
+  const allowed = registeredReturnOrigins();
+  const candidate = (requestOrigin ?? "").replace(/\/+$/, "");
+  return allowed.includes(candidate) ? candidate : allowed[0]!;
+}
+
 export class ArtistrySynkError extends Error {
   constructor(
     readonly code: string,

@@ -40,10 +40,11 @@ export const startArtistrySynkConnection = createServerFn({ method: "POST" })
       const { getArtistrySynkProvider } = await import(
         "@/integrations/artistrysynk/provider.server"
       );
+      const { resolveReturnOrigin } = await import("@/integrations/artistrysynk/api.server");
       try {
         const { authorizationUrl } = await getArtistrySynkProvider().beginConnection(
           context.userId,
-          requestOrigin(),
+          resolveReturnOrigin(requestOrigin()),
         );
         return { ok: true, authorizationUrl };
       } catch (error) {
