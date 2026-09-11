@@ -1,9 +1,11 @@
+import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 
 import { StatusPill } from "@/components/competition/StatusPill";
 import { ADMIN_SECTIONS } from "@/domain/navigation";
 import { ROLES, ROLE_LABELS, ROLE_PERMISSIONS } from "@/domain/roles";
-import { getFeaturedCompetition, listSponsors } from "@/lib/competition-data";
+import { useCategoryGroups, useCompetition, useRounds } from "@/hooks/useCompetition";
+import { fetchPublicContestants, fetchSponsors } from "@/lib/live-data";
 
 export const Route = createFileRoute("/admin/")({
   head: () => ({
@@ -22,31 +24,47 @@ export const Route = createFileRoute("/admin/")({
 });
 
 function AdminHome() {
-  const competition = getFeaturedCompetition();
-  const sponsors = listSponsors();
+  const competition = useCompetition();
+  const rounds = useRounds(competition.data?.id);
+  const groups = useCategoryGroups(competition.data?.id, false);
+  const sponsors = useQuery({
+    queryKey: ["sponsors", "all"],
+    queryFn: () => fetchSponsors({ activeOnly: true }),
+  });
+  const contestants = useQuery({
+    queryKey: ["public-contestants", competition.data?.slug],
+    queryFn: () => fetchPublicContestants(competition.data?.slug),
+    enabled: Boolean(competition.data?.slug),
+  });
+
+  const categoryCount = (groups.data ?? []).reduce((sum, g) => sum + g.categories.length, 0);
 
   return (
     <div className="space-y-8">
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className="eyebrow">Overview</p>
-          <h1 className="mt-2 text-3xl">{competition.name}</h1>
+          <h1 className="mt-2 text-3xl">{competition.data?.name ?? "No competition yet"}</h1>
         </div>
-        <StatusPill status={competition.status} />
+        {competition.data && <StatusPill status={competition.data.status} />}
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Metric label="Applications" value="0" note="Awaiting database" />
         <Metric
-          label="Categories"
-          value={String(competition.stats.categories)}
+          label="Public contestants"
+          value={String(contestants.data?.length ?? 0)}
+          note="Approved and visible"
+        />
+        <Metric label="Categories" value={String(categoryCount)} note="Configurable" />
+        <Metric
+          label="Rounds"
+          value={String((rounds.data ?? []).filter((r) => r.is_active).length)}
           note="Configurable"
         />
-        <Metric label="Rounds" value={String(competition.rounds.length)} note="Configurable" />
         <Metric
           label="Active sponsors"
-          value={String(sponsors.length)}
-          note="ArtistrySynk × Chow"
+          value={String(sponsors.data?.length ?? 0)}
+          note="Configurable"
         />
       </div>
 
@@ -103,8 +121,8 @@ function AdminHome() {
           </table>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          These permissions are mirrored for the interface only. Every action is re-authorised on
-          the server and by row-level policies once the backend is connected.
+          This table mirrors permissions for the interface only. Every action is re-authorised on the
+          server and by row-level policies.
         </p>
       </section>
     </div>
