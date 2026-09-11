@@ -39,6 +39,7 @@ import { Route as ContestantsIndexRouteImport } from './routes/contestants.index
 import { Route as ContestantsHandleRouteImport } from './routes/contestants.$handle'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardSectionRouteImport } from './routes/dashboard.$section'
+import { Route as OauthArtistrysynkReturnRouteImport } from './routes/oauth.artistrysynk.return'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -190,6 +191,11 @@ const DashboardSectionRoute = DashboardSectionRouteImport.update({
   path: '/$section',
   getParentRoute: () => DashboardRoute,
 } as any)
+const OauthArtistrysynkReturnRoute = OauthArtistrysynkReturnRouteImport.update({
+  id: '/oauth/artistrysynk/return',
+  path: '/oauth/artistrysynk/return',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -222,6 +228,7 @@ export interface FileRoutesByFullPath {
   '/competitions/': typeof CompetitionsIndexRoute
   '/contestants/': typeof ContestantsIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/oauth/artistrysynk/return': typeof OauthArtistrysynkReturnRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -252,6 +259,7 @@ export interface FileRoutesByTo {
   '/competitions': typeof CompetitionsIndexRoute
   '/contestants': typeof ContestantsIndexRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/oauth/artistrysynk/return': typeof OauthArtistrysynkReturnRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -285,6 +293,7 @@ export interface FileRoutesById {
   '/competitions/': typeof CompetitionsIndexRoute
   '/contestants/': typeof ContestantsIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/oauth/artistrysynk/return': typeof OauthArtistrysynkReturnRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -319,6 +328,7 @@ export interface FileRouteTypes {
     | '/competitions/'
     | '/contestants/'
     | '/dashboard/'
+    | '/oauth/artistrysynk/return'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -349,6 +359,7 @@ export interface FileRouteTypes {
     | '/competitions'
     | '/contestants'
     | '/dashboard'
+    | '/oauth/artistrysynk/return'
   id:
     | '__root__'
     | '/'
@@ -381,6 +392,7 @@ export interface FileRouteTypes {
     | '/competitions/'
     | '/contestants/'
     | '/dashboard/'
+    | '/oauth/artistrysynk/return'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -404,6 +416,7 @@ export interface RootRouteChildren {
   CategoriesIndexRoute: typeof CategoriesIndexRoute
   CompetitionsIndexRoute: typeof CompetitionsIndexRoute
   ContestantsIndexRoute: typeof ContestantsIndexRoute
+  OauthArtistrysynkReturnRoute: typeof OauthArtistrysynkReturnRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -618,6 +631,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardSectionRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/oauth/artistrysynk/return': {
+      id: '/oauth/artistrysynk/return'
+      path: '/oauth/artistrysynk/return'
+      fullPath: '/oauth/artistrysynk/return'
+      preLoaderRoute: typeof OauthArtistrysynkReturnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -680,6 +700,7 @@ const rootRouteChildren: RootRouteChildren = {
   CategoriesIndexRoute: CategoriesIndexRoute,
   CompetitionsIndexRoute: CompetitionsIndexRoute,
   ContestantsIndexRoute: ContestantsIndexRoute,
+  OauthArtistrysynkReturnRoute: OauthArtistrysynkReturnRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

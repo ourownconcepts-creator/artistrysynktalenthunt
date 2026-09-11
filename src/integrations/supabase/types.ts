@@ -228,6 +228,90 @@ export type Database = {
           },
         ]
       }
+      artistrysynk_link_intents: {
+        Row: {
+          consumed_at: string | null
+          created_at: string
+          expires_at: string
+          external_subject: string
+          id: string
+          intent_id: string | null
+          redirect_uri: string
+          scopes: string[]
+          state_hash: string
+          user_id: string
+        }
+        Insert: {
+          consumed_at?: string | null
+          created_at?: string
+          expires_at: string
+          external_subject: string
+          id?: string
+          intent_id?: string | null
+          redirect_uri: string
+          scopes?: string[]
+          state_hash: string
+          user_id: string
+        }
+        Update: {
+          consumed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          external_subject?: string
+          id?: string
+          intent_id?: string | null
+          redirect_uri?: string
+          scopes?: string[]
+          state_hash?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      artistrysynk_links: {
+        Row: {
+          created_at: string
+          external_subject: string
+          id: string
+          identity_id: string
+          link_id: string | null
+          linked_at: string
+          profile_snapshot: Json
+          scopes: string[]
+          snapshot_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          external_subject: string
+          id?: string
+          identity_id: string
+          link_id?: string | null
+          linked_at?: string
+          profile_snapshot?: Json
+          scopes?: string[]
+          snapshot_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          external_subject?: string
+          id?: string
+          identity_id?: string
+          link_id?: string | null
+          linked_at?: string
+          profile_snapshot?: Json
+          scopes?: string[]
+          snapshot_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       audit_log: {
         Row: {
           action: string
@@ -1089,6 +1173,10 @@ export type Database = {
       advance_application: {
         Args: { _application_id: string; _outcome: string }
         Returns: Json
+      }
+      artistrysynk_apply_link: {
+        Args: { p_identity_ref: string; p_user: string }
+        Returns: number
       }
       audit_feed: {
         Args: {

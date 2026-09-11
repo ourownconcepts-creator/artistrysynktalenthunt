@@ -1,40 +1,49 @@
-# ArtistrySynk integration boundary
+# ArtistrySynk integration — v1 (real API)
 
-Zik's Got Talent owns **competitions**. ArtistrySynk owns **creative identity**.
-This directory is the only place in the codebase allowed to know about
-ArtistrySynk. Everything else depends on `ArtistrySynkClient` (see `client.ts`).
+Zik's Got Talent owns competitions. ArtistrySynk owns creative identity. This
+folder is the only place that talks to ArtistrySynk, and every call is
+server-side.
 
-## Current state (Phase 1)
+## Files
 
-- `LocalArtistrySynkAdapter` implements the contract with local in-session
-  storage. Identities it produces are tagged `provider: "local"`.
-- No ArtistrySynk endpoints, table names, user IDs, or secrets are assumed or
-  fabricated anywhere in this project.
-- No competition entity stores identity attributes — only an opaque
-  `identityRef`.
+- `types.ts` — connection status, permitted profile projection, results.
+- `client.ts` — `ArtistrySynkIdentityProvider` boundary interface.
+- `api.server.ts` — HTTP transport. Discovery (RFC 9728 protected-resource
+  metadata + OIDC `openid-configuration`), then only the documented endpoints:
+  `POST /identity/link/start`, `POST /identity/link/complete`,
+  `GET /profile/{identity_id}`, `POST /revoke`, plus the discovered token
+  endpoint. No endpoint is hard-coded or invented.
+- `links.server.ts` — one-time hashed OAuth state (intents) and link storage.
+- `provider.server.ts` — `RemoteArtistrySynkProvider`: begin/complete
+  connection, status, disconnect, duplicate-identity rejection.
+- `index.ts` — client-safe brand constants only.
 
-## What is required to connect the real platform
+Callers use `src/lib/artistrysynk.functions.ts` (authenticated server
+functions). UI uses `src/components/artistrysynk/ConnectArtistrySynk.tsx` and
+the popup callback route `src/routes/oauth.artistrysynk.return.tsx`.
 
-1. **Base API URL** for ArtistrySynk (e.g. `ARTISTRYSYNK_API_URL`).
-2. **Machine-to-machine credential** for server-to-server calls, stored as a
-   secret (`ARTISTRYSYNK_API_KEY` or OAuth client id/secret). Never in client code.
-3. **Identity lookup contract** — find an identity by email (or by SSO subject),
-   and the canonical id field to persist as `identityRef`.
-4. **Identity create/link contract** — create an ArtistrySynk identity for a new
-   Zik's Got Talent registrant, and link an existing one without duplicating it.
-   Must be idempotent per email/subject.
-5. **Creative profile read/write contract** — fields, validation, and which
-   fields Zik's Got Talent may write on the user's behalf.
-6. **Session strategy** — SSO / OIDC issuer + client, or a token-exchange
-   endpoint so an ArtistrySynk-authenticated user is recognised here without a
-   second password.
-7. **Canonical public profile URL pattern** (for `profileUrl()`).
-8. **Media policy** — whether approved audition media may be mirrored into the
-   ArtistrySynk profile, and under what rights/consent.
+## Environment
 
-## Rules
+- `ARTISTRYSYNK_CLIENT_ID`, `ARTISTRYSYNK_CLIENT_SECRET` — server secrets.
+- `ARTISTRYSYNK_BASE_URL` — optional, defaults to `https://artistrysynk.app`.
 
-- Never create a second ArtistrySynk user database here.
-- Never widen the interface to leak ArtistrySynk internals into competition code.
-- Registration UI must state plainly that an ArtistrySynk profile is created or
-  connected. Do not hide it.
+Scopes requested: `identity:link`, `profile:read`.
+
+## Storage
+
+- `artistrysynk_link_intents` — one-time state hash, redirect URI, expiry.
+- `artistrysynk_links` — opaque `identity_id`/`link_id`, scopes, status and the
+  approved profile projection.
+- `profiles.artistrysynk_identity_ref` / `artistrysynk_provider` — the verified
+  reference, written by the guarded `artistrysynk_apply_link` routine.
+
+Both tables are service-role only. No client secret, access token or refresh
+token is ever stored or returned to the browser.
+
+## Production configuration still required
+
+The exact `redirect_uri` used by this app
+(`https://<host>/oauth/artistrysynk/return`, for every host in use — preview,
+`ziksgottalent.com`, `www.ziksgottalent.com`) must be registered on the
+ArtistrySynk OAuth client. Unregistered URIs are rejected with
+`invalid_redirect_uri`.

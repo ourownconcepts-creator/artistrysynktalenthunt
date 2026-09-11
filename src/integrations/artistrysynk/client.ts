@@ -1,47 +1,38 @@
 import type {
-  ArtistrySynkIdentity,
-  CreateIdentityInput,
-  CreativeProfile,
-  CreativeProfilePatch,
-  IdentityResolution,
+  ArtistrySynkConnectResult,
+  ArtistrySynkConnection,
 } from "./types";
 
 /**
- * THE INTEGRATION BOUNDARY — the ArtistrySynk identity provider contract.
+ * THE INTEGRATION BOUNDARY.
  *
- * Every part of Zik's Got Talent that touches identity or creative profiles
- * goes through this interface — nothing else. Swapping the temporary local
- * provider for a real ArtistrySynk provider must require zero changes outside
- * src/integrations/artistrysynk.
+ * Every part of Zik's Got Talent that touches creative identity goes through
+ * this interface — nothing else. The implementation lives in
+ * `provider.server.ts` and talks only to the published ArtistrySynk
+ * Integration API v1.
  */
 export interface ArtistrySynkIdentityProvider {
-  readonly provider: "local" | "artistrysynk";
+  readonly provider: "artistrysynk";
 
-  /** Find an existing ArtistrySynk identity. */
-  findIdentityByEmail(email: string): Promise<ArtistrySynkIdentity | null>;
+  /** Start authorization; returns the URL ArtistrySynk built for us. */
+  beginConnection(
+    userId: string,
+    origin: string,
+  ): Promise<{ authorizationUrl: string; expiresAt: string }>;
 
-  /** New Zik's Got Talent registrant → ArtistrySynk identity. */
-  createIdentity(input: CreateIdentityInput): Promise<ArtistrySynkIdentity>;
+  /** Validate the callback, complete the link, associate the identity. */
+  completeConnection(
+    userId: string,
+    input: { code: string; state: string },
+  ): Promise<ArtistrySynkConnectResult>;
 
-  /** Create-or-link in one call; used by the registration wizard. */
-  resolveIdentity(input: CreateIdentityInput): Promise<IdentityResolution>;
+  /** Current connection state for a Zik's Got Talent account. */
+  getConnection(userId: string): Promise<ArtistrySynkConnection>;
 
-  /** Bind a Zik's Got Talent session user to an existing ArtistrySynk identity. */
-  linkIdentity(localUserId: string, identityRef: string): Promise<void>;
+  isIdentityLinked(userId: string): Promise<boolean>;
 
-  /** Is this session user already linked to an ArtistrySynk identity? */
-  isIdentityLinked(localUserId: string): Promise<boolean>;
-
-  /** The linked identity for a session user, if any. */
-  getLinkedIdentity(localUserId: string): Promise<ArtistrySynkIdentity | null>;
-
-  getCreativeProfile(identityRef: string): Promise<CreativeProfile | null>;
-
-  /** Create or update the minimum required creative profile information. */
-  upsertCreativeProfile(identityRef: string, patch: CreativeProfilePatch): Promise<CreativeProfile>;
-
-  /** Canonical public profile destination on ArtistrySynk. */
-  profileUrl(identityRef: string): string;
+  /** Revoke the association on both sides. */
+  disconnect(userId: string): Promise<void>;
 }
 
 /** Legacy alias kept so existing imports keep working. */

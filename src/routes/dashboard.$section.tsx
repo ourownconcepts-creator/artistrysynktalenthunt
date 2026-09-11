@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
+import { ConnectArtistrySynk } from "@/components/artistrysynk/ConnectArtistrySynk";
 import { JourneyTracker } from "@/components/competition/JourneyTracker";
 import { Button } from "@/components/ui/button";
 import { DASHBOARD_SECTIONS } from "@/domain/navigation";
@@ -234,7 +235,7 @@ function DashboardSectionPage() {
                   />
                 </dl>
               )}
-              <p>{ARTISTRYSYNK.promise}</p>
+              <ConnectArtistrySynk enabled={Boolean(user)} />
               <a
                 href={ARTISTRYSYNK.site}
                 target="_blank"
