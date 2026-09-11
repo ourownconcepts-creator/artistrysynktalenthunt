@@ -41,14 +41,25 @@ export class ArtistrySynkError extends Error {
 
 /** Configuration is absent until the credentials are provisioned. */
 export function readArtistrySynkConfig(): ArtistrySynkConfig | null {
-  const clientId = process.env["ARTISTRYSYNK_CLIENT_ID"];
-  const clientSecret = process.env["ARTISTRYSYNK_CLIENT_SECRET"];
-  if (!clientId || !clientSecret) return null;
+  const signinClientId =
+    process.env["ARTISTRYSYNK_SIGNIN_CLIENT_ID"] ?? process.env["ARTISTRYSYNK_CLIENT_ID"];
+  const signinClientSecret =
+    process.env["ARTISTRYSYNK_SIGNIN_CLIENT_SECRET"] ?? process.env["ARTISTRYSYNK_CLIENT_SECRET"];
+  const clientId = process.env["ARTISTRYSYNK_API_CLIENT_ID"] ?? DEFAULT_API_CLIENT_ID;
+  const clientSecret = process.env["ARTISTRYSYNK_API_CLIENT_SECRET"];
+  if (!signinClientId || !signinClientSecret || !clientId || !clientSecret) return null;
   const baseUrl = (process.env["ARTISTRYSYNK_BASE_URL"] ?? "https://artistrysynk.app").replace(
     /\/$/,
     "",
   );
-  return { baseUrl, integrationUrl: `${baseUrl}/integration/v1`, clientId, clientSecret };
+  return {
+    baseUrl,
+    integrationUrl: `${baseUrl}/integration/v1`,
+    clientId,
+    clientSecret,
+    signinClientId,
+    signinClientSecret,
+  };
 }
 
 export function requireArtistrySynkConfig(): ArtistrySynkConfig {
