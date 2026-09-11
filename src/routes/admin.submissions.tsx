@@ -69,10 +69,23 @@ function SubmissionReview() {
       id: string;
       state: string;
       publish?: boolean;
-    }) => reviewSubmission(id, state, { reason, publish: publish ?? false }),
+    }) => {
+      const result = await reviewSubmission(id, state, { reason, publish: publish ?? false });
+      if (result.ok) {
+        // A mail failure must never undo a recorded moderation decision.
+        try {
+          await sendApplicationStatusEmail({
+            data: { applicationId: id, status: state, ...(reason.trim() ? { note: reason.trim() } : {}) },
+          });
+        } catch {
+          /* decision stands; the email can be resent */
+        }
+      }
+      return result;
+    },
     onSuccess: (result) => {
       if (result.ok) {
-        toast.success("Audition updated");
+        toast.success("Audition updated — the contestant has been emailed");
         setReason("");
         void queryClient.invalidateQueries({ queryKey: ["admin-submissions"] });
         void queryClient.invalidateQueries({ queryKey: ["ops-snapshot"] });
