@@ -216,14 +216,6 @@ export async function saveLink(input: {
     { onConflict: "user_id" },
   );
   if (error) throw error;
-  const { error: auditError } = await db.from("audit_log").insert({
-    actor_id: input.userId,
-    action: "artistrysynk.connect",
-    entity: "artistrysynk_link",
-    entity_id: input.userId,
-    detail: { identity_ref: input.identityId, scopes: input.scopes },
-  });
-  if (auditError) throw auditError;
 }
 
 export async function markRevoked(userId: string): Promise<void> {
@@ -233,14 +225,6 @@ export async function markRevoked(userId: string): Promise<void> {
     .update({ status: "REVOKED", profile_snapshot: {}, snapshot_at: null })
     .eq("user_id", userId);
   if (error) throw error;
-  const { error: auditError } = await db.from("audit_log").insert({
-    actor_id: userId,
-    action: "artistrysynk.disconnect",
-    entity: "artistrysynk_link",
-    entity_id: userId,
-    detail: {},
-  });
-  if (auditError) throw auditError;
 }
 
 /** Attach (or clear) the verified identity reference on the entrant's entries. */
