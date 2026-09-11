@@ -19,7 +19,7 @@ export function SiteFooter() {
           <FooterColumn
             title="Competition"
             links={[
-              { to: "/competitions", label: "Season One" },
+              { to: "/competitions", label: "Competitions" },
               { to: "/categories", label: "Categories" },
               { to: "/register", label: "Enter now" },
               { to: "/rules", label: "Rules & eligibility" },

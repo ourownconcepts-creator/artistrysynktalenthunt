@@ -116,10 +116,10 @@ export const ADMIN_SECTIONS: SurfaceSection[] = [
   },
   {
     slug: "audit-logs",
-    label: "Audit Logs",
+    label: "Audit Log",
     summary: "Append-only record of every admin, judge and vote action.",
     permission: "audit:read",
-    phase: "LATER",
+    phase: "PHASE_1",
   },
   {
     slug: "settings",

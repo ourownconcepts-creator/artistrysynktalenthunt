@@ -3,8 +3,8 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useCompetition, useRounds } from "@/hooks/useCompetition";
 import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
-import { getFeaturedCompetition } from "@/lib/competition-data";
 
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
@@ -30,19 +30,16 @@ export const Route = createFileRoute("/how-it-works")({
 const STEPS = [
   {
     title: "Choose your talent",
-    body: "Pick the category that fits you best. Every category has its own audition brief so you know exactly what to send.",
+    body: "Pick the category that fits you best. Every category lists exactly what it asks you to submit.",
   },
-  {
-    title: "Create or connect your identity",
-    body: ARTISTRYSYNK.promise,
-  },
+  { title: "Create or connect your identity", body: ARTISTRYSYNK.promise },
   {
     title: "Tell us about you",
     body: "Your name, where you're based, and how we reach you. It takes about ten minutes in total.",
   },
   {
-    title: "Send your audition",
-    body: "Upload or link your audition piece. Nothing becomes public until it has been reviewed.",
+    title: "Send your submission",
+    body: "Provide whatever your category requires. Nothing becomes public until it has been reviewed.",
   },
   {
     title: "Review and consent",
@@ -55,12 +52,13 @@ const STEPS = [
 ];
 
 function HowItWorksPage() {
-  const competition = getFeaturedCompetition();
+  const competition = useCompetition();
+  const rounds = useRounds(competition.data?.id);
 
   return (
     <PublicShell>
       <PageHeader
-        eyebrow={competition.name}
+        eyebrow={competition.data?.name ?? "Zik's Got Talent"}
         title="How it works"
         intro="Six steps to get on stage, then a clear path through every round of the season."
       />
@@ -86,20 +84,29 @@ function HowItWorksPage() {
       <section className="mx-auto w-full max-w-7xl px-4 pb-16 sm:px-6">
         <h2 className="font-display text-2xl uppercase tracking-wide">The rounds</h2>
         <ul className="mt-6 space-y-3">
-          {competition.rounds.map((round) => (
-            <li
-              key={round.id}
-              className="flex flex-col gap-1 rounded-xl border border-border/70 bg-surface p-5 sm:flex-row sm:items-baseline sm:gap-6"
-            >
-              <span className="font-display text-lg text-gold sm:w-16">
-                {String(round.sequence).padStart(2, "0")}
-              </span>
-              <div>
-                <p className="font-semibold">{round.name}</p>
-                <p className="text-sm text-muted-foreground">{round.description}</p>
-              </div>
-            </li>
-          ))}
+          {(rounds.data ?? [])
+            .filter((round) => round.is_active)
+            .map((round) => (
+              <li
+                key={round.id}
+                className="flex flex-col gap-1 rounded-xl border border-border/70 bg-surface p-5 sm:flex-row sm:items-baseline sm:gap-6"
+              >
+                <span className="font-display text-lg text-gold sm:w-16">
+                  {String(round.sequence).padStart(2, "0")}
+                </span>
+                <div>
+                  <p className="font-semibold">{round.name}</p>
+                  <p className="text-sm text-muted-foreground">{round.description}</p>
+                  <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
+                    {round.judging_enabled ? "Judged" : "Not judged"}
+                    {round.voting_enabled ? " · public voting" : ""}
+                  </p>
+                </div>
+              </li>
+            ))}
+          {rounds.data?.length === 0 && (
+            <li className="text-sm text-muted-foreground">Rounds have not been published yet.</li>
+          )}
         </ul>
 
         <div className="mt-10 flex flex-wrap gap-3">
