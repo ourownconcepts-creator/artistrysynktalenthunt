@@ -816,6 +816,10 @@ export type Database = {
         Args: { _application_id: string; _judge_id: string }
         Returns: boolean
       }
+      judge_can_score_round: {
+        Args: { _application_id: string; _judge_id: string; _round_id: string }
+        Returns: boolean
+      }
       judge_queue: {
         Args: { _competition_slug?: string }
         Returns: {

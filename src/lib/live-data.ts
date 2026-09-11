@@ -250,7 +250,9 @@ export type VoteReason =
   | "WINDOW_CLOSED"
   | "RATE_LIMITED"
   | "DAILY_LIMIT_REACHED"
+  | "SELF_VOTE"
   | "DUPLICATE";
+
 
 export interface VoteResult {
   ok: boolean;
@@ -271,7 +273,9 @@ export const VOTE_MESSAGES: Record<VoteReason, string> = {
   WINDOW_CLOSED: "Public voting is not open right now.",
   RATE_LIMITED: "Too many votes too quickly — please slow down.",
   DAILY_LIMIT_REACHED: "You've used all your votes for today.",
+  SELF_VOTE: "You can't vote for your own entry.",
   DUPLICATE: "You've already voted for this contestant today.",
+
 };
 
 export async function fetchJudgeQueue(
