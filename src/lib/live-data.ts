@@ -250,7 +250,9 @@ export type VoteReason =
   | "WINDOW_CLOSED"
   | "RATE_LIMITED"
   | "DAILY_LIMIT_REACHED"
+  | "SELF_VOTE"
   | "DUPLICATE";
+
 
 export interface VoteResult {
   ok: boolean;
