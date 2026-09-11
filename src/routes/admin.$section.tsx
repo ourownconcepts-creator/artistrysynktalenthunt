@@ -105,15 +105,15 @@ function AdminSectionPage() {
       {section.slug === "announcements" && <AnnouncementsPanel competitionId={competitionId} />}
       {section.slug === "badges" && <BadgesPanel competitionId={competitionId} />}
       {section.slug === "audit-logs" && <AuditPanel />}
-
-      {section.phase === "LATER" && section.slug !== "audit-logs" && (
-        <div className="card-stage p-5">
-          <p className="text-sm text-muted-foreground">
-            This area is intentionally not built yet. Its data model, permissions and audit rules
-            are already defined, so it can be added without reshaping the foundation.
-          </p>
-        </div>
+      {section.slug === "contestants" && (
+        <ContestantsPanel competitionSlug={competition.data?.slug ?? null} />
       )}
+      {section.slug === "shortlists" && <ShortlistsPanel competitionId={competitionId} />}
+      {section.slug === "moderation" && (
+        <ModerationPanel competitionSlug={competition.data?.slug ?? null} />
+      )}
+      {section.slug === "settings" && <SettingsPanel />}
+
     </div>
   );
 }
