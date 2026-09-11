@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, mock, test } from "bun:test";
+import { afterEach, describe, expect, test, vi } from "vitest";
 
 import {
   exchangeCode,
@@ -26,11 +26,11 @@ describe("ArtistrySynk link transport", () => {
   test("sends state and the correct S256 challenge", async () => {
     const verifier = "a".repeat(64);
     const challenge = base64UrlSha256(verifier);
-    const fetchMock = mock(async (_input: string | URL | Request, init?: RequestInit) => {
+    const fetchMock = vi.fn(async (_input: string | URL | Request, init?: RequestInit) => {
       const body = JSON.parse(String(init?.body)) as Record<string, unknown>;
-      expect(body.state).toBe("s".repeat(32));
-      expect(body.code_challenge).toBe(challenge);
-      expect(body.code_challenge_method).toBe("S256");
+      expect(body["state"]).toBe("s".repeat(32));
+      expect(body["code_challenge"]).toBe(challenge);
+      expect(body["code_challenge_method"]).toBe("S256");
       return Response.json({
         data: {
           intent_id: "intent-1",
@@ -54,7 +54,7 @@ describe("ArtistrySynk link transport", () => {
   test("sends the same verifier during token exchange", async () => {
     const verifier = "v".repeat(64);
     let requestNumber = 0;
-    globalThis.fetch = mock(async (_input: string | URL | Request, init?: RequestInit) => {
+    globalThis.fetch = vi.fn(async (_input: string | URL | Request, init?: RequestInit) => {
       requestNumber += 1;
       if (requestNumber === 1) {
         return Response.json({ authorization_servers: ["https://issuer.example"] });
@@ -82,7 +82,7 @@ describe("ArtistrySynk link transport", () => {
 
   test("rejects an incorrect verifier at token exchange", async () => {
     let requestNumber = 0;
-    globalThis.fetch = mock(async () => {
+    globalThis.fetch = vi.fn(async () => {
       requestNumber += 1;
       if (requestNumber === 1) {
         return Response.json({ authorization_servers: ["https://other-issuer.example"] });
@@ -107,7 +107,7 @@ describe("ArtistrySynk link transport", () => {
   });
 
   test("preserves safe field-level validation details", async () => {
-    globalThis.fetch = mock(async () =>
+    globalThis.fetch = vi.fn(async () =>
       Response.json(
         {
           error: {
@@ -137,7 +137,7 @@ describe("ArtistrySynk link transport", () => {
   });
 
   test("maps provider unavailability safely", async () => {
-    globalThis.fetch = mock(async () => {
+    globalThis.fetch = vi.fn(async () => {
       throw new Error("network details must stay private");
     }) as typeof fetch;
 
