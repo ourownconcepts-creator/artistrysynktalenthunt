@@ -50,6 +50,7 @@ export const sendEntryEmails = createServerFn({ method: "POST" })
       email: string;
       phone: string | null;
       location: string | null;
+      reference_code: string | null;
       categories: { name: string } | null;
       competitions: { name: string } | null;
     };
@@ -59,6 +60,7 @@ export const sendEntryEmails = createServerFn({ method: "POST" })
       competitionName: row.competitions?.name ?? "Zik's Got Talent",
       categoryName: row.categories?.name ?? "your category",
       handle: row.handle,
+      referenceCode: row.reference_code,
     };
 
     let sent = 0;
