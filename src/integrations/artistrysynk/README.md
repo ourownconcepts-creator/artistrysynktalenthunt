@@ -24,7 +24,14 @@ the popup callback route `src/routes/oauth.artistrysynk.return.tsx`.
 
 ## Environment
 
-- `ARTISTRYSYNK_CLIENT_ID`, `ARTISTRYSYNK_CLIENT_SECRET` — server secrets.
+Two distinct confidential clients, both server-only:
+
+- `ARTISTRYSYNK_SIGNIN_CLIENT_ID` / `ARTISTRYSYNK_SIGNIN_CLIENT_SECRET` — user
+  sign-in/approval flow and the authorization-code token exchange. Falls back to
+  the legacy `ARTISTRYSYNK_CLIENT_ID` / `ARTISTRYSYNK_CLIENT_SECRET` names.
+- `ARTISTRYSYNK_API_CLIENT_ID` (defaults to `zgt-prod-aa3c2403c67a4cb6`) /
+  `ARTISTRYSYNK_API_CLIENT_SECRET` — direct Integration API calls: link start,
+  link complete, profile read, revoke.
 - `ARTISTRYSYNK_BASE_URL` — optional, defaults to `https://artistrysynk.app`.
 
 Scopes requested: `identity:link`, `profile:read`.

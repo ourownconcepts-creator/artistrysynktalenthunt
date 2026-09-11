@@ -16,9 +16,16 @@ export interface ArtistrySynkConfig {
   /** Origin that serves the resource metadata and the integration API. */
   baseUrl: string;
   integrationUrl: string;
+  /** API client — direct server-to-server Integration API calls (Basic auth). */
   clientId: string;
   clientSecret: string;
+  /** Sign-in client — user approval flow and the authorization-code exchange. */
+  signinClientId: string;
+  signinClientSecret: string;
 }
+
+/** Default API client identifier (public value, not a secret). */
+const DEFAULT_API_CLIENT_ID = "zgt-prod-aa3c2403c67a4cb6";
 
 export class ArtistrySynkError extends Error {
   constructor(
@@ -34,14 +41,25 @@ export class ArtistrySynkError extends Error {
 
 /** Configuration is absent until the credentials are provisioned. */
 export function readArtistrySynkConfig(): ArtistrySynkConfig | null {
-  const clientId = process.env["ARTISTRYSYNK_CLIENT_ID"];
-  const clientSecret = process.env["ARTISTRYSYNK_CLIENT_SECRET"];
-  if (!clientId || !clientSecret) return null;
+  const signinClientId =
+    process.env["ARTISTRYSYNK_SIGNIN_CLIENT_ID"] ?? process.env["ARTISTRYSYNK_CLIENT_ID"];
+  const signinClientSecret =
+    process.env["ARTISTRYSYNK_SIGNIN_CLIENT_SECRET"] ?? process.env["ARTISTRYSYNK_CLIENT_SECRET"];
+  const clientId = process.env["ARTISTRYSYNK_API_CLIENT_ID"] ?? DEFAULT_API_CLIENT_ID;
+  const clientSecret = process.env["ARTISTRYSYNK_API_CLIENT_SECRET"];
+  if (!signinClientId || !signinClientSecret || !clientId || !clientSecret) return null;
   const baseUrl = (process.env["ARTISTRYSYNK_BASE_URL"] ?? "https://artistrysynk.app").replace(
     /\/$/,
     "",
   );
-  return { baseUrl, integrationUrl: `${baseUrl}/integration/v1`, clientId, clientSecret };
+  return {
+    baseUrl,
+    integrationUrl: `${baseUrl}/integration/v1`,
+    clientId,
+    clientSecret,
+    signinClientId,
+    signinClientSecret,
+  };
 }
 
 export function requireArtistrySynkConfig(): ArtistrySynkConfig {
@@ -55,8 +73,15 @@ export function requireArtistrySynkConfig(): ArtistrySynkConfig {
   return config;
 }
 
+/** Basic credential for the API client (Integration API calls). */
 function basic(config: ArtistrySynkConfig): string {
   const raw = `${config.clientId}:${config.clientSecret}`;
+  return `Basic ${Buffer.from(raw, "utf8").toString("base64")}`;
+}
+
+/** Basic credential for the sign-in client (token endpoint only). */
+function signinBasic(config: ArtistrySynkConfig): string {
+  const raw = `${config.signinClientId}:${config.signinClientSecret}`;
   return `Basic ${Buffer.from(raw, "utf8").toString("base64")}`;
 }
 
@@ -215,14 +240,14 @@ export async function exchangeCode(
     grant_type: "authorization_code",
     code: input.code,
     redirect_uri: input.redirectUri,
-    client_id: config.clientId,
+    client_id: config.signinClientId,
   });
   let res: Response;
   try {
     res = await fetch(tokenEndpoint, {
       method: "POST",
       headers: {
-        Authorization: basic(config),
+        Authorization: signinBasic(config),
         "Content-Type": "application/x-www-form-urlencoded",
         Accept: "application/json",
       },
