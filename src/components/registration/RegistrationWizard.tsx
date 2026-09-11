@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Check, Loader2, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -9,12 +10,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { findCategory, findGroupForCategory } from "@/domain/catalogue";
-import type { CategoryGroup, Competition } from "@/domain/types";
 import { ARTISTRYSYNK, getArtistrySynkClient } from "@/integrations/artistrysynk";
 import type { IdentityResolution } from "@/integrations/artistrysynk/types";
 import { supabase } from "@/integrations/supabase/client";
-import { submitEntry } from "@/lib/live-data";
+import type { GroupedCategories, LiveCompetition, RequirementRow } from "@/lib/live-data";
+import { fetchRequirements, submitEntry } from "@/lib/live-data";
 import { cn } from "@/lib/utils";
 
 /**
@@ -60,7 +60,7 @@ const STEPS = [
   "Identity",
   "Personal",
   "Creative",
-  "Audition",
+  "Submission",
   "Review",
   "Consent",
 ] as const;
@@ -83,11 +83,6 @@ const creativeSchema = z.object({
   experience: z.string().min(2, "Tell us how long you've been doing this"),
 });
 
-const auditionSchema = z.object({
-  auditionUrl: z.string().url("Paste a valid link to your audition media"),
-  auditionNotes: z.string().optional(),
-});
-
 interface FormState {
   categorySlug: string;
   email: string;
@@ -99,8 +94,8 @@ interface FormState {
   dateOfBirth: string;
   bio: string;
   experience: string;
-  auditionUrl: string;
   auditionNotes: string;
+  answers: Record<string, string>;
   consents: Record<number, boolean>;
 }
 
@@ -115,32 +110,67 @@ const EMPTY: FormState = {
   dateOfBirth: "",
   bio: "",
   experience: "",
-  auditionUrl: "",
   auditionNotes: "",
+  answers: {},
   consents: {},
 };
+
+function validateAnswers(
+  requirements: RequirementRow[],
+  answers: Record<string, string>,
+): Record<string, string> {
+  const errors: Record<string, string> = {};
+  for (const requirement of requirements) {
+    const value = (answers[requirement.key] ?? "").trim();
+    if (!value) {
+      if (requirement.is_required) errors[requirement.key] = `${requirement.label} is required`;
+      continue;
+    }
+    if (requirement.kind === "URL" || requirement.kind === "FILE_URL") {
+      if (!/^https?:\/\/\S+$/i.test(value)) {
+        errors[requirement.key] = "Paste a full link starting with https://";
+      }
+    }
+    if (requirement.kind === "NUMBER" && !Number.isFinite(Number(value))) {
+      errors[requirement.key] = "Enter a number";
+    }
+    if (requirement.kind === "IMAGE_URL_LIST") {
+      const lines = value.split(/\n+/).filter(Boolean);
+      if (lines.some((line) => !/^https?:\/\/\S+$/i.test(line.trim()))) {
+        errors[requirement.key] = "Each line must be a full image link";
+      }
+    }
+  }
+  return errors;
+}
 
 export function RegistrationWizard({
   competition,
   groups,
   initialCategory,
 }: {
-  competition: Competition;
-  groups: CategoryGroup[];
+  competition: LiveCompetition;
+  groups: GroupedCategories[];
   initialCategory: string;
 }) {
   const [step, setStep] = useState(initialCategory ? 1 : 0);
-  const [form, setForm] = useState<FormState>({
-    ...EMPTY,
-    categorySlug: initialCategory,
-  });
+  const [form, setForm] = useState<FormState>({ ...EMPTY, categorySlug: initialCategory });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [identity, setIdentity] = useState<IdentityResolution | null>(null);
   const [busy, setBusy] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const category = useMemo(() => findCategory(form.categorySlug), [form.categorySlug]);
-  const group = useMemo(() => findGroupForCategory(form.categorySlug), [form.categorySlug]);
+  const allCategories = useMemo(() => groups.flatMap((g) => g.categories), [groups]);
+  const category = allCategories.find((c) => c.slug === form.categorySlug);
+  const group = groups.find((g) => g.id === category?.group_id);
+
+  /** Submission fields are configured per category, so they load per category. */
+  const requirements = useQuery({
+    queryKey: ["requirements", category?.id],
+    queryFn: () => fetchRequirements(category!.id, true),
+    enabled: Boolean(category?.id),
+  });
+  const requirementRows = requirements.data ?? [];
 
   function set<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -161,11 +191,9 @@ export function RegistrationWizard({
   }
 
   async function next() {
-    if (step === 0) {
-      if (!form.categorySlug) {
-        toast.error("Choose a talent category to continue");
-        return;
-      }
+    if (step === 0 && !form.categorySlug) {
+      toast.error("Choose a talent category to continue");
+      return;
     }
 
     if (step === 1) {
@@ -198,12 +226,28 @@ export function RegistrationWizard({
 
     if (step === 2 && !applyIssues(personalSchema.safeParse(form))) return;
     if (step === 3 && !applyIssues(creativeSchema.safeParse(form))) return;
-    if (step === 4 && !applyIssues(auditionSchema.safeParse(form))) return;
+    if (step === 4) {
+      const issues = validateAnswers(requirementRows, form.answers);
+      if (Object.keys(issues).length > 0) {
+        setErrors(issues);
+        return;
+      }
+      setErrors({});
+    }
 
     setStep((s) => Math.min(STEPS.length - 1, s + 1));
   }
 
-  const allConsentsGiven = competition.consentRequirements.every((_, i) => form.consents[i]);
+  const allConsentsGiven = competition.consent_requirements.every((_, i) => form.consents[i]);
+
+  /** The primary audition link stays populated for judges and moderators. */
+  const primaryLink =
+    form.answers["audition_url"] ??
+    requirementRows
+      .filter((r) => r.kind === "URL" || r.kind === "FILE_URL")
+      .map((r) => form.answers[r.key])
+      .find(Boolean) ??
+    "";
 
   async function submit() {
     if (!allConsentsGiven) {
@@ -223,6 +267,7 @@ export function RegistrationWizard({
         });
       }
       await submitEntry({
+        competitionSlug: competition.slug,
         categorySlug: form.categorySlug,
         displayName: form.displayName,
         fullName: form.fullName,
@@ -232,8 +277,9 @@ export function RegistrationWizard({
         dateOfBirth: form.dateOfBirth,
         bio: form.bio,
         experience: form.experience,
-        auditionUrl: form.auditionUrl,
+        auditionUrl: primaryLink,
         auditionNotes: form.auditionNotes,
+        submissionAnswers: form.answers,
         identityRef: identity?.identity.identityRef ?? null,
         identityProvider: client.provider,
       });
@@ -347,6 +393,11 @@ export function RegistrationWizard({
                   </div>
                 </div>
               ))}
+              {groups.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                  No categories are open for entries yet.
+                </p>
+              )}
             </div>
           </StepBody>
         )}
@@ -434,16 +485,30 @@ export function RegistrationWizard({
 
         {step === 4 && (
           <StepBody
-            title="Audition submission"
-            hint={category?.auditionHint ?? "Submit the media required for your category."}
+            title={`What ${category?.name ?? "this category"} needs`}
+            hint={
+              requirementRows.length
+                ? "These fields are set by admins for your category."
+                : (category?.audition_hint ?? "Submit the media required for your category.")
+            }
           >
-            <Field label="Audition media link" error={errors["auditionUrl"]}>
-              <Input
-                value={form.auditionUrl}
-                onChange={(e) => set("auditionUrl", e.target.value)}
-                placeholder="https://…"
+            {requirements.isLoading && (
+              <p className="text-sm text-muted-foreground">Loading requirements…</p>
+            )}
+            {requirementRows.map((requirement) => (
+              <RequirementField
+                key={requirement.id}
+                requirement={requirement}
+                value={form.answers[requirement.key] ?? ""}
+                error={errors[requirement.key]}
+                onChange={(value) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    answers: { ...prev.answers, [requirement.key]: value },
+                  }))
+                }
               />
-            </Field>
+            ))}
             <Field label="Notes for judges (optional)">
               <Textarea
                 rows={4}
@@ -462,7 +527,7 @@ export function RegistrationWizard({
           <StepBody title="Review your application" hint="Check everything before you submit.">
             <dl className="divide-y divide-border/60 text-sm">
               <Row label="Competition" value={competition.name} />
-              <Row label="Category" value={`${group?.name} · ${category?.name}`} />
+              <Row label="Category" value={`${group?.name ?? ""} · ${category?.name ?? ""}`} />
               <Row label="Creative name" value={form.displayName} />
               <Row label="Email" value={form.email} />
               <Row
@@ -478,7 +543,13 @@ export function RegistrationWizard({
               <Row label="Full name" value={form.fullName} />
               <Row label="Location" value={form.location} />
               <Row label="Experience" value={form.experience} />
-              <Row label="Audition" value={form.auditionUrl} />
+              {requirementRows.map((requirement) => (
+                <Row
+                  key={requirement.id}
+                  label={requirement.label}
+                  value={form.answers[requirement.key] ?? ""}
+                />
+              ))}
             </dl>
           </StepBody>
         )}
@@ -486,7 +557,7 @@ export function RegistrationWizard({
         {step === 6 && (
           <StepBody title="Consent and submit" hint="All consents are required.">
             <ul className="space-y-3">
-              {competition.consentRequirements.map((requirement, index) => (
+              {competition.consent_requirements.map((requirement, index) => (
                 <li key={requirement} className="flex gap-3 rounded-lg border border-border p-4">
                   <Checkbox
                     id={`consent-${index}`}
@@ -544,6 +615,45 @@ export function RegistrationWizard({
   );
 }
 
+/** Renders the input type an admin configured for this requirement. */
+function RequirementField({
+  requirement,
+  value,
+  error,
+  onChange,
+}: {
+  requirement: RequirementRow;
+  value: string;
+  error?: string | undefined;
+  onChange: (value: string) => void;
+}) {
+  const label = `${requirement.label}${requirement.is_required ? "" : " (optional)"}`;
+
+  if (requirement.kind === "LONG_TEXT" || requirement.kind === "IMAGE_URL_LIST") {
+    return (
+      <Field label={label} error={error} hint={requirement.help_text}>
+        <Textarea rows={4} value={value} onChange={(e) => onChange(e.target.value)} />
+      </Field>
+    );
+  }
+
+  const type =
+    requirement.kind === "NUMBER" ? "number" : requirement.kind === "DATE" ? "date" : "text";
+
+  return (
+    <Field label={label} error={error} hint={requirement.help_text}>
+      <Input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={
+          requirement.kind === "URL" || requirement.kind === "FILE_URL" ? "https://…" : undefined
+        }
+      />
+    </Field>
+  );
+}
+
 function StepBody({
   title,
   hint,
@@ -565,10 +675,12 @@ function StepBody({
 function Field({
   label,
   error,
+  hint,
   children,
 }: {
   label: string;
   error?: string | undefined;
+  hint?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -579,6 +691,7 @@ function Field({
         <span className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">
           {label}
         </span>
+        {hint && <span className="block text-xs text-muted-foreground">{hint}</span>}
         {children}
       </label>
       {error && <p className="text-xs font-semibold text-destructive">{error}</p>}

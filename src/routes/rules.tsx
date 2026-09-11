@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { PageHeader, PublicShell } from "@/components/site/PublicShell";
-import { getFeaturedCompetition } from "@/lib/competition-data";
+import { useCompetition } from "@/hooks/useCompetition";
 
 export const Route = createFileRoute("/rules")({
   head: () => ({
@@ -10,32 +10,37 @@ export const Route = createFileRoute("/rules")({
       {
         name: "description",
         content:
-          "Official Zik's Got Talent rules, eligibility criteria and consent requirements for Season One entrants.",
+          "Official Zik's Got Talent rules, eligibility criteria and consent requirements for entrants.",
       },
       { property: "og:title", content: "Rules & Eligibility — Zik's Got Talent" },
       {
         property: "og:description",
         content: "Official rules, eligibility criteria and consent requirements.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Rules,
 });
 
 function Rules() {
-  const competition = getFeaturedCompetition();
+  const competition = useCompetition();
 
   return (
     <PublicShell>
       <PageHeader
-        eyebrow={competition.name}
+        eyebrow={competition.data?.name ?? "Competition"}
         title="Rules & eligibility"
         intro="Rules, eligibility and consent requirements are configured per competition and versioned with your application."
       />
       <section className="mx-auto grid w-full max-w-5xl gap-5 px-4 py-16 sm:px-6 lg:grid-cols-3">
-        <List title="Eligibility" items={competition.eligibility} />
-        <List title="Rules" items={competition.rules} />
-        <List title="Consent" items={competition.consentRequirements} />
+        <p className="lg:col-span-3 rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm text-warning">
+          Draft wording. The final legal text has not been supplied yet.
+        </p>
+        <List title="Eligibility" items={competition.data?.eligibility ?? []} />
+        <List title="Rules" items={competition.data?.rules ?? []} />
+        <List title="Consent" items={competition.data?.consent_requirements ?? []} />
       </section>
     </PublicShell>
   );
@@ -52,6 +57,7 @@ function List({ title, items }: { title: string; items: string[] }) {
             {item}
           </li>
         ))}
+        {items.length === 0 && <li>Not configured yet.</li>}
       </ul>
     </article>
   );

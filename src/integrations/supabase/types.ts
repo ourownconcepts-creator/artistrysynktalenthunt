@@ -22,7 +22,10 @@ export type Database = {
           created_at: string
           id: string
           is_pinned: boolean
+          is_published: boolean
           published_at: string
+          round_id: string | null
+          scheduled_for: string | null
           title: string
         }
         Insert: {
@@ -32,7 +35,10 @@ export type Database = {
           created_at?: string
           id?: string
           is_pinned?: boolean
+          is_published?: boolean
           published_at?: string
+          round_id?: string | null
+          scheduled_for?: string | null
           title: string
         }
         Update: {
@@ -42,7 +48,10 @@ export type Database = {
           created_at?: string
           id?: string
           is_pinned?: boolean
+          is_published?: boolean
           published_at?: string
+          round_id?: string | null
+          scheduled_for?: string | null
           title?: string
         }
         Relationships: [
@@ -51,6 +60,13 @@ export type Database = {
             columns: ["competition_id"]
             isOneToOne: false
             referencedRelation: "competitions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "announcements_round_id_fkey"
+            columns: ["round_id"]
+            isOneToOne: false
+            referencedRelation: "competition_rounds"
             referencedColumns: ["id"]
           },
         ]
@@ -111,6 +127,7 @@ export type Database = {
           location: string
           phone: string
           status: string
+          submission_answers: Json
           submitted_at: string | null
           updated_at: string
           user_id: string
@@ -134,6 +151,7 @@ export type Database = {
           location?: string
           phone?: string
           status?: string
+          submission_answers?: Json
           submitted_at?: string | null
           updated_at?: string
           user_id: string
@@ -157,6 +175,7 @@ export type Database = {
           location?: string
           phone?: string
           status?: string
+          submission_answers?: Json
           submitted_at?: string | null
           updated_at?: string
           user_id?: string
@@ -217,33 +236,55 @@ export type Database = {
       }
       badges: {
         Row: {
+          award_condition: string
+          competition_id: string | null
           created_at: string
           description: string
+          icon: string
           id: string
+          is_active: boolean
           name: string
           slug: string
         }
         Insert: {
+          award_condition?: string
+          competition_id?: string | null
           created_at?: string
           description?: string
+          icon?: string
           id?: string
+          is_active?: boolean
           name: string
           slug: string
         }
         Update: {
+          award_condition?: string
+          competition_id?: string | null
           created_at?: string
           description?: string
+          icon?: string
           id?: string
+          is_active?: boolean
           name?: string
           slug?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "badges_competition_id_fkey"
+            columns: ["competition_id"]
+            isOneToOne: false
+            referencedRelation: "competitions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       categories: {
         Row: {
           audition_hint: string
           blurb: string
+          competition_id: string | null
           created_at: string
+          eligibility: string
           group_id: string
           id: string
           is_active: boolean
@@ -254,7 +295,9 @@ export type Database = {
         Insert: {
           audition_hint?: string
           blurb?: string
+          competition_id?: string | null
           created_at?: string
+          eligibility?: string
           group_id: string
           id?: string
           is_active?: boolean
@@ -265,7 +308,9 @@ export type Database = {
         Update: {
           audition_hint?: string
           blurb?: string
+          competition_id?: string | null
           created_at?: string
+          eligibility?: string
           group_id?: string
           id?: string
           is_active?: boolean
@@ -274,6 +319,13 @@ export type Database = {
           sort_order?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "categories_competition_id_fkey"
+            columns: ["competition_id"]
+            isOneToOne: false
+            referencedRelation: "competitions"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "categories_group_id_fkey"
             columns: ["group_id"]
@@ -313,6 +365,56 @@ export type Database = {
         }
         Relationships: []
       }
+      category_requirements: {
+        Row: {
+          category_id: string
+          created_at: string
+          help_text: string
+          id: string
+          is_active: boolean
+          is_required: boolean
+          key: string
+          kind: string
+          label: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          help_text?: string
+          id?: string
+          is_active?: boolean
+          is_required?: boolean
+          key: string
+          kind?: string
+          label: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          help_text?: string
+          id?: string
+          is_active?: boolean
+          is_required?: boolean
+          key?: string
+          kind?: string
+          label?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "category_requirements_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       competition_rounds: {
         Row: {
           advancement_rule: string
@@ -322,10 +424,13 @@ export type Database = {
           description: string
           id: string
           is_active: boolean
+          judging_enabled: boolean
           name: string
           opens_at: string | null
           sequence: number
           slug: string
+          submission_requirements: string
+          voting_enabled: boolean
         }
         Insert: {
           advancement_rule?: string
@@ -335,10 +440,13 @@ export type Database = {
           description?: string
           id?: string
           is_active?: boolean
+          judging_enabled?: boolean
           name: string
           opens_at?: string | null
           sequence: number
           slug: string
+          submission_requirements?: string
+          voting_enabled?: boolean
         }
         Update: {
           advancement_rule?: string
@@ -348,10 +456,13 @@ export type Database = {
           description?: string
           id?: string
           is_active?: boolean
+          judging_enabled?: boolean
           name?: string
           opens_at?: string | null
           sequence?: number
           slug?: string
+          submission_requirements?: string
+          voting_enabled?: boolean
         }
         Relationships: [
           {
@@ -373,6 +484,7 @@ export type Database = {
           eligibility: string[]
           ends_at: string | null
           id: string
+          is_featured: boolean
           judge_weight: number
           name: string
           prize_pool: string
@@ -401,6 +513,7 @@ export type Database = {
           eligibility?: string[]
           ends_at?: string | null
           id?: string
+          is_featured?: boolean
           judge_weight?: number
           name: string
           prize_pool?: string
@@ -429,6 +542,7 @@ export type Database = {
           eligibility?: string[]
           ends_at?: string | null
           id?: string
+          is_featured?: boolean
           judge_weight?: number
           name?: string
           prize_pool?: string
@@ -653,6 +767,7 @@ export type Database = {
           is_active: boolean
           max_score: number
           name: string
+          round_id: string | null
           sort_order: number
           weight: number
         }
@@ -663,6 +778,7 @@ export type Database = {
           is_active?: boolean
           max_score?: number
           name: string
+          round_id?: string | null
           sort_order?: number
           weight?: number
         }
@@ -673,6 +789,7 @@ export type Database = {
           is_active?: boolean
           max_score?: number
           name?: string
+          round_id?: string | null
           sort_order?: number
           weight?: number
         }
@@ -684,10 +801,18 @@ export type Database = {
             referencedRelation: "competitions"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "scoring_criteria_round_id_fkey"
+            columns: ["round_id"]
+            isOneToOne: false
+            referencedRelation: "competition_rounds"
+            referencedColumns: ["id"]
+          },
         ]
       }
       sponsors: {
         Row: {
+          competition_id: string | null
           created_at: string
           description: string
           id: string
@@ -700,6 +825,7 @@ export type Database = {
           website: string
         }
         Insert: {
+          competition_id?: string | null
           created_at?: string
           description?: string
           id?: string
@@ -712,6 +838,7 @@ export type Database = {
           website?: string
         }
         Update: {
+          competition_id?: string | null
           created_at?: string
           description?: string
           id?: string
@@ -723,7 +850,15 @@ export type Database = {
           tier?: string
           website?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "sponsors_competition_id_fkey"
+            columns: ["competition_id"]
+            isOneToOne: false
+            referencedRelation: "competitions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -793,14 +928,40 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      active_competition_id: { Args: never; Returns: string }
+      active_competition_slug: { Args: never; Returns: string }
       advance_application: {
         Args: { _application_id: string; _outcome: string }
         Returns: Json
       }
+      audit_feed: {
+        Args: {
+          _action?: string
+          _actor_email?: string
+          _entity?: string
+          _entity_id?: string
+          _from?: string
+          _limit?: number
+          _to?: string
+        }
+        Returns: {
+          action: string
+          actor_email: string
+          created_at: string
+          detail: Json
+          entity: string
+          entity_id: string
+          id: string
+        }[]
+      }
       cast_vote: { Args: { _handle: string }; Returns: Json }
       claim_first_admin: { Args: never; Returns: Json }
       grant_role_by_email: {
-        Args: { _email: string; _role: Database["public"]["Enums"]["app_role"] }
+        Args: {
+          _competition_slug?: string
+          _email: string
+          _role: Database["public"]["Enums"]["app_role"]
+        }
         Returns: Json
       }
       has_role: {
@@ -837,6 +998,20 @@ export type Database = {
           status: string
         }[]
       }
+      list_judge_assignments: {
+        Args: { _competition_slug?: string }
+        Returns: {
+          assignment_id: string
+          category_id: string
+          category_name: string
+          competition_id: string
+          competition_name: string
+          created_at: string
+          judge_email: string
+          judge_id: string
+          judge_name: string
+        }[]
+      }
       list_team: {
         Args: never
         Returns: {
@@ -859,6 +1034,10 @@ export type Database = {
           stage: string
           vote_count: number
         }[]
+      }
+      revoke_role_by_email: {
+        Args: { _email: string; _role: Database["public"]["Enums"]["app_role"] }
+        Returns: Json
       }
       round_leaderboard: {
         Args: { _competition_slug: string; _round_slug: string }
