@@ -10,8 +10,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ARTISTRYSYNK, getArtistrySynkClient } from "@/integrations/artistrysynk";
-import type { IdentityResolution } from "@/integrations/artistrysynk/types";
+import { ConnectArtistrySynk } from "@/components/artistrysynk/ConnectArtistrySynk";
+import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
+import type { ArtistrySynkConnection } from "@/integrations/artistrysynk/types";
 import { supabase } from "@/integrations/supabase/client";
 import type { GroupedCategories, LiveCompetition, RequirementRow } from "@/lib/live-data";
 import { fetchRequirements, submitEntry } from "@/lib/live-data";
@@ -156,7 +157,8 @@ export function RegistrationWizard({
   const [step, setStep] = useState(initialCategory ? 1 : 0);
   const [form, setForm] = useState<FormState>({ ...EMPTY, categorySlug: initialCategory });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [identity, setIdentity] = useState<IdentityResolution | null>(null);
+  const [connection, setConnection] = useState<ArtistrySynkConnection | null>(null);
+  const [accountReady, setAccountReady] = useState(false);
   const [busy, setBusy] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -205,17 +207,7 @@ export function RegistrationWizard({
           toast.error(account.message);
           return;
         }
-        const resolution = await getArtistrySynkClient().resolveIdentity({
-          email: form.email,
-          displayName: form.displayName,
-          primaryDiscipline: category?.name ?? "",
-        });
-        setIdentity(resolution);
-        toast.success(
-          resolution.outcome === "CREATED"
-            ? `${ARTISTRYSYNK.brand} creative profile created`
-            : `Connected to your existing ${ARTISTRYSYNK.brand} account`,
-        );
+        setAccountReady(true);
       } catch (error) {
         toast.error(error instanceof Error ? error.message : "We couldn't set up your account.");
         return;
@@ -256,16 +248,7 @@ export function RegistrationWizard({
     }
     setBusy(true);
     try {
-      const client = getArtistrySynkClient();
-      if (identity) {
-        await client.upsertCreativeProfile(identity.identity.identityRef, {
-          displayName: form.displayName,
-          bio: form.bio,
-          location: form.location,
-          primaryDiscipline: category?.name ?? "",
-          isPublic: true,
-        });
-      }
+      const linked = connection?.status === "CONNECTED" ? connection.identity : null;
       await submitEntry({
         competitionSlug: competition.slug,
         categorySlug: form.categorySlug,
@@ -280,8 +263,8 @@ export function RegistrationWizard({
         auditionUrl: primaryLink,
         auditionNotes: form.auditionNotes,
         submissionAnswers: form.answers,
-        identityRef: identity?.identity.identityRef ?? null,
-        identityProvider: client.provider,
+        identityRef: linked?.identityRef ?? null,
+        identityProvider: linked ? "artistrysynk" : "unlinked",
       });
       setSubmitted(true);
     } catch (error) {
@@ -299,14 +282,10 @@ export function RegistrationWizard({
         </span>
         <h2 className="mt-6 text-3xl">Entry submitted</h2>
         <p className="mt-3 text-muted-foreground">
-          Your {category?.name} entry for {competition.name} is saved and queued for review. Your{" "}
-          {ARTISTRYSYNK.brand} creative profile is{" "}
-          {identity?.outcome === "CREATED" ? "created" : "connected"}.
-        </p>
-        <p className="mt-4 rounded-lg border border-warning/40 bg-warning/10 p-4 text-left text-sm text-warning">
-          Your creative identity currently uses a clearly-marked stand-in while the real{" "}
-          {ARTISTRYSYNK.brand} connection details are pending. Nothing is duplicated — the entry
-          stores only a reference, so it links straight through once that connection is live.
+          Your {category?.name} entry for {competition.name} is saved and queued for review.
+          {connection?.status === "CONNECTED"
+            ? ` Your ${ARTISTRYSYNK.brand} creative identity is connected.`
+            : ` You can connect your ${ARTISTRYSYNK.brand} creative identity any time from your dashboard.`}
         </p>
         <div className="mt-7 flex flex-wrap justify-center gap-3">
           <Button asChild className="bg-gold text-primary-foreground hover:opacity-90">

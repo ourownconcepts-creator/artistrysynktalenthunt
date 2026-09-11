@@ -1,53 +1,57 @@
 /**
- * Contracts for the ArtistrySynk identity platform.
+ * Contracts for the ArtistrySynk integration.
  *
- * IMPORTANT: ArtistrySynk (artistrysynk.app) owns creative identity. Zik's Got
- * Talent (ziksgottalent.com) owns competitions only. Nothing in this project
- * may become a second identity store — competition entities reference an
- * ArtistrySynk identity through the opaque `identityRef` below.
- *
- * These shapes are OUR expectation of the eventual contract, and are
- * intentionally minimal. They are not a claim about existing endpoints.
+ * ArtistrySynk (artistrysynk.app) owns creative identity: username, profile,
+ * portfolio, connections. Zik's Got Talent owns the competition. Competition
+ * entities store only the opaque `identityRef` returned by the Integration API,
+ * plus the small approved profile projection needed to render a connection.
  */
 
-export type IdentityProvider = "local" | "artistrysynk";
+export type ArtistrySynkConnectionStatus =
+  | "NOT_CONFIGURED"
+  | "NOT_CONNECTED"
+  | "CONNECTED"
+  | "REVOKED";
 
+/** The approved, read-only projection ArtistrySynk permits partners to read. */
 export interface ArtistrySynkIdentity {
-  /** Opaque reference every competition entity stores. */
   identityRef: string;
-  provider: IdentityProvider;
-  email: string;
-  displayName: string;
-  /** Canonical ArtistrySynk handle, once the real platform assigns one. */
-  handle: string | null;
-  createdAt: string;
-}
-
-export interface CreativeProfile {
-  identityRef: string;
-  displayName: string;
-  handle: string | null;
-  bio: string;
-  location: string;
-  primaryDiscipline: string;
-  links: Array<{ label: string; url: string }>;
+  username: string | null;
+  displayName: string | null;
+  bio: string | null;
   avatarUrl: string | null;
-  isPublic: boolean;
+  coverImageUrl: string | null;
+  location: string | null;
+  country: string | null;
+  city: string | null;
+  isVerified: boolean;
+  professionalVerified: boolean;
 }
 
-export interface CreateIdentityInput {
-  email: string;
-  displayName: string;
-  location?: string;
-  primaryDiscipline?: string;
+export interface ArtistrySynkConnection {
+  status: ArtistrySynkConnectionStatus;
+  /** False until the integration credentials exist on the server. */
+  configured: boolean;
+  identity: ArtistrySynkIdentity | null;
+  scopes: string[];
+  linkedAt: string | null;
+  profileUrl: string | null;
+  /** How many of this entrant's entries carry the verified identity reference. */
+  linkedApplications: number;
 }
 
-export type CreativeProfilePatch = Partial<
-  Omit<CreativeProfile, "identityRef" | "handle" | "isPublic">
-> & { isPublic?: boolean };
+export type ArtistrySynkFailureReason =
+  | "CANCELLED"
+  | "INVALID_STATE"
+  | "EXPIRED"
+  | "ALREADY_USED"
+  | "DUPLICATE_IDENTITY"
+  | "UNAUTHORIZED"
+  | "UNAVAILABLE"
+  | "INVALID_CALLBACK"
+  | "NOT_CONFIGURED"
+  | "FAILED";
 
-/** Result of the register-time identity step, surfaced in the UI honestly. */
-export interface IdentityResolution {
-  identity: ArtistrySynkIdentity;
-  outcome: "CREATED" | "LINKED_EXISTING";
-}
+export type ArtistrySynkConnectResult =
+  | { outcome: "CONNECTED"; connection: ArtistrySynkConnection }
+  | { outcome: "FAILED"; reason: ArtistrySynkFailureReason; message: string };

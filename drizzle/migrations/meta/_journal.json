@@ -29,6 +29,20 @@
       "when": 1789119551735,
       "tag": "0003_allow_reopen_registration",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1789135134787,
+      "tag": "0004_artistrysynk_integration_v1",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1789135352740,
+      "tag": "0005_artistrysynk_apply_link_to_profiles",
+      "breakpoints": true
     }
   ]
 }
