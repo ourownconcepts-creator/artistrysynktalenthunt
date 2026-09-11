@@ -28,7 +28,12 @@ function paragraphs(body: string): string {
 const P = "margin:0 0 16px;font-size:16px;line-height:1.6;color:#2c2a26;";
 const MUTED = "margin:24px 0 0;font-size:13px;line-height:1.6;color:#7a756c;";
 
-function shell(options: { heading: string; kicker: string; content: string; cta?: { label: string; href: string } }) {
+function shell(options: {
+  heading: string;
+  kicker: string;
+  content: string;
+  cta?: { label: string; href: string };
+}) {
   const cta = options.cta
     ? `<p style="margin:28px 0 0;"><a href="${options.cta.href}" style="display:inline-block;background:#0f0d0b;color:#f7d774;text-decoration:none;font-weight:700;padding:14px 26px;border-radius:999px;font-size:15px;">${escapeHtml(options.cta.label)}</a></p>`
     : "";
@@ -65,14 +70,17 @@ export function entryConfirmationEmail(data: EntryEmailData) {
       content:
         paragraphs(
           `We've received your entry for ${data.competitionName} in the ${data.categoryName} category.\n\nOur team reviews every audition submission. You'll get an email as soon as your entry is reviewed and whenever you move to a new round.`,
-        ) + `<p style="${P}"><strong>Your contestant page:</strong> ${siteUrl()}/contestants/${data.handle}</p>`,
+        ) +
+        `<p style="${P}"><strong>Your contestant page:</strong> ${siteUrl()}/contestants/${data.handle}</p>`,
       cta: { label: "Open your dashboard", href: dashboard },
     }),
     text: `You're in, ${data.displayName}.\n\nWe've received your entry for ${data.competitionName} in the ${data.categoryName} category. You'll get an email once it's reviewed and whenever you move to a new round.\n\nYour dashboard: ${dashboard}\nYour contestant page: ${siteUrl()}/contestants/${data.handle}`,
   };
 }
 
-export function newEntryAdminEmail(data: EntryEmailData & { email: string; phone: string; location: string }) {
+export function newEntryAdminEmail(
+  data: EntryEmailData & { email: string; phone: string; location: string },
+) {
   return {
     subject: `New entry: ${data.displayName} (${data.categoryName})`,
     html: shell({
@@ -147,7 +155,11 @@ export function applicationStatusEmail(data: StatusEmailData) {
   };
 }
 
-export function announcementEmail(data: { title: string; body: string; competitionName: string | null }) {
+export function announcementEmail(data: {
+  title: string;
+  body: string;
+  competitionName: string | null;
+}) {
   return {
     subject: data.title,
     html: shell({

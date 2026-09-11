@@ -15,9 +15,12 @@ export interface EmailSendSummary {
   configured: boolean;
 }
 
-async function isAdmin(supabase: {
-  rpc: (fn: "is_admin", args: { _user_id: string }) => Promise<{ data: unknown; error: unknown }>;
-}, userId: string): Promise<boolean> {
+async function isAdmin(
+  supabase: {
+    rpc: (fn: "is_admin", args: { _user_id: string }) => Promise<{ data: unknown; error: unknown }>;
+  },
+  userId: string,
+): Promise<boolean> {
   const { data, error } = await supabase.rpc("is_admin", { _user_id: userId });
   return !error && data === true;
 }
@@ -31,9 +34,7 @@ export const sendEntryEmails = createServerFn({ method: "POST" })
 
     const { data, error } = await context.supabase
       .from("applications")
-      .select(
-        "display_name, handle, email, phone, location, categories(name), competitions(name)",
-      )
+      .select("display_name, handle, email, phone, location, categories(name), competitions(name)")
       .eq("user_id", context.userId)
       .order("created_at", { ascending: false })
       .limit(1)
@@ -138,9 +139,7 @@ export const sendApplicationStatusEmail = createServerFn({ method: "POST" })
  */
 export const sendAnnouncementEmail = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
-    z.object({ announcementId: z.string().uuid() }).parse(input),
-  )
+  .inputValidator((input: unknown) => z.object({ announcementId: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }): Promise<EmailSendSummary> => {
     const { sendEmail, emailConfig } = await import("./email/queensmtp.server");
     const { announcementEmail } = await import("./email/templates.server");
