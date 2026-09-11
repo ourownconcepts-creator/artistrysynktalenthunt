@@ -830,8 +830,7 @@ function AnnouncementsPanel({ competitionId }: { competitionId: string | null })
     ...useSaver(["admin-announcements", "announcements"], "Announcement"),
   });
   const email = useMutation({
-    mutationFn: (announcementId: string) =>
-      sendAnnouncementEmail({ data: { announcementId } }),
+    mutationFn: (announcementId: string) => sendAnnouncementEmail({ data: { announcementId } }),
     onSuccess: (result: EmailSendSummary) => {
       if (!result.configured) {
         toast.error("Email sending is not configured yet.");

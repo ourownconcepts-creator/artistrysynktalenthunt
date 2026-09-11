@@ -52,8 +52,7 @@ function ApplicationReview() {
   const { user, ready } = useSession();
   const roles = useMyRoles();
   const isAdmin = (roles.data ?? []).some((r) => ["SUPER_ADMIN", "ADMIN"].includes(r));
-  const isStaff =
-    isAdmin || (roles.data ?? []).some((r) => ["MODERATOR"].includes(r));
+  const isStaff = isAdmin || (roles.data ?? []).some((r) => ["MODERATOR"].includes(r));
   const queryClient = useQueryClient();
 
   const [filter, setFilter] = useState<string>("");
@@ -314,9 +313,7 @@ function EntryDetail({
           ) : (
             <p className="mt-1">No audition link</p>
           )}
-          {row.audition_notes && (
-            <p className="mt-1 text-muted-foreground">{row.audition_notes}</p>
-          )}
+          {row.audition_notes && <p className="mt-1 text-muted-foreground">{row.audition_notes}</p>}
         </div>
         <div>
           <p className="text-xs uppercase tracking-widest text-muted-foreground">
