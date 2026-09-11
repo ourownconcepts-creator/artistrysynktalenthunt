@@ -594,6 +594,7 @@ export async function fetchPublicContestant(handle: string): Promise<PublicConte
 
 export interface MyApplication {
   id: string;
+  reference_code: string | null;
   handle: string;
   display_name: string;
   full_name: string;
