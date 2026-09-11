@@ -18,6 +18,18 @@ import {
   reviewApplication,
   setApplicationState,
 } from "@/lib/operations";
+import { sendApplicationStatusEmail } from "@/lib/email.functions";
+
+/** Emails the contestant about a decision. A mail failure never blocks the decision. */
+async function notifyContestant(applicationId: string, status: string, note: string) {
+  try {
+    await sendApplicationStatusEmail({
+      data: { applicationId, status, ...(note.trim() ? { note: note.trim() } : {}) },
+    });
+  } catch {
+    /* decision is recorded; the email can be resent */
+  }
+}
 
 export const Route = createFileRoute("/admin/applications")({
   head: () => ({
