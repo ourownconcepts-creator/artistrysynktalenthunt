@@ -607,6 +607,11 @@ export interface MyApplication {
   audition_notes: string;
   submission_answers: Record<string, string>;
   status: string;
+  progress_state: string;
+  submission_state: string;
+  state_reason: string | null;
+  review_reason: string | null;
+  updated_at: string | null;
   is_public: boolean;
   submitted_at: string | null;
   competition_id: string;
