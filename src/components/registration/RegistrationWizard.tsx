@@ -269,7 +269,7 @@ export function RegistrationWizard({
       });
       // Confirmation email + organiser alert. A mail failure must never lose an entry.
       try {
-        await sendEntryConfirmation();
+        await sendEntryEmails();
       } catch {
         /* the entry is saved; the email can be resent later */
       }
