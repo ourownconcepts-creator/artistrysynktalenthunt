@@ -234,7 +234,7 @@ function DashboardSectionPage() {
                   />
                 </dl>
               )}
-              <p>{ARTISTRYSYNK.promise}</p>
+              <ConnectArtistrySynk enabled={Boolean(user)} />
               <a
                 href={ARTISTRYSYNK.site}
                 target="_blank"
