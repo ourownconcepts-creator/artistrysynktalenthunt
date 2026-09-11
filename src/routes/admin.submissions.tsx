@@ -16,6 +16,7 @@ import {
   fetchAdminApplications,
   reviewSubmission,
 } from "@/lib/operations";
+import { notifyContestant } from "@/lib/notify";
 
 export const Route = createFileRoute("/admin/submissions")({
   head: () => ({
@@ -41,8 +42,7 @@ function SubmissionReview() {
   const { user, ready } = useSession();
   const roles = useMyRoles();
   const isAdmin = (roles.data ?? []).some((r) => ["SUPER_ADMIN", "ADMIN"].includes(r));
-  const isStaff =
-    isAdmin || (roles.data ?? []).some((r) => ["MODERATOR"].includes(r));
+  const isStaff = isAdmin || (roles.data ?? []).some((r) => ["MODERATOR"].includes(r));
   const queryClient = useQueryClient();
 
   const [filter, setFilter] = useState("PENDING_REVIEW");
@@ -60,7 +60,7 @@ function SubmissionReview() {
   });
 
   const moderate = useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       id,
       state,
       publish,
@@ -68,10 +68,17 @@ function SubmissionReview() {
       id: string;
       state: string;
       publish?: boolean;
-    }) => reviewSubmission(id, state, { reason, publish: publish ?? false }),
+    }) => {
+      const result = await reviewSubmission(id, state, { reason, publish: publish ?? false });
+      if (result.ok) {
+        // A mail failure must never undo a recorded moderation decision.
+        await notifyContestant(id, state, reason);
+      }
+      return result;
+    },
     onSuccess: (result) => {
       if (result.ok) {
-        toast.success("Audition updated");
+        toast.success("Audition updated — the contestant has been emailed");
         setReason("");
         void queryClient.invalidateQueries({ queryKey: ["admin-submissions"] });
         void queryClient.invalidateQueries({ queryKey: ["ops-snapshot"] });

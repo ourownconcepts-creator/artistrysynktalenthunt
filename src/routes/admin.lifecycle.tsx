@@ -26,6 +26,7 @@ import {
   setCompetitionStatus,
   setRoundStatus,
 } from "@/lib/operations";
+import { notifyContestant } from "@/lib/notify";
 
 export const Route = createFileRoute("/admin/lifecycle")({
   head: () => ({
@@ -121,17 +122,21 @@ function LifecyclePage() {
   });
 
   const decide = useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       id,
       outcome,
     }: {
       id: string;
       outcome: "ADVANCED" | "ELIMINATED" | "HELD";
-    }) => decideRoundResult(id, outcome, reason),
+    }) => {
+      const result = await decideRoundResult(id, outcome, reason);
+      if (result.ok) await notifyContestant(id, outcome, reason);
+      return result;
+    },
     onSuccess: (result) => {
       if (result.ok) {
         toast.success(
-          `Recorded — contestant is now ${PROGRESS_STATE_LABELS[result.new_state ?? ""] ?? result.new_state}`,
+          `Recorded — contestant is now ${PROGRESS_STATE_LABELS[result.new_state ?? ""] ?? result.new_state} and has been emailed`,
         );
         setReason("");
         refresh();
@@ -143,11 +148,14 @@ function LifecyclePage() {
   });
 
   const changeState = useMutation({
-    mutationFn: ({ id, state }: { id: string; state: string }) =>
-      setApplicationState(id, state, reason),
+    mutationFn: async ({ id, state }: { id: string; state: string }) => {
+      const result = await setApplicationState(id, state, reason);
+      if (result.ok) await notifyContestant(id, state, reason);
+      return result;
+    },
     onSuccess: (result) => {
       if (result.ok) {
-        toast.success("Contestant state updated");
+        toast.success("Contestant state updated — the contestant has been emailed");
         setReason("");
         refresh();
       } else {
@@ -256,8 +264,7 @@ function LifecyclePage() {
         {round && (
           <>
             <p className="text-sm">
-              State:{" "}
-              <strong>{ROUND_STATUS_LABELS[round.status] ?? round.status}</strong>
+              State: <strong>{ROUND_STATUS_LABELS[round.status] ?? round.status}</strong>
             </p>
             <div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-6">
               <Stat label="In round" value={p?.contestants_in_round} />
@@ -337,13 +344,12 @@ function LifecyclePage() {
                       {PROGRESS_STATE_LABELS[row.progress_state] ?? row.progress_state}
                     </td>
                     <td className="px-4 py-3">
-                      {row.judge_score} <span className="text-muted-foreground">({row.judges_scored})</span>
+                      {row.judge_score}{" "}
+                      <span className="text-muted-foreground">({row.judges_scored})</span>
                     </td>
                     <td className="px-4 py-3">{row.public_votes}</td>
                     <td className="px-4 py-3 font-bold text-primary">{row.combined}</td>
-                    <td className="px-4 py-3">
-                      {row.outcome ? row.outcome.toLowerCase() : "—"}
-                    </td>
+                    <td className="px-4 py-3">{row.outcome ? row.outcome.toLowerCase() : "—"}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1.5">
                         <Button

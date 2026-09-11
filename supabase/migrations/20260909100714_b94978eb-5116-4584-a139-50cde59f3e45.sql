@@ -636,13 +636,13 @@ WHERE c.slug = 'season-one';
 
 INSERT INTO public.sponsors (name, tier, description, website, placements, sort_order) VALUES
  ('ArtistrySynk','MAJOR_SPONSOR','The creative identity platform behind Zik''s Got Talent. Every contestant leaves with an ArtistrySynk creative profile.','https://artistrysynk.app',ARRAY['HERO','HEADER','FOOTER','SPONSOR_PAGE'],1),
- ('Chow','MAJOR_SPONSOR','Fuelling the stage, the crew and the contestants across every round.','https://example.com',ARRAY['HERO','FOOTER','SPONSOR_PAGE'],2);
+ ('New Flava','MAJOR_SPONSOR','Fuelling the stage, the crew and the contestants across every round.','https://example.com',ARRAY['HERO','FOOTER','SPONSOR_PAGE'],2);
 
 INSERT INTO public.announcements (competition_id, title, body, audience, is_pinned, published_at)
 SELECT c.id, v.title, v.body, v.audience, v.pinned, v.pub::timestamptz
 FROM public.competitions c, (VALUES
  ('Registration is open for Season One','Applications are open across 22 categories in five groups. Registration closes 15 October — auditions are reviewed continuously, so early entries get earlier feedback.','PUBLIC',true,'2026-08-01T09:00:00Z'),
- ('ArtistrySynk × Chow announced as major sponsors','Season One is powered by ArtistrySynk and Chow, with supporting sponsors and media partners announced through the season.','PUBLIC',false,'2026-08-04T12:00:00Z'),
+ ('ArtistrySynk × New Flava announced as major sponsors','Season One is powered by ArtistrySynk and New Flava, with supporting sponsors and media partners announced through the season.','PUBLIC',false,'2026-08-04T12:00:00Z'),
  ('Audition briefs published per category','Each category now has its own audition brief and length limit. Check your category page before you record.','CONTESTANTS',false,'2026-08-08T15:30:00Z')
 ) AS v(title, body, audience, pinned, pub)
 WHERE c.slug = 'season-one';
