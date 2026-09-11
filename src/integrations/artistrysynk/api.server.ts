@@ -33,6 +33,7 @@ export class ArtistrySynkError extends Error {
     message: string,
     readonly status = 0,
     readonly requestId: string | null = null,
+    readonly validation: ReadonlyArray<{ field: string; issue: string }> = [],
   ) {
     super(message);
     this.name = "ArtistrySynkError";
@@ -88,7 +89,24 @@ function signinBasic(config: ArtistrySynkConfig): string {
 interface Envelope<T> {
   data?: T;
   request_id?: string;
-  error?: { code?: string; message?: string; request_id?: string };
+  error?: {
+    code?: string;
+    message?: string;
+    request_id?: string;
+    field?: string;
+    issue?: string;
+    details?: Array<{ field?: string; issue?: string }>;
+  };
+}
+
+function validationDetails(error: Envelope<unknown>["error"]): Array<{ field: string; issue: string }> {
+  if (!error) return [];
+  const details = Array.isArray(error.details) ? error.details : [error];
+  return details.flatMap((detail) =>
+    typeof detail.field === "string" && typeof detail.issue === "string"
+      ? [{ field: detail.field, issue: detail.issue }]
+      : [],
+  );
 }
 
 async function readEnvelope<T>(res: Response): Promise<T> {
@@ -106,6 +124,7 @@ async function readEnvelope<T>(res: Response): Promise<T> {
       body?.error?.message ?? `ArtistrySynk request failed (${res.status}).`,
       res.status,
       body?.error?.request_id ?? body?.request_id ?? null,
+      validationDetails(body?.error),
     );
   }
   if (!body?.data) {
@@ -209,7 +228,12 @@ export interface LinkIntent {
 
 export async function startLink(
   config: ArtistrySynkConfig,
-  input: { externalSubject: string; redirectUri: string; state: string },
+  input: {
+    externalSubject: string;
+    redirectUri: string;
+    state: string;
+    codeChallenge: string;
+  },
 ): Promise<LinkIntent> {
   return jsonRequest<LinkIntent>(`${config.integrationUrl}/identity/link/start`, {
     method: "POST",
@@ -219,6 +243,8 @@ export async function startLink(
       redirect_uri: input.redirectUri,
       scopes: [...ARTISTRYSYNK_SCOPES],
       state: input.state,
+      code_challenge: input.codeChallenge,
+      code_challenge_method: "S256",
     }),
   });
 }
@@ -233,7 +259,7 @@ export interface TokenSet {
 
 export async function exchangeCode(
   config: ArtistrySynkConfig,
-  input: { code: string; redirectUri: string },
+  input: { code: string; redirectUri: string; codeVerifier: string },
 ): Promise<TokenSet> {
   const { tokenEndpoint } = await discover(config);
   const body = new URLSearchParams({
@@ -241,6 +267,7 @@ export async function exchangeCode(
     code: input.code,
     redirect_uri: input.redirectUri,
     client_id: config.signinClientId,
+    code_verifier: input.codeVerifier,
   });
   let res: Response;
   try {

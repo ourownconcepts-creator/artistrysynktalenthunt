@@ -18,16 +18,20 @@ import {
 import type { ArtistrySynkIdentityProvider } from "./client";
 import {
   applyIdentityToApplications,
-  consumeIntent,
-  createState,
+  claimIntent,
+  consumeClaimedIntent,
+  deleteIntent,
   externalSubjectFor,
+  finalizeIntent,
   findConflictingLink,
   getLink,
   hashState,
   markRevoked,
   recordIntent,
+  releaseIntentClaim,
   saveLink,
 } from "./links.server";
+import { createPkceTransaction, isValidCodeVerifier, isValidState } from "./pkce.server";
 import type {
   ArtistrySynkConnectResult,
   ArtistrySynkConnection,
@@ -110,21 +114,40 @@ export class RemoteArtistrySynkProvider implements ArtistrySynkIdentityProvider 
     const config = requireArtistrySynkConfig();
     const externalSubject = externalSubjectFor(userId);
     const redirectUri = this.redirectUri(origin);
-    const { state, hash } = createState();
-
-    const intent = await startLink(config, { externalSubject, redirectUri, state });
-
-    await recordIntent({
+    const { state, codeVerifier, codeChallenge } = createPkceTransaction();
+    const transactionId = await recordIntent({
       userId,
-      stateHash: hash,
-      intentId: intent.intent_id,
+      stateHash: hashState(state),
       redirectUri,
       externalSubject,
       scopes: [...ARTISTRYSYNK_SCOPES],
-      expiresAt: intent.expires_at,
+      expiresAt: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+      codeVerifier,
     });
 
-    return { authorizationUrl: intent.authorization_url, expiresAt: intent.expires_at };
+    try {
+      const intent = await startLink(config, {
+        externalSubject,
+        redirectUri,
+        state,
+        codeChallenge,
+      });
+      await finalizeIntent(transactionId, {
+        intentId: intent.intent_id,
+        expiresAt: intent.expires_at,
+      });
+      return { authorizationUrl: intent.authorization_url, expiresAt: intent.expires_at };
+    } catch (error) {
+      await deleteIntent(transactionId).catch(() => undefined);
+      if (error instanceof ArtistrySynkError && error.validation.length > 0) {
+        console.error("ArtistrySynk link validation failed", {
+          code: error.code,
+          requestId: error.requestId,
+          validation: error.validation,
+        });
+      }
+      throw error;
+    }
   }
 
   async completeConnection(
@@ -139,7 +162,7 @@ export class RemoteArtistrySynkProvider implements ArtistrySynkIdentityProvider 
         message: "ArtistrySynk is not configured yet.",
       };
     }
-    if (!input.code || !input.state) {
+    if (!input.code || !isValidState(input.state)) {
       return {
         outcome: "FAILED",
         reason: "INVALID_CALLBACK",
@@ -147,7 +170,7 @@ export class RemoteArtistrySynkProvider implements ArtistrySynkIdentityProvider 
       };
     }
 
-    const claim = await consumeIntent(hashState(input.state), userId);
+    const claim = await claimIntent(hashState(input.state), userId);
     if (!claim.ok) {
       const message =
         claim.reason === "EXPIRED"
@@ -159,10 +182,20 @@ export class RemoteArtistrySynkProvider implements ArtistrySynkIdentityProvider 
     }
 
     try {
+      if (!isValidCodeVerifier(claim.intent.code_verifier)) {
+        await consumeClaimedIntent(claim.intent.id);
+        return {
+          outcome: "FAILED",
+          reason: "INVALID_CALLBACK",
+          message: "The ArtistrySynk response could not be verified.",
+        };
+      }
       const token = await exchangeCode(config, {
         code: input.code,
         redirectUri: claim.intent.redirect_uri,
+        codeVerifier: claim.intent.code_verifier,
       });
+      await consumeClaimedIntent(claim.intent.id);
       if (token.expiresAt <= Date.now()) {
         return {
           outcome: "FAILED",
@@ -211,7 +244,16 @@ export class RemoteArtistrySynkProvider implements ArtistrySynkIdentityProvider 
 
       return { outcome: "CONNECTED", connection: await this.getConnection(userId) };
     } catch (error) {
-      console.error("ArtistrySynk link completion failed", error);
+      if (error instanceof ArtistrySynkError && error.code === "temporarily_unavailable") {
+        await releaseIntentClaim(claim.intent.id).catch(() => undefined);
+      } else {
+        await consumeClaimedIntent(claim.intent.id).catch(() => undefined);
+      }
+      console.error("ArtistrySynk link completion failed", {
+        code: error instanceof ArtistrySynkError ? error.code : "internal_error",
+        requestId: error instanceof ArtistrySynkError ? error.requestId : null,
+        validation: error instanceof ArtistrySynkError ? error.validation : [],
+      });
       const mapped = reasonFor(error);
       return { outcome: "FAILED", ...mapped };
     }

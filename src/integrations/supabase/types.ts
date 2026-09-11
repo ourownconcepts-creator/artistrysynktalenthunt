@@ -230,36 +230,42 @@ export type Database = {
       }
       artistrysynk_link_intents: {
         Row: {
+          code_verifier: string | null
           consumed_at: string | null
           created_at: string
           expires_at: string
           external_subject: string
           id: string
           intent_id: string | null
+          processing_at: string | null
           redirect_uri: string
           scopes: string[]
           state_hash: string
           user_id: string
         }
         Insert: {
+          code_verifier?: string | null
           consumed_at?: string | null
           created_at?: string
           expires_at: string
           external_subject: string
           id?: string
           intent_id?: string | null
+          processing_at?: string | null
           redirect_uri: string
           scopes?: string[]
           state_hash: string
           user_id: string
         }
         Update: {
+          code_verifier?: string | null
           consumed_at?: string | null
           created_at?: string
           expires_at?: string
           external_subject?: string
           id?: string
           intent_id?: string | null
+          processing_at?: string | null
           redirect_uri?: string
           scopes?: string[]
           state_hash?: string
