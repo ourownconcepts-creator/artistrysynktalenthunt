@@ -5,11 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 import { Button } from "@/components/ui/button";
 import { useCategoryGroups, useCompetition } from "@/hooks/useCompetition";
-import {
-  REQUIREMENT_KIND_LABELS,
-  fetchCategoryBySlug,
-  fetchRequirements,
-} from "@/lib/live-data";
+import { REQUIREMENT_KIND_LABELS, fetchCategoryBySlug, fetchRequirements } from "@/lib/live-data";
 
 export const Route = createFileRoute("/categories/$slug")({
   head: ({ params }) => ({

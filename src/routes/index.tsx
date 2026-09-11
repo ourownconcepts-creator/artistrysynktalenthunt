@@ -259,7 +259,11 @@ function Landing() {
           <p className="mx-auto mt-5 max-w-xl text-muted-foreground">
             Registration is free and takes about ten minutes.
           </p>
-          <Button asChild size="lg" className="mt-8 bg-heat text-accent-foreground hover:opacity-90">
+          <Button
+            asChild
+            size="lg"
+            className="mt-8 bg-heat text-accent-foreground hover:opacity-90"
+          >
             <Link to="/register">
               Start my application
               <ArrowRight className="ml-1 size-4" />

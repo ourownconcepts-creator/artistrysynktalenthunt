@@ -89,8 +89,8 @@ function AdminSectionPage() {
       {section.phase === "LATER" && section.slug !== "audit-logs" && (
         <div className="card-stage p-5">
           <p className="text-sm text-muted-foreground">
-            This area is intentionally not built yet. Its data model, permissions and audit rules are
-            already defined, so it can be added without reshaping the foundation.
+            This area is intentionally not built yet. Its data model, permissions and audit rules
+            are already defined, so it can be added without reshaping the foundation.
           </p>
         </div>
       )}
@@ -177,9 +177,7 @@ function CategoriesPanel({ competitionId }: { competitionId: string | null }) {
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() =>
-                          setSelected(selected === category.id ? null : category.id)
-                        }
+                        onClick={() => setSelected(selected === category.id ? null : category.id)}
                       >
                         Requirements
                       </Button>
@@ -206,7 +204,11 @@ function CategoriesPanel({ competitionId }: { competitionId: string | null }) {
             label="Name"
             value={draft.name ?? ""}
             onChange={(value) =>
-              setDraft({ ...draft, name: value, slug: draft.id ? (draft.slug ?? "") : slugifyHandle(value) })
+              setDraft({
+                ...draft,
+                name: value,
+                slug: draft.id ? (draft.slug ?? "") : slugifyHandle(value),
+              })
             }
           />
           <Field
@@ -293,11 +295,7 @@ function RequirementsPanel({ categoryId }: { categoryId: string }) {
               <Button size="sm" variant="outline" onClick={() => setDraft(requirement)}>
                 Edit
               </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => remove.mutate(requirement.id)}
-              >
+              <Button size="sm" variant="ghost" onClick={() => remove.mutate(requirement.id)}>
                 Delete
               </Button>
             </div>
@@ -313,7 +311,11 @@ function RequirementsPanel({ categoryId }: { categoryId: string }) {
           label="Requirement label"
           value={draft.label ?? ""}
           onChange={(value) =>
-            setDraft({ ...draft, label: value, key: draft.id ? (draft.key ?? "") : slugifyHandle(value) })
+            setDraft({
+              ...draft,
+              label: value,
+              key: draft.id ? (draft.key ?? "") : slugifyHandle(value),
+            })
           }
         />
         <Field
@@ -435,7 +437,11 @@ function RoundsPanel({ competitionId }: { competitionId: string | null }) {
             label="Name"
             value={draft.name ?? ""}
             onChange={(value) =>
-              setDraft({ ...draft, name: value, slug: draft.id ? (draft.slug ?? "") : slugifyHandle(value) })
+              setDraft({
+                ...draft,
+                name: value,
+                slug: draft.id ? (draft.slug ?? "") : slugifyHandle(value),
+              })
             }
           />
           <Field
@@ -947,7 +953,11 @@ function BadgesPanel({ competitionId }: { competitionId: string | null }) {
             label="Badge name"
             value={draft.name ?? ""}
             onChange={(value) =>
-              setDraft({ ...draft, name: value, slug: draft.id ? (draft.slug ?? "") : slugifyHandle(value) })
+              setDraft({
+                ...draft,
+                name: value,
+                slug: draft.id ? (draft.slug ?? "") : slugifyHandle(value),
+              })
             }
           />
           <Field

@@ -100,9 +100,7 @@ function CompetitionDetail() {
         <div className="space-y-12">
           <Block title="Competition journey">
             <div className="card-stage p-6">
-              <JourneyTracker
-                steps={buildJourney(rounds.data ?? [], data.current_round_id)}
-              />
+              <JourneyTracker steps={buildJourney(rounds.data ?? [], data.current_round_id)} />
             </div>
           </Block>
 

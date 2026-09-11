@@ -69,7 +69,9 @@ function Competitions() {
                   </div>
                   <div>
                     <dt className="eyebrow">Prize pool</dt>
-                    <dd className="mt-1 font-display text-2xl">{competition.prize_pool || "TBC"}</dd>
+                    <dd className="mt-1 font-display text-2xl">
+                      {competition.prize_pool || "TBC"}
+                    </dd>
                   </div>
                   <div>
                     <dt className="eyebrow">Entries close</dt>

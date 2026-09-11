@@ -29,7 +29,10 @@ export const Route = createFileRoute("/dashboard/$section")({
       { name: "robots", content: "noindex" },
       { name: "description", content: loaderData?.section.summary ?? "Contestant dashboard" },
       { property: "og:title", content: loaderData?.section.label ?? "Zik's Got Talent" },
-      { property: "og:description", content: loaderData?.section.summary ?? "Contestant dashboard" },
+      {
+        property: "og:description",
+        content: loaderData?.section.summary ?? "Contestant dashboard",
+      },
     ],
   }),
   component: DashboardSectionPage,
@@ -175,9 +178,7 @@ function DashboardSectionPage() {
           )}
 
           {section.slug === "status" && app && (
-            <JourneyTracker
-              steps={buildJourney(rounds.data ?? [], app.current_round_id)}
-            />
+            <JourneyTracker steps={buildJourney(rounds.data ?? [], app.current_round_id)} />
           )}
 
           {section.slug === "announcements" && (

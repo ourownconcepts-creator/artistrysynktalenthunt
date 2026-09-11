@@ -33,9 +33,7 @@ export function useCategoryGroups(competitionId: string | undefined, activeOnly 
   return useQuery({
     queryKey: ["categories", competitionId ?? "all", activeOnly],
     queryFn: async () =>
-      groupCategories(
-        await fetchCategories({ competitionId: competitionId ?? null, activeOnly }),
-      ),
+      groupCategories(await fetchCategories({ competitionId: competitionId ?? null, activeOnly })),
   });
 }
 
@@ -50,7 +48,6 @@ export function useSponsors(placement?: string, competitionId?: string) {
 export function usePublicAnnouncements(competitionId?: string) {
   return useQuery({
     queryKey: ["announcements", "PUBLIC", competitionId ?? "all"],
-    queryFn: () =>
-      fetchAnnouncements({ audience: "PUBLIC", competitionId: competitionId ?? null }),
+    queryFn: () => fetchAnnouncements({ audience: "PUBLIC", competitionId: competitionId ?? null }),
   });
 }

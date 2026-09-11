@@ -81,13 +81,7 @@ export interface CategoryRow {
 }
 
 export type RequirementKind =
-  | "URL"
-  | "TEXT"
-  | "LONG_TEXT"
-  | "NUMBER"
-  | "DATE"
-  | "FILE_URL"
-  | "IMAGE_URL_LIST";
+  "URL" | "TEXT" | "LONG_TEXT" | "NUMBER" | "DATE" | "FILE_URL" | "IMAGE_URL_LIST";
 
 export const REQUIREMENT_KINDS: RequirementKind[] = [
   "URL",
@@ -271,10 +265,7 @@ export async function fetchPublicCompetitions(): Promise<LiveCompetition[]> {
   return all.filter((c) => c.status !== "DRAFT" && c.status !== "ARCHIVED");
 }
 
-export async function saveCompetition(
-  id: string,
-  patch: Partial<LiveCompetition>,
-): Promise<void> {
+export async function saveCompetition(id: string, patch: Partial<LiveCompetition>): Promise<void> {
   const { error } = await supabase
     .from("competitions")
     .update({ ...patch, updated_at: new Date().toISOString() })
@@ -300,10 +291,7 @@ export async function createCompetition(input: {
 
 /** Exactly one competition is featured at a time. */
 export async function setFeaturedCompetition(id: string): Promise<void> {
-  const clear = await supabase
-    .from("competitions")
-    .update({ is_featured: false })
-    .neq("id", id);
+  const clear = await supabase.from("competitions").update({ is_featured: false }).neq("id", id);
   if (clear.error) throw clear.error;
   const { error } = await supabase.from("competitions").update({ is_featured: true }).eq("id", id);
   if (error) throw error;

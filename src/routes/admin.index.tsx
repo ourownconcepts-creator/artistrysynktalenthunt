@@ -121,8 +121,8 @@ function AdminHome() {
           </table>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          This table mirrors permissions for the interface only. Every action is re-authorised on the
-          server and by row-level policies.
+          This table mirrors permissions for the interface only. Every action is re-authorised on
+          the server and by row-level policies.
         </p>
       </section>
     </div>
