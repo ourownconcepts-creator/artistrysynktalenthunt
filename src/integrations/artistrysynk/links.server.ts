@@ -49,7 +49,7 @@ export async function recordIntent(input: {
     .insert({
       user_id: input.userId,
       state_hash: input.stateHash,
-      intent_id: input.intentId,
+      intent_id: input.intentId ?? null,
       redirect_uri: input.redirectUri,
       external_subject: input.externalSubject,
       scopes: input.scopes,
