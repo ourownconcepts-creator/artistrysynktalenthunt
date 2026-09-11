@@ -512,11 +512,9 @@ export function RegistrationWizard({
               <Row
                 label="ArtistrySynk"
                 value={
-                  identity
-                    ? identity.outcome === "CREATED"
-                      ? "New creative profile will be created"
-                      : "Linked to existing account"
-                    : "Pending"
+                  connection?.status === "CONNECTED"
+                    ? `Connected${connection.identity?.username ? ` · @${connection.identity.username}` : ""}`
+                    : "Not connected (optional)"
                 }
               />
               <Row label="Full name" value={form.fullName} />
