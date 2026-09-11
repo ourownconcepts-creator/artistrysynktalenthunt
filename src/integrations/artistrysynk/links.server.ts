@@ -5,17 +5,12 @@
  * copy of the ArtistrySynk account.
  */
 
-import { createHash, randomBytes } from "node:crypto";
+import { createHash } from "node:crypto";
 
 import type { ArtistrySynkProfileProjection } from "./api.server";
 
 export function externalSubjectFor(userId: string): string {
   return `zgt-${userId}`;
-}
-
-export function createState(): { state: string; hash: string } {
-  const state = randomBytes(32).toString("base64url");
-  return { state, hash: hashState(state) };
 }
 
 export function hashState(state: string): string {
@@ -34,32 +29,60 @@ export interface StoredIntent {
   external_subject: string;
   expires_at: string;
   consumed_at: string | null;
+  processing_at: string | null;
+  code_verifier: string;
 }
 
 export async function recordIntent(input: {
   userId: string;
   stateHash: string;
-  intentId: string;
+  intentId?: string;
   redirectUri: string;
   externalSubject: string;
   scopes: string[];
   expiresAt: string;
-}): Promise<void> {
+  codeVerifier: string;
+}): Promise<string> {
   const db = await admin();
-  const { error } = await db.from("artistrysynk_link_intents").insert({
-    user_id: input.userId,
-    state_hash: input.stateHash,
-    intent_id: input.intentId,
-    redirect_uri: input.redirectUri,
-    external_subject: input.externalSubject,
-    scopes: input.scopes,
-    expires_at: input.expiresAt,
-  });
+  const { data, error } = await db
+    .from("artistrysynk_link_intents")
+    .insert({
+      user_id: input.userId,
+      state_hash: input.stateHash,
+      intent_id: input.intentId,
+      redirect_uri: input.redirectUri,
+      external_subject: input.externalSubject,
+      scopes: input.scopes,
+      expires_at: input.expiresAt,
+      code_verifier: input.codeVerifier,
+    })
+    .select("id")
+    .single();
+  if (error) throw error;
+  return data.id;
+}
+
+export async function finalizeIntent(
+  id: string,
+  input: { intentId: string; expiresAt: string },
+): Promise<void> {
+  const db = await admin();
+  const { error } = await db
+    .from("artistrysynk_link_intents")
+    .update({ intent_id: input.intentId, expires_at: input.expiresAt })
+    .eq("id", id)
+    .is("consumed_at", null);
   if (error) throw error;
 }
 
-/** Single-use: an intent is consumed atomically or rejected. */
-export async function consumeIntent(
+export async function deleteIntent(id: string): Promise<void> {
+  const db = await admin();
+  const { error } = await db.from("artistrysynk_link_intents").delete().eq("id", id);
+  if (error) throw error;
+}
+
+/** Atomically claim a callback so parallel/replayed processing cannot exchange its code twice. */
+export async function claimIntent(
   stateHash: string,
   userId: string,
 ): Promise<
@@ -67,27 +90,56 @@ export async function consumeIntent(
   | { ok: false; reason: "INVALID_STATE" | "EXPIRED" | "ALREADY_USED" }
 > {
   const db = await admin();
-  const { data, error } = await db
+  const claimedAt = new Date().toISOString();
+  const { data: claimed, error: claimError } = await db
     .from("artistrysynk_link_intents")
-    .select("id, user_id, redirect_uri, external_subject, expires_at, consumed_at")
+    .update({ processing_at: claimedAt })
+    .eq("state_hash", stateHash)
+    .eq("user_id", userId)
+    .is("processing_at", null)
+    .is("consumed_at", null)
+    .gt("expires_at", claimedAt)
+    .select(
+      "id, user_id, redirect_uri, external_subject, expires_at, consumed_at, processing_at, code_verifier",
+    )
+    .maybeSingle();
+  if (claimError) throw claimError;
+  if (claimed?.code_verifier) return { ok: true, intent: claimed as StoredIntent };
+
+  const { data: existing, error } = await db
+    .from("artistrysynk_link_intents")
+    .select("expires_at, consumed_at, processing_at")
     .eq("state_hash", stateHash)
     .eq("user_id", userId)
     .maybeSingle();
   if (error) throw error;
-  if (!data) return { ok: false, reason: "INVALID_STATE" };
-  if (data.consumed_at) return { ok: false, reason: "ALREADY_USED" };
-  if (new Date(data.expires_at).getTime() < Date.now()) return { ok: false, reason: "EXPIRED" };
+  if (!existing) return { ok: false, reason: "INVALID_STATE" };
+  if (existing.consumed_at || existing.processing_at) return { ok: false, reason: "ALREADY_USED" };
+  return { ok: false, reason: "EXPIRED" };
+}
 
-  const claimed = await db
+export async function consumeClaimedIntent(id: string): Promise<void> {
+  const db = await admin();
+  const { data, error } = await db
     .from("artistrysynk_link_intents")
     .update({ consumed_at: new Date().toISOString() })
-    .eq("id", data.id)
+    .eq("id", id)
+    .not("processing_at", "is", null)
     .is("consumed_at", null)
     .select("id")
     .maybeSingle();
-  if (claimed.error) throw claimed.error;
-  if (!claimed.data) return { ok: false, reason: "ALREADY_USED" };
-  return { ok: true, intent: data as StoredIntent };
+  if (error) throw error;
+  if (!data) throw new Error("ArtistrySynk transaction was not claimable.");
+}
+
+export async function releaseIntentClaim(id: string): Promise<void> {
+  const db = await admin();
+  const { error } = await db
+    .from("artistrysynk_link_intents")
+    .update({ processing_at: null })
+    .eq("id", id)
+    .is("consumed_at", null);
+  if (error) throw error;
 }
 
 export interface LinkRecord {

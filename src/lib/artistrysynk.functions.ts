@@ -68,7 +68,7 @@ export const startArtistrySynkConnection = createServerFn({ method: "POST" })
 export const completeArtistrySynkConnection = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { code: string; state: string }) =>
-    z.object({ code: z.string().min(1).max(4096), state: z.string().min(1).max(512) }).parse(input),
+    z.object({ code: z.string().min(1).max(4096), state: z.string().min(16).max(512) }).parse(input),
   )
   .handler(async ({ data, context }): Promise<ArtistrySynkConnectResult> => {
     const { getArtistrySynkProvider } = await import(
