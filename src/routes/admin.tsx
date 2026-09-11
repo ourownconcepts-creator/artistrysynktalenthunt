@@ -5,7 +5,7 @@ import { Wordmark } from "@/components/brand/Wordmark";
 import { ADMIN_SECTIONS } from "@/domain/navigation";
 
 /** Sections that have their own live, database-backed page. */
-const LIVE_ADMIN_PAGES = ["competitions", "judging", "voting"];
+const LIVE_ADMIN_PAGES = ["competitions", "lifecycle", "applications", "submissions", "judging", "voting"];
 
 export const Route = createFileRoute("/admin")({
   component: AdminLayout,
@@ -60,7 +60,7 @@ function AdminLayout() {
         <header className="flex h-16 items-center justify-between border-b border-border bg-surface/60 px-4 sm:px-6">
           <span className="eyebrow">Control centre</span>
           <span className="inline-flex items-center gap-1.5 rounded-full border border-warning/40 bg-warning/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-warning">
-            <Lock className="size-3" /> Role gating pending backend
+            <Lock className="size-3" /> Server-enforced roles
           </span>
         </header>
         <main className="min-w-0 flex-1 p-4 sm:p-8">

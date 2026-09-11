@@ -59,6 +59,7 @@ function JudgingPanel() {
   });
 
   const isStaff = (roles.data ?? []).some((r) => ["SUPER_ADMIN", "ADMIN", "MODERATOR"].includes(r));
+  const isAdmin = (roles.data ?? []).some((r) => ["SUPER_ADMIN", "ADMIN"].includes(r));
   const isJudge = (roles.data ?? []).includes("JUDGE");
 
   const claim = useMutation({
@@ -80,7 +81,7 @@ function JudgingPanel() {
       toast.success("Decision recorded");
       void queryClient.invalidateQueries({ queryKey: ["judge-queue"] });
     },
-    onError: () => toast.error("Only admins and moderators can move contestants between rounds."),
+    onError: () => toast.error("Only administrators can move contestants between rounds."),
   });
 
   if (!ready) return <p className="text-sm text-muted-foreground">Loading…</p>;
@@ -102,8 +103,8 @@ function JudgingPanel() {
         <p className="eyebrow">Judging</p>
         <h1 className="mt-3 text-4xl">Judging panel</h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          Judges score each entry against the configured criteria. Admins and moderators decide who
-          advances. Contact details are never shown here.
+          Judges score each entry against the configured criteria. Only administrators decide who
+          advances or is eliminated. Contact details are never shown here.
         </p>
       </header>
 
@@ -160,7 +161,7 @@ function JudgingPanel() {
                       "Score"
                     )}
                   </Button>
-                  {isStaff && (
+                  {isAdmin && (
                     <>
                       <Button
                         size="sm"

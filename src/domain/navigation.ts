@@ -38,11 +38,19 @@ export const ADMIN_SECTIONS: SurfaceSection[] = [
     phase: "PHASE_1",
   },
   {
+    slug: "lifecycle",
+    label: "Operations",
+    summary:
+      "Competition and round lifecycle, round completion, results and contestant advancement.",
+    permission: "round:manage",
+    phase: "PHASE_1",
+  },
+  {
     slug: "applications",
     label: "Applications",
     summary: "Review, approve, reject and de-duplicate contestant applications.",
     permission: "application:review",
-    phase: "LATER",
+    phase: "PHASE_1",
   },
   {
     slug: "contestants",
@@ -56,7 +64,7 @@ export const ADMIN_SECTIONS: SurfaceSection[] = [
     label: "Submissions",
     summary: "Moderate audition media before anything becomes public.",
     permission: "submission:moderate",
-    phase: "LATER",
+    phase: "PHASE_1",
   },
   {
     slug: "judging",
