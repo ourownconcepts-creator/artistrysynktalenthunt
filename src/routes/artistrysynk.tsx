@@ -173,7 +173,10 @@ function ArtistrySynkPortalPage() {
                     />
                     <Row label="Entry code" value={app.reference_code ?? "—"} />
                     <Row label="Status" value={STATUS_LABELS[app.status] ?? app.status} />
-                    <Row label="Current stage" value={app.competition_rounds?.name ?? "Registration"} />
+                    <Row
+                      label="Current stage"
+                      value={app.competition_rounds?.name ?? "Registration"}
+                    />
                     <Row
                       label="Submitted"
                       value={
@@ -189,7 +192,10 @@ function ArtistrySynkPortalPage() {
                       You have not entered a competition yet. Entry is free and takes about ten
                       minutes.
                     </p>
-                    <Button asChild className="mt-5 bg-gold text-primary-foreground hover:opacity-90">
+                    <Button
+                      asChild
+                      className="mt-5 bg-gold text-primary-foreground hover:opacity-90"
+                    >
                       <Link to="/register">Enter the competition</Link>
                     </Button>
                   </>
