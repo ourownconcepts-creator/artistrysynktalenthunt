@@ -48,7 +48,7 @@ function AdminHome() {
   });
   const announcements = useQuery({
     queryKey: ["announcements", competition.data?.id, "admin"],
-    queryFn: () => fetchAnnouncements({ competitionId: competition.data?.id }),
+    queryFn: () => fetchAnnouncements({ competitionId: competition.data?.id ?? null }),
     enabled: Boolean(competition.data?.id),
   });
   const audit = useQuery({
