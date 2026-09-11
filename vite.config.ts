@@ -12,7 +12,7 @@ import { loadEnv } from "vite";
 // Server routes (auth email webhook, integrations) read non-VITE_ env vars.
 // The base config only injects VITE_* into the client, so load the rest into
 // process.env for server-side code only — never into the client bundle.
-const serverEnv = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "");
+const serverEnv = loadEnv(process.env["NODE_ENV"] ?? "development", process.cwd(), "");
 Object.assign(process.env, serverEnv);
 
 const entitiesRoot = path.resolve(process.cwd(), "node_modules/entities");

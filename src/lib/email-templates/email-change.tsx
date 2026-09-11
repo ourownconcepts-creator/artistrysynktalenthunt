@@ -66,7 +66,7 @@ export const EmailChangeEmail = ({
 
 export default EmailChangeEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
+const main = { backgroundColor: '#ffffff', fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif'".replace(/'/g, '') }
 const container = { padding: '20px 25px' }
 const h1 = {
   fontSize: '22px',
