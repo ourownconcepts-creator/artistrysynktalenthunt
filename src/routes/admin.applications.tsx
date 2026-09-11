@@ -40,6 +40,8 @@ function ApplicationReview() {
   const { user, ready } = useSession();
   const roles = useMyRoles();
   const isAdmin = (roles.data ?? []).some((r) => ["SUPER_ADMIN", "ADMIN"].includes(r));
+  const isStaff =
+    isAdmin || (roles.data ?? []).some((r) => ["MODERATOR"].includes(r));
   const queryClient = useQueryClient();
 
   const [filter, setFilter] = useState<string>("");
@@ -109,15 +111,17 @@ function ApplicationReview() {
         <p className="eyebrow">Applications</p>
         <h1 className="mt-3 text-4xl">Application review</h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          Contestants can never approve their own entry — the server only accepts these decisions
-          from an administrator, and records every one in the audit log.
+          Contestants can never approve their own entry. Only administrators admit or reject an
+          entry; moderators can flag one for review or ask for a correction. Every action is
+          recorded in the audit log.
         </p>
       </header>
 
       {!isAdmin && (
         <p className="card-stage p-6 text-sm text-warning">
-          You can read entries, but only administrators can approve, reject or change a contestant's
-          state.
+          {isStaff
+            ? "As a moderator you can flag entries and ask for corrections. Admitting or rejecting an entry is reserved for administrators."
+            : "You can read entries, but only competition staff can act on them."}
         </p>
       )}
 
@@ -191,10 +195,18 @@ function ApplicationReview() {
                   <Button
                     size="sm"
                     variant="outline"
-                    disabled={!isAdmin || review.isPending}
+                    disabled={!isStaff || review.isPending}
                     onClick={() => review.mutate({ id: row.id, decision: "CORRECTION_REQUESTED" })}
                   >
                     Request correction
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={!isStaff || review.isPending}
+                    onClick={() => review.mutate({ id: row.id, decision: "UNDER_REVIEW" })}
+                  >
+                    Flag for review
                   </Button>
                   <Button
                     size="sm"
