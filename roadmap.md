@@ -1,6 +1,10 @@
 # Zik's Got Talent — roadmap
 
 ## Done
+- Twelve real contestant entries seeded across categories with judge marks and
+  public votes, so Contestants, Shortlists and Moderation show live records.
+- Contestant portal shows the stage, progress state, decision note and time of
+  the last admin change, refreshing on its own.
 - Admin panel complete: contestant records, round shortlists, moderation
   (flagged voting, media queue, score corrections) and settings (team roles,
   integrations) now live alongside the existing admin sections.
@@ -13,7 +17,7 @@
 
 ## Open (blocked)
 - Branded sender domain for sign-in confirmation and password-reset emails —
-  waiting on the user to complete the email domain setup dialog. These emails are
-  sent by the platform's own sign-in system, not QueenSMTP.
+  waiting on the user to complete the email domain setup dialog, then the
+  branded sign-in templates get scaffolded and styled.
 - Approve the Demo Connect Act entry — waiting on the user to approve the
   ArtistrySynk consent so the linked profile can be verified first.
