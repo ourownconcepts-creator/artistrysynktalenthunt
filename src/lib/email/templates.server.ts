@@ -132,6 +132,34 @@ const STATUS_COPY: Record<string, { heading: string; body: string }> = {
     heading: "Your competition journey ends here",
     body: "You didn't advance to the next round this time. Thank you for the performance you gave us.",
   },
+  HELD: {
+    heading: "Your result is being held",
+    body: "Your result for this round is on hold while the panel finishes its decisions. We'll email you as soon as it's confirmed.",
+  },
+  SHORTLISTED: {
+    heading: "You've been shortlisted",
+    body: "Great news — you're on the shortlist. Keep an eye on your dashboard for the next step.",
+  },
+  ROUND_ACTIVE: {
+    heading: "You're live in this round",
+    body: "You're now competing in the current round. Check your dashboard for what's required and by when.",
+  },
+  WINNER: {
+    heading: "You won",
+    body: "Congratulations — you've won the competition. Our team will be in touch about what happens next.",
+  },
+  PENDING_REVIEW: {
+    heading: "Your audition is queued for review",
+    body: "We've received your audition and it's waiting for our team to watch it.",
+  },
+  REVISION_REQUESTED: {
+    heading: "Your audition needs a change",
+    body: "Our team has asked for a revision to your audition. Please update it from your dashboard.",
+  },
+  CORRECTION_REQUESTED: {
+    heading: "We need a correction to your entry",
+    body: "Something in your entry needs fixing before we can review it. Please update it from your dashboard.",
+  },
 };
 
 export function applicationStatusEmail(data: StatusEmailData) {
