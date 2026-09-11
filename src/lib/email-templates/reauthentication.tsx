@@ -34,12 +34,13 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
 
 export default ReauthenticationEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif'".replace(/'/g, '') }
+const main = { backgroundColor: '#ffffff', fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }
 const container = { padding: '20px 25px' }
 const h1 = {
   fontSize: '22px',
   fontWeight: 'bold' as const,
-  color: '#000000',
+  color: '#14110C',
+  letterSpacing: '0.02em',
   margin: '0 0 20px',
 }
 const text = {
