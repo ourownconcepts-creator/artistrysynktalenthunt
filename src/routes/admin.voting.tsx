@@ -10,6 +10,13 @@ import { Label } from "@/components/ui/label";
 import { useMyRoles, useSession } from "@/hooks/useSession";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchCompetition } from "@/lib/live-data";
+import {
+  closeVotingNow,
+  describeResult,
+  fetchSuspiciousVoters,
+  fetchVoteTotals,
+  voidVotes,
+} from "@/lib/operations";
 
 export const Route = createFileRoute("/admin/voting")({
   head: () => ({
