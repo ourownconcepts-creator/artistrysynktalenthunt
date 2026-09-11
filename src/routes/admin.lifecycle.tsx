@@ -121,17 +121,21 @@ function LifecyclePage() {
   });
 
   const decide = useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       id,
       outcome,
     }: {
       id: string;
       outcome: "ADVANCED" | "ELIMINATED" | "HELD";
-    }) => decideRoundResult(id, outcome, reason),
+    }) => {
+      const result = await decideRoundResult(id, outcome, reason);
+      if (result.ok) await notifyContestant(id, outcome, reason);
+      return result;
+    },
     onSuccess: (result) => {
       if (result.ok) {
         toast.success(
-          `Recorded — contestant is now ${PROGRESS_STATE_LABELS[result.new_state ?? ""] ?? result.new_state}`,
+          `Recorded — contestant is now ${PROGRESS_STATE_LABELS[result.new_state ?? ""] ?? result.new_state} and has been emailed`,
         );
         setReason("");
         refresh();
@@ -143,11 +147,14 @@ function LifecyclePage() {
   });
 
   const changeState = useMutation({
-    mutationFn: ({ id, state }: { id: string; state: string }) =>
-      setApplicationState(id, state, reason),
+    mutationFn: async ({ id, state }: { id: string; state: string }) => {
+      const result = await setApplicationState(id, state, reason);
+      if (result.ok) await notifyContestant(id, state, reason);
+      return result;
+    },
     onSuccess: (result) => {
       if (result.ok) {
-        toast.success("Contestant state updated");
+        toast.success("Contestant state updated — the contestant has been emailed");
         setReason("");
         refresh();
       } else {
