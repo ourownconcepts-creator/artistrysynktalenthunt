@@ -2,19 +2,18 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, BadgeCheck, Sparkles, Trophy, Users } from "lucide-react";
 
 import heroStage from "@/assets/hero-stage.jpg";
-import { CategoryGrid } from "@/components/competition/CategoryGrid";
 import { StatusPill } from "@/components/competition/StatusPill";
 import { PublicShell } from "@/components/site/PublicShell";
 import { SponsorStrip } from "@/components/site/SponsorStrip";
 import { Button } from "@/components/ui/button";
-import { daysUntil, formatDateRange, isRegistrationOpen } from "@/domain/competition";
-import { describeVoting } from "@/domain/voting";
-import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
 import {
-  getFeaturedCompetition,
-  listAnnouncements,
-  listCategoryGroups,
-} from "@/lib/competition-data";
+  useCategoryGroups,
+  useCompetition,
+  usePublicAnnouncements,
+  useRounds,
+} from "@/hooks/useCompetition";
+import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
+import { describeVotingModel, formatDateRange, isRegistrationOpen } from "@/lib/live-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,25 +22,37 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "A national multi-category talent competition for singers, dancers, comedians, designers, photographers, coders and creators. Enter Season One free.",
+          "A national multi-category talent competition for singers, dancers, comedians, designers, photographers, coders and creators. Entry is free.",
       },
       { property: "og:title", content: "Zik's Got Talent — Your talent deserves to be discovered" },
       {
         property: "og:description",
         content:
-          "Enter Season One across 22 talent categories. Every contestant leaves with a free ArtistrySynk creative profile.",
+          "Enter across every talent category. Every contestant leaves with a free ArtistrySynk creative profile.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Landing,
 });
 
 function Landing() {
-  const competition = getFeaturedCompetition();
-  const groups = listCategoryGroups();
-  const announcements = listAnnouncements("PUBLIC").slice(0, 3);
-  const open = isRegistrationOpen(competition);
-  const closingIn = daysUntil(competition.registrationClosesAt);
+  const competition = useCompetition();
+  const rounds = useRounds(competition.data?.id);
+  const groups = useCategoryGroups(competition.data?.id, true);
+  const announcements = usePublicAnnouncements(competition.data?.id);
+
+  const data = competition.data;
+  const activeRounds = (rounds.data ?? []).filter((r) => r.is_active);
+  const categoryCount = (groups.data ?? []).reduce((sum, g) => sum + g.categories.length, 0);
+  const open = data ? isRegistrationOpen(data) : false;
+  const closingIn =
+    data?.registration_closes_at &&
+    Math.max(
+      0,
+      Math.ceil((new Date(data.registration_closes_at).getTime() - Date.now()) / 86_400_000),
+    );
 
   return (
     <PublicShell>
@@ -67,9 +78,9 @@ function Landing() {
         </div>
         <div className="relative mx-auto w-full max-w-7xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24">
           <div className="flex flex-wrap items-center gap-3">
-            <StatusPill status={competition.status} />
+            {data && <StatusPill status={data.status} />}
             <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-              {formatDateRange(competition.startsAt, competition.endsAt)}
+              {formatDateRange(data?.starts_at ?? null, data?.ends_at ?? null)}
             </span>
           </div>
 
@@ -82,41 +93,35 @@ function Landing() {
           </h1>
 
           <p className="mt-7 max-w-xl text-base text-muted-foreground sm:text-lg">
-            {competition.description}
+            {data?.description ??
+              "A national multi-category talent competition. Entry is free, and every entrant keeps a permanent creative profile."}
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Button asChild size="lg" className="bg-gold text-primary-foreground hover:opacity-90">
               <Link to="/register">
-                Enter Season One
+                {data ? `Enter ${data.name}` : "Enter the competition"}
                 <ArrowRight className="ml-1 size-4" />
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline">
-              <Link to="/competitions/$slug" params={{ slug: competition.slug }}>
-                How it works
-              </Link>
+              <Link to="/how-it-works">How it works</Link>
             </Button>
-            {open && (
+            {open && closingIn ? (
               <span className="text-sm text-muted-foreground">
-                Registration closes in{" "}
-                <span className="font-bold text-primary">{closingIn} days</span>
+                Entries close in <span className="font-bold text-primary">{closingIn} days</span>
               </span>
-            )}
+            ) : null}
           </div>
 
           <dl className="mt-14 grid grid-cols-2 gap-6 border-t border-border/60 pt-8 sm:grid-cols-4">
-            <Stat
-              label="Talent categories"
-              value={String(competition.stats.categories)}
-              icon={Sparkles}
-            />
-            <Stat label="Cities" value={String(competition.stats.cities)} icon={Users} />
-            <Stat label="Prize pool" value={competition.stats.prizePool} icon={Trophy} />
-            <Stat label="Rounds" value={String(competition.rounds.length)} icon={BadgeCheck} />
+            <Stat label="Talent categories" value={String(categoryCount)} icon={Sparkles} />
+            <Stat label="Cities" value={String(data?.cities ?? 0)} icon={Users} />
+            <Stat label="Prize pool" value={data?.prize_pool || "TBC"} icon={Trophy} />
+            <Stat label="Rounds" value={String(activeRounds.length)} icon={BadgeCheck} />
           </dl>
 
-          <SponsorStrip placement="HERO" className="mt-16" />
+          <SponsorStrip placement="HERO" className="mt-16" competitionId={data?.id} />
         </div>
       </section>
 
@@ -166,8 +171,26 @@ function Landing() {
             <Link to="/categories">All categories</Link>
           </Button>
         </div>
-        <div className="mt-9">
-          <CategoryGrid groups={groups} />
+        <div className="mt-9 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {(groups.data ?? []).map((group) => (
+            <article key={group.id} className="card-stage card-stage-hover p-6">
+              <h3 className="text-2xl">{group.name}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{group.description}</p>
+              <ul className="mt-5 flex flex-wrap gap-2">
+                {group.categories.map((category) => (
+                  <li key={category.id}>
+                    <Link
+                      to="/categories/$slug"
+                      params={{ slug: category.slug }}
+                      className="inline-flex rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
+                    >
+                      {category.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -175,15 +198,15 @@ function Landing() {
       <section className="border-y border-border/70 bg-surface/50">
         <div className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6">
           <p className="eyebrow">The road to the final</p>
-          <h2 className="mt-3 text-3xl sm:text-4xl">
-            {competition.rounds.length} configurable rounds
-          </h2>
-          <p className="mt-4 max-w-2xl text-muted-foreground">
-            Judging is weighted {describeVoting(competition.voting).toLowerCase()} once public
-            voting opens.
-          </p>
+          <h2 className="mt-3 text-3xl sm:text-4xl">{activeRounds.length} configurable rounds</h2>
+          {data && (
+            <p className="mt-4 max-w-2xl text-muted-foreground">
+              Judging is weighted {describeVotingModel(data).toLowerCase()} once public voting
+              opens.
+            </p>
+          )}
           <ol className="mt-9 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {competition.rounds.map((round) => (
+            {activeRounds.map((round) => (
               <li key={round.id} className="card-stage card-stage-hover p-5">
                 <span className="font-display text-3xl text-primary/40">
                   {String(round.sequence).padStart(2, "0")}
@@ -208,10 +231,10 @@ function Landing() {
           </Button>
         </div>
         <div className="mt-9 grid gap-4 lg:grid-cols-3">
-          {announcements.map((announcement) => (
+          {(announcements.data ?? []).slice(0, 3).map((announcement) => (
             <article key={announcement.id} className="card-stage card-stage-hover p-6">
-              <time className="eyebrow" dateTime={announcement.publishedAt}>
-                {new Date(announcement.publishedAt).toLocaleDateString("en-GB", {
+              <time className="eyebrow" dateTime={announcement.published_at}>
+                {new Date(announcement.published_at).toLocaleDateString("en-GB", {
                   day: "numeric",
                   month: "long",
                 })}
@@ -234,14 +257,9 @@ function Landing() {
             One entry. <span className="text-gold">One shot.</span>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-muted-foreground">
-            Registration is free and takes about ten minutes. You can save your application and
-            finish it later.
+            Registration is free and takes about ten minutes.
           </p>
-          <Button
-            asChild
-            size="lg"
-            className="mt-8 bg-heat text-accent-foreground hover:opacity-90"
-          >
+          <Button asChild size="lg" className="mt-8 bg-heat text-accent-foreground hover:opacity-90">
             <Link to="/register">
               Start my application
               <ArrowRight className="ml-1 size-4" />
