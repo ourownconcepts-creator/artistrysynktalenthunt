@@ -130,6 +130,7 @@ function DashboardSectionPage() {
                 label="Category"
                 value={`${app.categories?.category_groups?.name ?? ""} · ${app.categories?.name ?? ""}`}
               />
+              <Row label="Entry code" value={app.reference_code ?? "—"} />
               <Row label="Status" value={STATUS_LABELS[app.status] ?? app.status} />
               <Row label="Stage" value={app.competition_rounds?.name ?? "Registration"} />
               <Row label="Public profile" value={app.is_public ? "Visible" : "Hidden"} />

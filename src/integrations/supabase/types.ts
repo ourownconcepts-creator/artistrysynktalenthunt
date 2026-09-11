@@ -128,6 +128,7 @@ export type Database = {
           media_is_public: boolean
           phone: string
           progress_state: string
+          reference_code: string | null
           review_decision: string | null
           review_reason: string | null
           reviewed_at: string | null
@@ -160,6 +161,7 @@ export type Database = {
           media_is_public?: boolean
           phone?: string
           progress_state?: string
+          reference_code?: string | null
           review_decision?: string | null
           review_reason?: string | null
           reviewed_at?: string | null
@@ -192,6 +194,7 @@ export type Database = {
           media_is_public?: boolean
           phone?: string
           progress_state?: string
+          reference_code?: string | null
           review_decision?: string | null
           review_reason?: string | null
           reviewed_at?: string | null
@@ -1223,6 +1226,7 @@ export type Database = {
         Args: { _application_id: string; _outcome: string; _reason?: string }
         Returns: Json
       }
+      generate_application_reference: { Args: never; Returns: string }
       grant_role_by_email: {
         Args: {
           _competition_slug?: string
@@ -1402,6 +1406,22 @@ export type Database = {
           voter_id: string
           votes_last_hour: number
           votes_today: number
+        }[]
+      }
+      track_application: {
+        Args: { _email: string; _reference_code: string }
+        Returns: {
+          category_name: string
+          competition_name: string
+          display_name: string
+          handle: string
+          progress_state: string
+          reference_code: string
+          round_name: string
+          status: string
+          submission_state: string
+          submitted_at: string
+          updated_at: string
         }[]
       }
       void_votes: {

@@ -50,6 +50,13 @@
       "when": 1789155220952,
       "tag": "0006_add_artistrysynk_pkce_transactions",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1789156923174,
+      "tag": "0007_application_reference_and_public_tracking",
+      "breakpoints": true
     }
   ]
 }
