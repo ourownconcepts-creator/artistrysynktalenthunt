@@ -1230,7 +1230,7 @@ function ContestantsPanel({ competitionSlug }: { competitionSlug: string | null 
   return (
     <Panel
       title="Contestant records"
-      description="Every contestant in this competition, with suspension, withdrawal and disqualification controls. Each change is emailed to the contestant and written to the audit log."
+      description="Every contestant in this competition, with suspension, withdrawal and disqualification controls. Each change is emailed to the contestant, written to the audit log, and shown straight away on the contestant's own portal and dashboard."
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Search name or handle" value={search} onChange={setSearch} />
