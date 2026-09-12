@@ -88,6 +88,23 @@ export function entryConfirmationEmail(data: EntryEmailData) {
   };
 }
 
+export function accountCreatedEmail(email: string) {
+  const dashboard = `${siteUrl()}/dashboard`;
+  const register = `${siteUrl()}/register`;
+  return {
+    subject: `Welcome to ${SITE_NAME} — your account is ready`,
+    html: shell({
+      kicker: "Account created",
+      heading: "Welcome to the stage",
+      content: paragraphs(
+        `Your ${SITE_NAME} account has been created for ${email}.\n\nOne account covers everything: entering the competition, following your progress on your dashboard, and voting for your favourite acts.\n\nReady to perform? Register your audition for Season One from your dashboard.`,
+      ),
+      cta: { label: "Open your dashboard", href: dashboard },
+    }),
+    text: `Welcome to ${SITE_NAME}.\n\nYour account has been created for ${email}. One account covers entering the competition, your dashboard, and voting.\n\nDashboard: ${dashboard}\nEnter Season One: ${register}`,
+  };
+}
+
 export function newEntryAdminEmail(
   data: EntryEmailData & { email: string; phone: string; location: string },
 ) {

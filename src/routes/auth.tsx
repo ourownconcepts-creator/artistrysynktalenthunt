@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useSession } from "@/hooks/useSession";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
+import { sendAccountCreatedEmail } from "@/lib/email.functions";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -74,6 +75,9 @@ function AuthPage() {
           options: { emailRedirectTo: `${window.location.origin}/dashboard` },
         });
         if (error) throw error;
+        // Branded account-created confirmation via QueenSMTP. Best-effort:
+        // it must never block or fail the signup itself.
+        void sendAccountCreatedEmail({ data: { email } }).catch(() => {});
         if (!data.session) {
           toast.success("Check your email to confirm your account, then sign in.");
           setMode("signin");
