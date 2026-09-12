@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useMyRoles, useSession } from "@/hooks/useSession";
 import { fetchJudgeDashboard } from "@/lib/operations";
 import { fetchJudgeQueue } from "@/lib/live-data";
+import { ScoringPanel } from "@/components/admin/ScoringPanel";
 
 export const Route = createFileRoute("/judge")({
   head: () => ({
@@ -139,11 +140,9 @@ function JudgeDashboardPage() {
               correction after a round decision, an administrator has to record it with a reason.
             </p>
 
-            <Button asChild className="mt-5 bg-gold text-primary-foreground hover:opacity-90">
-              <Link to="/admin/judging">
-                <ClipboardCheck className="mr-1 size-4" /> Open scoring panel
-              </Link>
-            </Button>
+            <p className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary">
+              <ClipboardCheck className="size-4" aria-hidden /> Score your contestants below
+            </p>
           </section>
 
           <section className="space-y-3">
@@ -188,6 +187,8 @@ function JudgeDashboardPage() {
               </p>
             )}
           </section>
+
+          <ScoringPanel isAdmin={false} />
         </>
       )}
     </div>
