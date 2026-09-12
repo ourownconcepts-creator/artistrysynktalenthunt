@@ -12,15 +12,19 @@ import { useMyRoles, useSession } from "@/hooks/useSession";
 import {
   type CriterionRow,
   type JudgeQueueRow,
+  assignJudge,
   claimFirstAdmin,
   decideRound,
+  fetchCategories,
   fetchCompetition,
   fetchCriteria,
+  fetchJudgeAssignments,
   fetchJudgeQueue,
   fetchLeaderboard,
   fetchMyScores,
   grantRoleByEmail,
   listTeam,
+  removeJudgeAssignment,
   saveScores,
 } from "@/lib/live-data";
 
@@ -122,6 +126,11 @@ function JudgingPanel() {
       )}
 
       {isStaff && <TeamPanel />}
+
+      {isAdmin && competition.data && (
+        <AssignmentsPanel competitionId={competition.data.id} competitionSlug={competition.data.slug} />
+      )}
+
 
       <section className="space-y-4">
         <h2 className="text-2xl">Contestants to score</h2>
@@ -280,6 +289,142 @@ function ScoreForm({ row, criteria }: { row: JudgeQueueRow; criteria: CriterionR
         Save scores
       </Button>
     </div>
+  );
+}
+
+/**
+ * Assigns appointed judges to the competition, either across every category or
+ * to one category only. A judge can score nothing until they appear here.
+ */
+function AssignmentsPanel({
+  competitionId,
+  competitionSlug,
+}: {
+  competitionId: string;
+  competitionSlug: string;
+}) {
+  const queryClient = useQueryClient();
+  const [judgeId, setJudgeId] = useState("");
+  const [categoryId, setCategoryId] = useState("");
+
+  const team = useQuery({ queryKey: ["team"], queryFn: listTeam });
+  const categories = useQuery({
+    queryKey: ["categories", competitionId],
+    queryFn: () => fetchCategories({ competitionId, activeOnly: true }),
+  });
+  const assignments = useQuery({
+    queryKey: ["judge-assignments", competitionSlug],
+    queryFn: () => fetchJudgeAssignments(competitionSlug),
+  });
+
+  const judges = (team.data ?? []).filter((m) => m.role === "JUDGE");
+
+  function refresh() {
+    void queryClient.invalidateQueries({ queryKey: ["judge-assignments"] });
+    void queryClient.invalidateQueries({ queryKey: ["judge-queue"] });
+  }
+
+  const add = useMutation({
+    mutationFn: () =>
+      assignJudge({ judgeId, competitionId, categoryId: categoryId || null }),
+    onSuccess: () => {
+      toast.success("Judge assigned");
+      setJudgeId("");
+      setCategoryId("");
+      refresh();
+    },
+    onError: () => toast.error("That judge is already assigned, or the action was refused."),
+  });
+
+  const remove = useMutation({
+    mutationFn: (id: string) => removeJudgeAssignment(id),
+    onSuccess: () => {
+      toast.success("Assignment removed");
+      refresh();
+    },
+    onError: () => toast.error("That action was refused."),
+  });
+
+  return (
+    <section className="card-stage p-6">
+      <p className="flex items-center gap-2 eyebrow">
+        <ShieldCheck className="size-4" /> Judge assignments
+      </p>
+      <p className="mt-2 text-sm text-muted-foreground">
+        A judge can only score entries in the categories they are assigned to.
+      </p>
+      <div className="mt-4 flex flex-wrap items-end gap-3">
+        <div className="min-w-56 flex-1 space-y-2">
+          <Label htmlFor="assign-judge">Judge</Label>
+          <select
+            id="assign-judge"
+            value={judgeId}
+            onChange={(e) => setJudgeId(e.target.value)}
+            className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+          >
+            <option value="">Choose a judge…</option>
+            {judges.map((j) => (
+              <option key={j.user_id} value={j.user_id}>
+                {j.display_name || j.email}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="min-w-48 space-y-2">
+          <Label htmlFor="assign-category">Category</Label>
+          <select
+            id="assign-category"
+            value={categoryId}
+            onChange={(e) => setCategoryId(e.target.value)}
+            className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+          >
+            <option value="">Every category</option>
+            {(categories.data ?? []).map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <Button onClick={() => add.mutate()} disabled={!judgeId || add.isPending}>
+          {add.isPending ? (
+            <Loader2 className="mr-1 size-4 animate-spin" />
+          ) : (
+            <UserPlus className="mr-1 size-4" />
+          )}
+          Assign
+        </Button>
+      </div>
+
+      {judges.length === 0 && (
+        <p className="mt-4 text-xs text-warning">
+          No judges appointed yet — appoint one above before assigning categories.
+        </p>
+      )}
+
+      {assignments.data?.length ? (
+        <ul className="mt-5 divide-y divide-border/60 text-sm">
+          {assignments.data.map((row) => (
+            <li key={row.assignment_id} className="flex items-center justify-between gap-3 py-2.5">
+              <span>
+                {row.judge_name || row.judge_email}
+                <span className="ml-2 text-muted-foreground">{row.category_name}</span>
+              </span>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => remove.mutate(row.assignment_id)}
+                disabled={remove.isPending}
+              >
+                <X className="mr-1 size-4" /> Remove
+              </Button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-5 text-sm text-muted-foreground">No judges assigned yet.</p>
+      )}
+    </section>
   );
 }
 

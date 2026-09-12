@@ -1,16 +1,79 @@
 import { useState } from "react";
 import { Link, Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { LogOut } from "lucide-react";
+import { Loader2, LogOut, ShieldAlert } from "lucide-react";
 
 import { Wordmark } from "@/components/brand/Wordmark";
 import { Button } from "@/components/ui/button";
 import { DASHBOARD_SECTIONS } from "@/domain/navigation";
+import { useMyRoles, useSession } from "@/hooks/useSession";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/dashboard")({
-  component: DashboardLayout,
+  ssr: false,
+  component: DashboardGate,
 });
+
+/**
+ * The contestant dashboard is for contestants and the public only.
+ * Administrators work exclusively in the control centre.
+ */
+function DashboardGate() {
+  const { user, ready } = useSession();
+  const roles = useMyRoles();
+
+  if (!ready || (user && roles.isPending)) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 className="size-4 animate-spin" aria-hidden /> Loading your dashboard…
+        </p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background p-6">
+        <div className="card-stage w-full max-w-md p-8 text-center">
+          <h1 className="text-2xl">Sign in to continue</h1>
+          <p className="mt-3 text-sm text-muted-foreground">
+            Your dashboard shows your entry, its progress and your account details.
+          </p>
+          <Button asChild className="mt-6">
+            <Link to="/auth">Sign in</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  const isAdmin = (roles.data ?? []).some((r) => r === "SUPER_ADMIN" || r === "ADMIN");
+
+  if (isAdmin) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background p-6">
+        <div className="card-stage w-full max-w-md p-8 text-center">
+          <ShieldAlert className="mx-auto size-8 text-warning" aria-hidden />
+          <h1 className="mt-4 text-2xl">Administrators use the control centre</h1>
+          <p className="mt-3 text-sm text-muted-foreground">
+            This account runs the competition, so it does not have a contestant dashboard.
+          </p>
+          <div className="mt-6 flex flex-col gap-2">
+            <Button asChild>
+              <Link to="/admin">Open the control centre</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link to="/">Back to the site</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return <DashboardLayout />;
+}
 
 function DashboardLayout() {
   const navigate = useNavigate();
