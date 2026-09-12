@@ -187,6 +187,8 @@ function JudgeDashboardPage() {
               </p>
             )}
           </section>
+
+          <ScoringPanel isAdmin={false} />
         </>
       )}
     </div>
