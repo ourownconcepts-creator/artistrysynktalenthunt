@@ -340,6 +340,135 @@ export class RemoteArtistrySynkProvider implements ArtistrySynkIdentityProvider 
     }
   }
 
+  /**
+   * Complete a new-identity claim from the ArtistrySynk redirect. The completion
+   * code is single-use, five-minute and exchanged server-to-server; it is never
+   * logged and never handled anywhere but here.
+   */
+  async completeClaim(
+    userId: string,
+    input: { code: string; state: string },
+  ): Promise<ArtistrySynkConnectResult> {
+    const correlationId = randomUUID();
+    const trace = (event: string, extra: Record<string, unknown> = {}) =>
+      console.info(event, { correlationId, userId, ...extra });
+
+    trace("ARTISTRYSYNK_CALLBACK_RECEIVED", { hasCode: Boolean(input.code) });
+
+    const config = readArtistrySynkConfig();
+    if (!config) {
+      return {
+        outcome: "FAILED",
+        reason: "NOT_CONFIGURED",
+        message: "ArtistrySynk is not configured yet.",
+      };
+    }
+
+    // Idempotency: a refreshed callback on an already-connected account changes nothing.
+    const existing = await getLink(userId);
+    if (existing?.status === "LINKED") {
+      trace("ARTISTRYSYNK_CONNECTION_COMPLETED", { alreadyConnected: true });
+      return { outcome: "CONNECTED", connection: await this.getConnection(userId) };
+    }
+
+    if (!input.code || !isValidState(input.state)) {
+      trace("ARTISTRYSYNK_CALLBACK_FAILED", { reason: "INVALID_CALLBACK" });
+      return {
+        outcome: "FAILED",
+        reason: "INVALID_CALLBACK",
+        message: "The ArtistrySynk response was incomplete.",
+      };
+    }
+
+    // No exchange call happens unless a live server-side transaction owns this
+    // contestant's claim. The browser never chooses the target account.
+    const claim = await claimPendingClaimIntent(userId);
+    if (!claim.ok) {
+      trace("ARTISTRYSYNK_CALLBACK_FAILED", { reason: claim.reason });
+      return {
+        outcome: "FAILED",
+        reason: claim.reason,
+        message:
+          claim.reason === "EXPIRED"
+            ? "That ArtistrySynk claim expired. Please start again."
+            : claim.reason === "ALREADY_USED"
+              ? "That ArtistrySynk claim was already used."
+              : "We couldn't complete your ArtistrySynk connection. Please try again.",
+      };
+    }
+    trace("ARTISTRYSYNK_STATE_VALIDATED", { transactionId: claim.intent.id });
+
+    const externalSubject = externalSubjectFor(userId);
+    try {
+      trace("ARTISTRYSYNK_CLAIM_EXCHANGE_STARTED", { transactionId: claim.intent.id });
+      const record = await exchangeClaimCode(config, {
+        code: input.code,
+        externalSubject: claim.intent.external_subject,
+        redirectUri: claim.intent.redirect_uri,
+      });
+      trace("ARTISTRYSYNK_CLAIM_EXCHANGE_SUCCEEDED", { identityId: record.identity_id });
+
+      if (
+        record.external_subject !== claim.intent.external_subject ||
+        claim.intent.external_subject !== externalSubject
+      ) {
+        console.error("ARTISTRYSYNK_CALLBACK_FAILED", {
+          correlationId,
+          userId,
+          reason: "EXTERNAL_SUBJECT_MISMATCH",
+          transactionId: claim.intent.id,
+        });
+        await consumeClaimedIntent(claim.intent.id).catch(() => undefined);
+        return {
+          outcome: "FAILED",
+          reason: "INVALID_CALLBACK",
+          message: "We couldn't complete your ArtistrySynk connection. Please try again.",
+        };
+      }
+      trace("ARTISTRYSYNK_IDENTITY_VERIFIED", { identityId: record.identity_id });
+
+      const result = await this.attach(
+        userId,
+        externalSubject,
+        {
+          identity_id: record.identity_id,
+          link_id: record.link_id,
+          linked_at: record.linked_at,
+          scopes: record.scopes,
+        },
+        config,
+      );
+      await consumeClaimedIntent(claim.intent.id).catch(() => undefined);
+      if (result.outcome === "CONNECTED") {
+        trace("ARTISTRYSYNK_IDENTITY_ATTACHED", { identityId: record.identity_id });
+        trace("ARTISTRYSYNK_CONNECTION_COMPLETED", { linkId: record.link_id ?? null });
+      } else {
+        trace("ARTISTRYSYNK_CALLBACK_FAILED", { reason: "ATTACH_REFUSED" });
+      }
+      return result;
+    } catch (error) {
+      // A provider outage must leave the transaction retryable, never corrupted.
+      if (error instanceof ArtistrySynkError && error.code === "temporarily_unavailable") {
+        await releaseIntentClaim(claim.intent.id).catch(() => undefined);
+      } else {
+        await consumeClaimedIntent(claim.intent.id).catch(() => undefined);
+      }
+      console.error("ARTISTRYSYNK_CALLBACK_FAILED", {
+        correlationId,
+        userId,
+        code: error instanceof ArtistrySynkError ? error.code : "internal_error",
+        status: error instanceof ArtistrySynkError ? error.status : 0,
+        requestId: error instanceof ArtistrySynkError ? error.requestId : null,
+      });
+      const mapped = reasonFor(error);
+      return {
+        outcome: "FAILED",
+        reason: mapped.reason,
+        message: "We couldn't complete your ArtistrySynk connection. Please try again.",
+      };
+    }
+  }
+
   async completeConnection(
     userId: string,
     input: { code: string; state: string },
