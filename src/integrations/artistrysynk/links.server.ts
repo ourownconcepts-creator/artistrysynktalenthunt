@@ -96,6 +96,48 @@ export async function consumeIntent(id: string): Promise<void> {
   if (error) throw error;
 }
 
+/**
+ * Atomically take ownership of the live identity-creation transaction for this
+ * contestant, so a refreshed or replayed claim callback cannot exchange its
+ * completion code twice.
+ */
+export async function claimPendingClaimIntent(
+  userId: string,
+): Promise<
+  | { ok: true; intent: StoredIntent }
+  | { ok: false; reason: "INVALID_STATE" | "EXPIRED" | "ALREADY_USED" }
+> {
+  const db = await admin();
+  const now = new Date().toISOString();
+  const { data: pending, error: pendingError } = await db
+    .from("artistrysynk_link_intents")
+    .select("id, expires_at, consumed_at, processing_at")
+    .eq("user_id", userId)
+    .eq("kind", "CLAIM")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (pendingError) throw pendingError;
+  if (!pending) return { ok: false, reason: "INVALID_STATE" };
+  if (pending.consumed_at || pending.processing_at) return { ok: false, reason: "ALREADY_USED" };
+
+  const { data: claimed, error } = await db
+    .from("artistrysynk_link_intents")
+    .update({ processing_at: now })
+    .eq("id", pending.id)
+    .eq("user_id", userId)
+    .is("consumed_at", null)
+    .is("processing_at", null)
+    .gt("expires_at", now)
+    .select(
+      "id, user_id, redirect_uri, external_subject, expires_at, consumed_at, processing_at, code_verifier",
+    )
+    .maybeSingle();
+  if (error) throw error;
+  if (!claimed) return { ok: false, reason: "EXPIRED" };
+  return { ok: true, intent: claimed as StoredIntent };
+}
+
 export async function finalizeIntent(
   id: string,
   input: { intentId: string; expiresAt: string },

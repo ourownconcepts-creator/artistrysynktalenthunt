@@ -484,6 +484,37 @@ export async function createIdentityIntent(
   });
 }
 
+/* ------------------------------------------------------- claim code exchange */
+
+export interface ClaimExchange {
+  identity_id: string;
+  external_subject: string;
+  link_id: string | null;
+  linked_at: string | null;
+  scopes: string[] | null;
+}
+
+/**
+ * `POST /identity/claim/exchange` — turns the single-use, five-minute completion
+ * code that ArtistrySynk puts on the claim redirect into the verified identity
+ * reference. Server-to-server only, Basic auth with the API client credential.
+ * The code is never logged and never leaves the server.
+ */
+export async function exchangeClaimCode(
+  config: ArtistrySynkConfig,
+  input: { code: string; externalSubject?: string; redirectUri?: string },
+): Promise<ClaimExchange> {
+  return jsonRequest<ClaimExchange>(`${config.integrationUrl}/identity/claim/exchange`, {
+    method: "POST",
+    authorization: basic(config),
+    body: JSON.stringify({
+      code: input.code,
+      ...(input.externalSubject ? { external_subject: input.externalSubject } : {}),
+      ...(input.redirectUri ? { redirect_uri: input.redirectUri } : {}),
+    }),
+  });
+}
+
 /* ------------------------------------------------------------------- revoke */
 
 export async function revokeLink(
