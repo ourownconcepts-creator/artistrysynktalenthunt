@@ -261,6 +261,12 @@ export function ConnectArtistrySynk({
                 : `Connect ${ARTISTRYSYNK.brand}`}
           </Button>
         )}
+        {!notConfigured && !connected && (
+          <Button type="button" variant="outline" onClick={connectWithSignIn} disabled={!enabled || busy}>
+            {phase === "AUTHORIZING" ? <Loader2 className="mr-1 size-4 animate-spin" /> : null}
+            I already have an {ARTISTRYSYNK.brand} account
+          </Button>
+        )}
         {connected && data?.profileUrl && (
           <Button asChild variant="outline">
             <a href={data.profileUrl} target="_blank" rel="noreferrer noopener">
