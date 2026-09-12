@@ -113,6 +113,7 @@ function AdminSectionPage() {
         <ModerationPanel competitionSlug={competition.data?.slug ?? null} />
       )}
       {section.slug === "settings" && <SettingsPanel />}
+      {section.slug === "artistrysynk" && <CreativeIdentitiesPanel />}
 
     </div>
   );
