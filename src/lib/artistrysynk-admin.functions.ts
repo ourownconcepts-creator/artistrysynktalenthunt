@@ -61,10 +61,12 @@ export const listArtistrySynkConnections = createServerFn({ method: "GET" })
         .order("created_at", { ascending: false }),
     ]);
 
-    const linkByUser = new Map<string, (typeof links)[number]>();
+    type LinkRow = NonNullable<typeof links>[number];
+    const linkByUser = new Map<string, LinkRow>();
     for (const link of links ?? []) if (!linkByUser.has(link.user_id)) linkByUser.set(link.user_id, link);
 
-    const intentByUser = new Map<string, (typeof intents)[number]>();
+    type IntentRow = NonNullable<typeof intents>[number];
+    const intentByUser = new Map<string, IntentRow>();
     for (const intent of intents ?? [])
       if (!intentByUser.has(intent.user_id)) intentByUser.set(intent.user_id, intent);
 
