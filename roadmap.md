@@ -29,3 +29,10 @@
   they start sending as soon as the domain's DNS check finishes.
 - Approve the Demo Connect Act entry — waiting on the user to approve the
   ArtistrySynk consent so the linked profile can be verified first.
+
+## Release Gate 1 (security) — 12 Sep 2026
+- Fixed: artistrysynk_apply_link was executable by any signed-in user with an arbitrary target user (identity hijack). EXECUTE revoked to service_role only.
+- Added profiles_guard_identity trigger: Data API callers cannot write artistrysynk_identity_ref/provider.
+- Unique indexes: one ArtistrySynk identity per ZGT profile; one CONNECTED link per identity.
+- Least privilege: anon is read-only on all tables; writes to user_roles, votes, audit_log, score_corrections, round_results and applications review columns only via guarded routines; artistrysynk_links/intents are service-role only.
+- Launch requirements: enable email confirmation in production auth; verify notify.ziksgottalent.com DNS; no storage buckets exist (audition media is external URLs).
