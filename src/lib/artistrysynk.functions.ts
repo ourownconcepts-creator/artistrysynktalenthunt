@@ -65,6 +65,24 @@ export const finalizeArtistrySynkClaim = createServerFn({ method: "POST" })
     return getArtistrySynkProvider().finalizeClaim(context.userId);
   });
 
+/**
+ * Claim completion: the one-time code from the ArtistrySynk redirect is
+ * exchanged server-to-server and the verified identity is attached to the
+ * signed-in account. The code never reaches ArtistrySynk from the browser and
+ * the browser cannot choose which account receives the identity.
+ */
+export const completeArtistrySynkClaim = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { code: string; state: string }) =>
+    z
+      .object({ code: z.string().min(1).max(4096), state: z.string().min(16).max(512) })
+      .parse(input),
+  )
+  .handler(async ({ data, context }): Promise<ArtistrySynkConnectResult> => {
+    const { getArtistrySynkProvider } = await import("@/integrations/artistrysynk/provider.server");
+    return getArtistrySynkProvider().completeClaim(context.userId, data);
+  });
+
 export const startArtistrySynkConnection = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(

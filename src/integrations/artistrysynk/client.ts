@@ -37,6 +37,15 @@ export interface ArtistrySynkIdentityProvider {
   /** After the claim redirect: verify and attach the claimed identity. */
   finalizeClaim(userId: string): Promise<ArtistrySynkConnectResult>;
 
+  /**
+   * Exchange the single-use completion code from the claim redirect, verify the
+   * external subject and attach the resulting identity. Server-to-server only.
+   */
+  completeClaim(
+    userId: string,
+    input: { code: string; state: string },
+  ): Promise<ArtistrySynkConnectResult>;
+
   /** Current connection state for a Zik's Got Talent account. */
   getConnection(userId: string): Promise<ArtistrySynkConnection>;
 
