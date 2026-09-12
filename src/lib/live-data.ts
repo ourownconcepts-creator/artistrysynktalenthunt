@@ -718,8 +718,9 @@ export async function submitEntry(input: EntryInput) {
       location: input.location,
       primary_discipline: category.name,
       is_public: true,
-      artistrysynk_identity_ref: input.identityRef,
-      artistrysynk_provider: input.identityProvider,
+      // The verified ArtistrySynk reference is written ONLY by the server-side
+      // link routine. Anything sent from the browser is ignored by the
+      // profiles_guard_identity trigger, so we do not send it at all.
       updated_at: new Date().toISOString(),
     },
     { onConflict: "id" },
