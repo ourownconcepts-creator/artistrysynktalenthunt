@@ -36,3 +36,20 @@
 - Unique indexes: one ArtistrySynk identity per ZGT profile; one CONNECTED link per identity.
 - Least privilege: anon is read-only on all tables; writes to user_roles, votes, audit_log, score_corrections, round_results and applications review columns only via guarded routines; artistrysynk_links/intents are service-role only.
 - Launch requirements: enable email confirmation in production auth; verify notify.ziksgottalent.com DNS; no storage buckets exist (audition media is external URLs).
+
+## Release Gate 2 (production configuration) — 12 Sep 2026
+- Email confirmation is now REQUIRED in production: Cloud auth setting
+  auto_confirm_email = false (also: signups open, anonymous sign-in off,
+  leaked-password check on). Verified: signup returns no session,
+  login before confirmation -> email_not_confirmed, login after -> works,
+  expired/invalid link -> /auth explains it, resend rate-limited to 1/min.
+- notify.ziksgottalent.com is VERIFIED with the email provider and auth emails
+  are enabled from it (NS-delegated to Lovable). Delivery test sent + accepted.
+  QueenSMTP cannot send from this subdomain while it is delegated, so entry
+  alerts continue from noreply@ziksgottalent.com.
+- Legal copy: Terms and Privacy now state plainly that auditions are external
+  links and that video access depends on the hosting site's permissions.
+- Cleanup: removed a stand-in identity reference and a revoked test connection.
+- Still open before production: real-person ArtistrySynk claim (new user) and
+  existing-account PKCE consent (NOT LIVE-VERIFIED); final legal copy;
+  backup/restore procedure confirmation from the platform.
