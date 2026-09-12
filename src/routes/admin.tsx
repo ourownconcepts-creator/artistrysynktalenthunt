@@ -137,9 +137,16 @@ function AdminLayout({
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-16 items-center justify-between border-b border-border bg-surface/60 px-4 sm:px-6">
           <span className="eyebrow">Control centre</span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-warning/40 bg-warning/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-warning">
-            <Lock className="size-3" /> Server-enforced roles
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="hidden text-xs text-muted-foreground sm:inline">{email}</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-warning/40 bg-warning/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-warning">
+              <Lock className="size-3" /> Admin only
+            </span>
+            <Button variant="outline" size="sm" onClick={onSignOut} disabled={signingOut}>
+              <LogOut className="mr-1.5 size-4" aria-hidden />
+              {signingOut ? "Signing out…" : "Sign out"}
+            </Button>
+          </div>
         </header>
         <main className="min-w-0 flex-1 p-4 sm:p-8">
           <Outlet />
