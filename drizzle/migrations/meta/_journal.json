@@ -64,6 +64,13 @@
       "when": 1789217590696,
       "tag": "0008_artistrysynk_identity_claim_intents",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1789222102543,
+      "tag": "0009_harden_identity_link_and_privileges",
+      "breakpoints": true
     }
   ]
 }
