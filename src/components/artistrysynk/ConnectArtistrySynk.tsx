@@ -10,11 +10,12 @@ import {
   completeArtistrySynkConnection,
   disconnectArtistrySynk,
   getArtistrySynkConnection,
+  provisionArtistrySynkIdentity,
   startArtistrySynkConnection,
 } from "@/lib/artistrysynk.functions";
 import { cn } from "@/lib/utils";
 
-type Phase = "IDLE" | "AUTHORIZING" | "CANCELLED" | "FAILED";
+type Phase = "IDLE" | "CREATING" | "AUTHORIZING" | "NEEDS_SIGNIN" | "CANCELLED" | "FAILED";
 
 /** Same-origin, popup-scoped wait for the authorization result. */
 function waitForResult(popup: Window) {
@@ -79,7 +80,32 @@ export function ConnectArtistrySynk({
     onChange?.(data);
   }, [data, onChange]);
 
+  /** Default path: no ArtistrySynk account needed, nothing to type. */
   async function connect() {
+    setFailure(null);
+    setPhase("CREATING");
+    try {
+      const result = await provisionArtistrySynkIdentity();
+      if (result.outcome === "CONNECTED") {
+        setPhase("IDLE");
+        await connection.refetch();
+        toast.success(`Connected to ${ARTISTRYSYNK.brand}`);
+        return;
+      }
+      if (result.reason === "AUTHORIZATION_REQUIRED") {
+        setPhase("NEEDS_SIGNIN");
+        return;
+      }
+      setPhase("FAILED");
+      setFailure(result.message);
+    } catch {
+      setPhase("FAILED");
+      setFailure(`We couldn't reach ${ARTISTRYSYNK.brand}. Your entry is unaffected — try later.`);
+    }
+  }
+
+  /** For someone who already has an ArtistrySynk account: their own approval. */
+  async function connectWithSignIn() {
     setFailure(null);
     const popup = window.open("", "artistrysynk-oauth", "width=600,height=760");
     if (!popup) {
@@ -134,7 +160,7 @@ export function ConnectArtistrySynk({
   const connected = data?.status === "CONNECTED";
   const revoked = data?.status === "REVOKED";
   const notConfigured = data?.status === "NOT_CONFIGURED";
-  const busy = phase === "AUTHORIZING" || connection.isLoading;
+  const busy = phase === "AUTHORIZING" || phase === "CREATING" || connection.isLoading;
 
   return (
     <div className={cn("rounded-xl border border-border bg-card/60 p-5", className)}>
@@ -194,6 +220,13 @@ export function ConnectArtistrySynk({
         </p>
       )}
 
+      {phase === "NEEDS_SIGNIN" && (
+        <p className="mt-4 rounded-lg border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
+          It looks like this email already belongs to an {ARTISTRYSYNK.brand} account. Sign in to
+          that account once to approve the connection.
+        </p>
+      )}
+
       {phase === "CANCELLED" && (
         <p className="mt-4 rounded-lg border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
           Authorization was cancelled. Nothing was connected — you can try again any time.
@@ -226,6 +259,17 @@ export function ConnectArtistrySynk({
               : revoked || phase === "FAILED" || phase === "CANCELLED"
                 ? "Try again"
                 : `Connect ${ARTISTRYSYNK.brand}`}
+          </Button>
+        )}
+        {!notConfigured && !connected && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={connectWithSignIn}
+            disabled={!enabled || busy}
+          >
+            {phase === "AUTHORIZING" ? <Loader2 className="mr-1 size-4 animate-spin" /> : null}I
+            already have an {ARTISTRYSYNK.brand} account
           </Button>
         )}
         {connected && data?.profileUrl && (

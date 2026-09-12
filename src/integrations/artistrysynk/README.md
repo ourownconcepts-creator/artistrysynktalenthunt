@@ -10,9 +10,26 @@ server-side.
 - `client.ts` — `ArtistrySynkIdentityProvider` boundary interface.
 - `api.server.ts` — HTTP transport. Discovery (RFC 9728 protected-resource
   metadata + OIDC `openid-configuration`), then only the documented endpoints:
+  `GET /identity/lookup`, `POST /identity/create`,
   `POST /identity/link/start`, `POST /identity/link/complete`,
   `GET /profile/{identity_id}`, `POST /revoke`, plus the discovered token
   endpoint. No endpoint is hard-coded or invented.
+
+## Two connection paths
+
+1. **New contestant (default).** `provisionIdentity` looks the external subject
+   up (`identity:read`); when there is none it asks ArtistrySynk to create the
+   identity server-to-server (`identity:create`) from the contestant's ZGT
+   details. The contestant is never asked for ArtistrySynk credentials.
+2. **Existing ArtistrySynk account.** If ArtistrySynk reports a conflict or
+   refuses to provision, the result is `AUTHORIZATION_REQUIRED` and the UI
+   offers the OAuth/PKCE sign-in flow, unchanged.
+
+The `POST /identity/create` body currently sent is `external_subject`, `email`,
+`display_name`, optional `username`/`location`/`primary_discipline`, `scopes`
+and `client_id`. ArtistrySynk rejects this shape with a generic
+`invalid_request`, so the exact published field names must be confirmed before
+automatic provisioning succeeds in production.
 - `links.server.ts` — one-time hashed OAuth state (intents) and link storage.
 - `provider.server.ts` — `RemoteArtistrySynkProvider`: begin/complete
   connection, status, disconnect, duplicate-identity rejection.

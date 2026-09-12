@@ -7,7 +7,9 @@ import {
   ARTISTRYSYNK_SCOPES,
   ArtistrySynkError,
   completeLink,
+  createIdentity,
   exchangeCode,
+  lookupIdentity,
   readArtistrySynkConfig,
   readProfile,
   requireArtistrySynkConfig,
@@ -147,6 +149,106 @@ export class RemoteArtistrySynkProvider implements ArtistrySynkIdentityProvider 
         });
       }
       throw error;
+    }
+  }
+
+  /**
+   * Automatic path. A contestant who has no ArtistrySynk account gets one
+   * provisioned server-to-server; nobody is asked for ArtistrySynk credentials.
+   * When ArtistrySynk says the person must approve in their own account, this
+   * returns AUTHORIZATION_REQUIRED so the caller can fall back to sign-in.
+   */
+  async provisionIdentity(
+    userId: string,
+    seed: {
+      email: string;
+      displayName: string;
+      username?: string | null;
+      location?: string | null;
+      primaryDiscipline?: string | null;
+    },
+  ): Promise<ArtistrySynkConnectResult> {
+    const config = readArtistrySynkConfig();
+    if (!config) {
+      return {
+        outcome: "FAILED",
+        reason: "NOT_CONFIGURED",
+        message: "ArtistrySynk is not configured yet.",
+      };
+    }
+
+    const existing = await getLink(userId);
+    if (existing?.status === "LINKED") {
+      return { outcome: "CONNECTED", connection: await this.getConnection(userId) };
+    }
+
+    const externalSubject = externalSubjectFor(userId);
+    try {
+      let record = await lookupIdentity(config, externalSubject);
+      if (!record) {
+        record = await createIdentity(config, {
+          externalSubject,
+          email: seed.email,
+          displayName: seed.displayName,
+          username: seed.username ?? null,
+          location: seed.location ?? null,
+          primaryDiscipline: seed.primaryDiscipline ?? null,
+        });
+      }
+
+      const conflict = await findConflictingLink(record.identity_id, userId);
+      if (conflict) {
+        return {
+          outcome: "FAILED",
+          reason: "DUPLICATE_IDENTITY",
+          message:
+            "That ArtistrySynk identity is already connected to another Zik's Got Talent account.",
+        };
+      }
+
+      let projection: ArtistrySynkProfileProjection | null = record.profile ?? null;
+      if (!projection) {
+        try {
+          projection = await readProfile(config, { identityId: record.identity_id });
+        } catch {
+          projection = null;
+        }
+      }
+
+      await saveLink({
+        userId,
+        externalSubject,
+        identityId: record.identity_id,
+        linkId: record.link_id ?? record.identity_id,
+        scopes: record.scopes ?? [...ARTISTRYSYNK_SCOPES],
+        linkedAt: record.linked_at ?? new Date().toISOString(),
+        profile: projection,
+      });
+      await applyIdentityToApplications(userId, record.identity_id);
+      return { outcome: "CONNECTED", connection: await this.getConnection(userId) };
+    } catch (error) {
+      console.error("ArtistrySynk automatic identity provisioning failed", {
+        code: error instanceof ArtistrySynkError ? error.code : "internal_error",
+        status: error instanceof ArtistrySynkError ? error.status : 0,
+        requestId: error instanceof ArtistrySynkError ? error.requestId : null,
+        validation: error instanceof ArtistrySynkError ? error.validation : [],
+      });
+      if (error instanceof ArtistrySynkError) {
+        // A conflicting or already-owned account, or a request ArtistrySynk will
+        // only honour with the person's own approval: use the sign-in flow.
+        if (
+          ["conflict", "already_exists", "invalid_request", "forbidden", "unsupported"].includes(
+            error.code,
+          )
+        ) {
+          return {
+            outcome: "FAILED",
+            reason: "AUTHORIZATION_REQUIRED",
+            message: "This contestant needs to approve the connection in ArtistrySynk.",
+          };
+        }
+      }
+      return { outcome: "FAILED", ...reasonFor(error) };
     }
   }
 

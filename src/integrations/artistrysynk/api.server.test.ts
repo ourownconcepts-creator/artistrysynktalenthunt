@@ -1,10 +1,6 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 
-import {
-  exchangeCode,
-  startLink,
-  type ArtistrySynkConfig,
-} from "./api.server";
+import { exchangeCode, startLink, type ArtistrySynkConfig } from "./api.server";
 import { base64UrlSha256 } from "./pkce.server";
 
 const config: ArtistrySynkConfig = {

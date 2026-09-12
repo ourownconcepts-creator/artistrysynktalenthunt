@@ -8,10 +8,7 @@
  */
 
 export type ArtistrySynkConnectionStatus =
-  | "NOT_CONFIGURED"
-  | "NOT_CONNECTED"
-  | "CONNECTED"
-  | "REVOKED";
+  "NOT_CONFIGURED" | "NOT_CONNECTED" | "CONNECTED" | "REVOKED";
 
 /** The approved, read-only projection ArtistrySynk permits partners to read. */
 export interface ArtistrySynkIdentity {
@@ -50,6 +47,8 @@ export type ArtistrySynkFailureReason =
   | "UNAVAILABLE"
   | "INVALID_CALLBACK"
   | "NOT_CONFIGURED"
+  /** ArtistrySynk needs the person to approve in their own account. */
+  | "AUTHORIZATION_REQUIRED"
   | "FAILED";
 
 export type ArtistrySynkConnectResult =
