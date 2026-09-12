@@ -15,10 +15,81 @@ const ADMIN_ROLES = ["SUPER_ADMIN", "ADMIN"];
 const LIVE_ADMIN_PAGES = ["competitions", "lifecycle", "applications", "submissions", "judging", "voting"];
 
 export const Route = createFileRoute("/admin")({
-  component: AdminLayout,
+  head: () => ({ meta: [{ name: "robots", content: "noindex" }] }),
+  component: AdminGate,
 });
 
-function AdminLayout() {
+function AdminGate() {
+  const { user, ready } = useSession();
+  const roles = useMyRoles();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [signingOut, setSigningOut] = useState(false);
+
+  async function handleSignOut() {
+    if (signingOut) return;
+    setSigningOut(true);
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  }
+
+  if (!ready || (user && roles.isPending)) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 className="size-4 animate-spin" aria-hidden /> Checking your access…
+        </p>
+      </div>
+    );
+  }
+
+  const isAdmin = Boolean(user) && (roles.data ?? []).some((r) => ADMIN_ROLES.includes(r));
+
+  if (!isAdmin) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background p-6">
+        <div className="card-stage w-full max-w-md p-8 text-center">
+          <ShieldAlert className="mx-auto size-8 text-warning" aria-hidden />
+          <h1 className="mt-4 text-2xl">Admin access only</h1>
+          <p className="mt-3 text-sm text-muted-foreground">
+            {user
+              ? "This account is not an administrator. Sign in with the Zik's Got Talent admin account to open the control centre."
+              : "Sign in with the Zik's Got Talent admin account to open the control centre."}
+          </p>
+          <div className="mt-6 flex flex-col gap-2">
+            {user ? (
+              <Button onClick={handleSignOut} disabled={signingOut}>
+                <LogOut className="mr-1.5 size-4" aria-hidden />
+                {signingOut ? "Signing out…" : "Sign out and switch account"}
+              </Button>
+            ) : (
+              <Button asChild>
+                <Link to="/auth">Sign in</Link>
+              </Button>
+            )}
+            <Button asChild variant="outline">
+              <Link to="/">Back to the site</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return <AdminLayout onSignOut={handleSignOut} signingOut={signingOut} email={user?.email ?? ""} />;
+}
+
+function AdminLayout({
+  onSignOut,
+  signingOut,
+  email,
+}: {
+  onSignOut: () => void;
+  signingOut: boolean;
+  email: string;
+}) {
   return (
     <div className="flex min-h-screen bg-background">
       <aside className="hidden w-64 shrink-0 border-r border-sidebar-border bg-sidebar lg:block">
