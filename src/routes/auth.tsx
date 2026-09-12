@@ -45,6 +45,24 @@ function AuthPage() {
     if (ready && user) void navigate({ to: "/dashboard", replace: true });
   }, [ready, user, navigate]);
 
+  // An expired or already-used confirmation / reset link returns here with the
+  // reason in the URL fragment. Explain it instead of showing a bare form.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const fragment = window.location.hash.replace(/^#/, "");
+    if (!fragment) return;
+    const params = new URLSearchParams(fragment);
+    const code = params.get("error_code");
+    if (!code) return;
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    setMode("signup");
+    toast.error(
+      code === "otp_expired"
+        ? "That confirmation link has expired or was already used. Enter your email and password again to get a fresh one."
+        : (params.get("error_description") ?? "That link could not be used.").replace(/\+/g, " "),
+    );
+  }, []);
+
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     setBusy(true);

@@ -39,6 +39,12 @@ function Terms() {
           Zik&rsquo;s Got Talent a licence to feature approved media in competition and promotional
           contexts.
         </Section>
+        <Section title="Audition links">
+          Auditions are submitted as links to video hosted elsewhere. Contestants are responsible for
+          keeping that link reachable for judges and for the sharing permissions set on the hosting
+          site; access and privacy of the video itself are governed by that provider, not by
+          Zik&rsquo;s Got Talent.
+        </Section>
         <Section title="Conduct and integrity">
           Vote manipulation, plagiarism, impersonation and abuse result in disqualification.
           Integrity reviews are logged and auditable.

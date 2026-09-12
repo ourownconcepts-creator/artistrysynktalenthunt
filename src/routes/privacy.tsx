@@ -34,8 +34,17 @@ function Privacy() {
           Draft summary only. Final privacy policy must be supplied before entries open publicly.
         </p>
         <Section title="What stays private">
-          Contact details, date of birth, guardian consent records, raw audition media, judge scores
-          and comments, and moderation notes. None of this appears on a public contestant profile.
+          Contact details, date of birth, guardian consent records, the audition link you submit,
+          judge scores and comments, and moderation notes. None of this appears on a public
+          contestant profile unless you mark your audition public.
+        </Section>
+        <Section title="Audition links">
+          Auditions are entered as a link to video you host elsewhere &mdash; YouTube, Google Drive,
+          Vimeo or similar. Zik&rsquo;s Got Talent stores the link, not the file, and keeps the link
+          itself out of public view unless you choose to make your audition public. Who else can open
+          that video depends on the site hosting it and the sharing permissions you set there, which
+          are outside our control. If your audition should stay private, keep it unlisted or
+          restricted on the hosting site.
         </Section>
         <Section title="What becomes public">
           Only your creative name, category, location, short bio, approved media, competition stage
