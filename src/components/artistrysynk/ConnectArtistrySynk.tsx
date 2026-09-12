@@ -10,6 +10,7 @@ import {
   completeArtistrySynkConnection,
   disconnectArtistrySynk,
   getArtistrySynkConnection,
+  provisionArtistrySynkIdentity,
   startArtistrySynkConnection,
 } from "@/lib/artistrysynk.functions";
 import { cn } from "@/lib/utils";
