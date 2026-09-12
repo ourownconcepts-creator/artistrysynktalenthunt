@@ -14,7 +14,7 @@ import {
 } from "@/lib/artistrysynk.functions";
 import { cn } from "@/lib/utils";
 
-type Phase = "IDLE" | "AUTHORIZING" | "CANCELLED" | "FAILED";
+type Phase = "IDLE" | "CREATING" | "AUTHORIZING" | "NEEDS_SIGNIN" | "CANCELLED" | "FAILED";
 
 /** Same-origin, popup-scoped wait for the authorization result. */
 function waitForResult(popup: Window) {
@@ -79,7 +79,32 @@ export function ConnectArtistrySynk({
     onChange?.(data);
   }, [data, onChange]);
 
+  /** Default path: no ArtistrySynk account needed, nothing to type. */
   async function connect() {
+    setFailure(null);
+    setPhase("CREATING");
+    try {
+      const result = await provisionArtistrySynkIdentity();
+      if (result.outcome === "CONNECTED") {
+        setPhase("IDLE");
+        await connection.refetch();
+        toast.success(`Connected to ${ARTISTRYSYNK.brand}`);
+        return;
+      }
+      if (result.reason === "AUTHORIZATION_REQUIRED") {
+        setPhase("NEEDS_SIGNIN");
+        return;
+      }
+      setPhase("FAILED");
+      setFailure(result.message);
+    } catch {
+      setPhase("FAILED");
+      setFailure(`We couldn't reach ${ARTISTRYSYNK.brand}. Your entry is unaffected — try later.`);
+    }
+  }
+
+  /** For someone who already has an ArtistrySynk account: their own approval. */
+  async function connectWithSignIn() {
     setFailure(null);
     const popup = window.open("", "artistrysynk-oauth", "width=600,height=760");
     if (!popup) {
