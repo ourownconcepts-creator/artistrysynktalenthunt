@@ -11,11 +11,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export type ArtistrySynkAdminStatus =
-  | "CONNECTED"
-  | "REVOKED"
-  | "AWAITING_CLAIM"
-  | "EXPIRED"
-  | "NOT_CONNECTED";
+  "CONNECTED" | "REVOKED" | "AWAITING_CLAIM" | "EXPIRED" | "NOT_CONNECTED";
 
 export interface ArtistrySynkAdminRow {
   userId: string;
@@ -63,7 +59,8 @@ export const listArtistrySynkConnections = createServerFn({ method: "GET" })
 
     type LinkRow = NonNullable<typeof links>[number];
     const linkByUser = new Map<string, LinkRow>();
-    for (const link of links ?? []) if (!linkByUser.has(link.user_id)) linkByUser.set(link.user_id, link);
+    for (const link of links ?? [])
+      if (!linkByUser.has(link.user_id)) linkByUser.set(link.user_id, link);
 
     type IntentRow = NonNullable<typeof intents>[number];
     const intentByUser = new Map<string, IntentRow>();

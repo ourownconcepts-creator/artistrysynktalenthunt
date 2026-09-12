@@ -65,7 +65,6 @@ import {
   sendArtistrySynkInvite,
 } from "@/lib/artistrysynk-admin.functions";
 
-
 export const Route = createFileRoute("/admin/$section")({
   loader: ({ params }) => {
     const section = ADMIN_SECTIONS.find((s) => s.slug === params.section);
@@ -118,7 +117,6 @@ function AdminSectionPage() {
       )}
       {section.slug === "settings" && <SettingsPanel />}
       {section.slug === "artistrysynk" && <CreativeIdentitiesPanel />}
-
     </div>
   );
 }
@@ -1196,8 +1194,7 @@ function ContestantsPanel({ competitionSlug }: { competitionSlug: string | null 
 
   const rows = useQuery({
     queryKey: ["admin-applications", competitionSlug, progress],
-    queryFn: () =>
-      fetchAdminApplications({ competitionSlug, progressState: progress || null }),
+    queryFn: () => fetchAdminApplications({ competitionSlug, progressState: progress || null }),
     enabled: Boolean(competitionSlug),
   });
 
@@ -1272,8 +1269,9 @@ function ContestantsPanel({ competitionSlug }: { competitionSlug: string | null 
                   <span className="text-xs text-muted-foreground">@{row.handle}</span>
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {row.category_name} · {PROGRESS_STATE_LABELS[row.progress_state] ?? row.progress_state}{" "}
-                  · media {SUBMISSION_STATE_LABELS[row.submission_state] ?? row.submission_state}
+                  {row.category_name} ·{" "}
+                  {PROGRESS_STATE_LABELS[row.progress_state] ?? row.progress_state} · media{" "}
+                  {SUBMISSION_STATE_LABELS[row.submission_state] ?? row.submission_state}
                   {row.round_name ? ` · ${row.round_name}` : ""}
                 </p>
               </div>
@@ -1288,7 +1286,12 @@ function ContestantsPanel({ competitionSlug }: { competitionSlug: string | null 
 
             {openId === row.id && (
               <div className="mt-3 space-y-3 rounded-md border border-border/60 p-3">
-                <AreaField label="Reason (recorded and emailed)" value={reason} onChange={setReason} rows={2} />
+                <AreaField
+                  label="Reason (recorded and emailed)"
+                  value={reason}
+                  onChange={setReason}
+                  rows={2}
+                />
                 <div className="flex flex-wrap gap-2">
                   {CONTESTANT_ACTIONS.map((state) => (
                     <Button
@@ -1398,7 +1401,10 @@ function ShortlistsPanel({ competitionId }: { competitionId: string | null }) {
           </p>
         )}
         {list.map((row, index) => (
-          <div key={row.application_id} className="flex flex-wrap items-center justify-between gap-3 py-3">
+          <div
+            key={row.application_id}
+            className="flex flex-wrap items-center justify-between gap-3 py-3"
+          >
             <div className="min-w-0">
               <p className="font-semibold">
                 <span className="text-muted-foreground">{index + 1}.</span> {row.display_name}{" "}
@@ -1455,8 +1461,7 @@ function ModerationPanel({ competitionSlug }: { competitionSlug: string | null }
   });
   const pending = useQuery({
     queryKey: ["admin-applications", competitionSlug, "PENDING_REVIEW-media"],
-    queryFn: () =>
-      fetchAdminApplications({ competitionSlug, submissionState: "PENDING_REVIEW" }),
+    queryFn: () => fetchAdminApplications({ competitionSlug, submissionState: "PENDING_REVIEW" }),
     enabled: Boolean(competitionSlug),
   });
   const corrections = useQuery({
@@ -1658,16 +1663,15 @@ function SettingsPanel() {
               <div className="min-w-0">
                 <p className="font-semibold">{member.display_name || member.email}</p>
                 <p className="text-xs text-muted-foreground">
-                  {member.email} · {ROLE_LABELS[member.role as keyof typeof ROLE_LABELS] ?? member.role}
+                  {member.email} ·{" "}
+                  {ROLE_LABELS[member.role as keyof typeof ROLE_LABELS] ?? member.role}
                 </p>
               </div>
               <Button
                 size="sm"
                 variant="outline"
                 disabled={revoke.isPending || !member.email}
-                onClick={() =>
-                  revoke.mutate({ email: member.email as string, role: member.role })
-                }
+                onClick={() => revoke.mutate({ email: member.email as string, role: member.role })}
               >
                 Remove role
               </Button>
@@ -1791,13 +1795,18 @@ function CreativeIdentitiesPanel() {
             <table className="w-full min-w-[52rem] text-sm">
               <thead>
                 <tr className="border-b border-border/60 text-left">
-                  {["Contestant", "Status", "Linked identity", "Claim expires", "Linked", "Entries"].map(
-                    (head) => (
-                      <th key={head} className="px-3 py-2.5 font-semibold">
-                        {head}
-                      </th>
-                    ),
-                  )}
+                  {[
+                    "Contestant",
+                    "Status",
+                    "Linked identity",
+                    "Claim expires",
+                    "Linked",
+                    "Entries",
+                  ].map((head) => (
+                    <th key={head} className="px-3 py-2.5 font-semibold">
+                      {head}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
@@ -1816,7 +1825,9 @@ function CreativeIdentitiesPanel() {
                       {row.identityRef ? (
                         <>
                           <span className="block font-mono text-xs">{row.identityRef}</span>
-                          {row.identityUsername && <span className="block">@{row.identityUsername}</span>}
+                          {row.identityUsername && (
+                            <span className="block">@{row.identityUsername}</span>
+                          )}
                         </>
                       ) : (
                         "—"

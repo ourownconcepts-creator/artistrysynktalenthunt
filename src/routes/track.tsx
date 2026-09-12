@@ -52,7 +52,8 @@ function TrackPage() {
   const competition = useCompetition();
   const categories = useQuery({
     queryKey: ["portal-categories", competition.data?.id ?? null],
-    queryFn: () => fetchCategories({ competitionId: competition.data?.id ?? null, activeOnly: true }),
+    queryFn: () =>
+      fetchCategories({ competitionId: competition.data?.id ?? null, activeOnly: true }),
   });
 
   async function onSubmit(event: React.FormEvent) {
