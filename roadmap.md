@@ -15,7 +15,16 @@
 - Public entry tracking at `/track` with per-entry reference codes.
 - Stage-change and entry alert emails sent through QueenSMTP.
 
+- Public contestant portal at `/track` in the gold-on-white look of the entry
+  alerts: category browsing, entry route and code-based stage tracking.
+- Admin "Creative identities" panel: ArtistrySynk status per entrant, pending
+  claim expiry, linked identity, and a one-off invitation sender.
+- Connection invitation emailed to ourownconcepts@gmail.com.
+
 ## Open (blocked)
+- Sending from notify.ziksgottalent.com is refused by the email service until
+  that exact subdomain is verified there; entry alerts and the invitation go out
+  from ziksgottalent.com meanwhile.
 - Branded sign-in emails from notify.ziksgottalent.com are built and styled;
   they start sending as soon as the domain's DNS check finishes.
 - Approve the Demo Connect Act entry — waiting on the user to approve the
