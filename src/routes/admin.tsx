@@ -1,8 +1,15 @@
-import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
-import { Lock } from "lucide-react";
+import { Link, Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { Loader2, Lock, LogOut, ShieldAlert } from "lucide-react";
+import { useState } from "react";
 
 import { Wordmark } from "@/components/brand/Wordmark";
+import { Button } from "@/components/ui/button";
 import { ADMIN_SECTIONS } from "@/domain/navigation";
+import { useMyRoles, useSession } from "@/hooks/useSession";
+import { supabase } from "@/integrations/supabase/client";
+
+const ADMIN_ROLES = ["SUPER_ADMIN", "ADMIN"];
 
 /** Sections that have their own live, database-backed page. */
 const LIVE_ADMIN_PAGES = ["competitions", "lifecycle", "applications", "submissions", "judging", "voting"];
