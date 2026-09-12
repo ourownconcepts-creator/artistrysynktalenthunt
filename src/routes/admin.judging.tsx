@@ -12,15 +12,19 @@ import { useMyRoles, useSession } from "@/hooks/useSession";
 import {
   type CriterionRow,
   type JudgeQueueRow,
+  assignJudge,
   claimFirstAdmin,
   decideRound,
+  fetchCategories,
   fetchCompetition,
   fetchCriteria,
+  fetchJudgeAssignments,
   fetchJudgeQueue,
   fetchLeaderboard,
   fetchMyScores,
   grantRoleByEmail,
   listTeam,
+  removeJudgeAssignment,
   saveScores,
 } from "@/lib/live-data";
 
