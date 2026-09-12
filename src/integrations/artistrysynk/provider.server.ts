@@ -11,6 +11,7 @@ import {
   ArtistrySynkError,
   completeLink,
   createIdentityIntent,
+  exchangeClaimCode,
   exchangeCode,
   lookupIdentity,
   readArtistrySynkConfig,
@@ -24,6 +25,7 @@ import type { ArtistrySynkIdentityProvider } from "./client";
 import {
   applyIdentityToApplications,
   claimIntent,
+  claimPendingClaimIntent,
   consumeClaimedIntent,
   consumeIntent,
   deleteIntent,
