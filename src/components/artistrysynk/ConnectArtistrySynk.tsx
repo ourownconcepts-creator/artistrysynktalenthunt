@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
 import type { ArtistrySynkConnection } from "@/integrations/artistrysynk/types";
 import {
+  completeArtistrySynkClaim,
   completeArtistrySynkConnection,
   disconnectArtistrySynk,
   finalizeArtistrySynkClaim,
@@ -133,11 +134,11 @@ export function ConnectArtistrySynk({
       popup.location.href = prepared.claimUrl;
       const returned = await waiting;
 
-      // A claim that comes back with an authorization code completes through the
-      // standard exchange; otherwise verify the claimed identity directly.
+      // A claim return carries a single-use completion code: it is exchanged
+      // server-side. Without one, verify the claimed identity directly.
       const result =
         returned.code && returned.state
-          ? await completeArtistrySynkConnection({
+          ? await completeArtistrySynkClaim({
               data: { code: returned.code, state: returned.state },
             })
           : await finalizeArtistrySynkClaim();
