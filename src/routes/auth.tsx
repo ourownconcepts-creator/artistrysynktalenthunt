@@ -8,7 +8,7 @@ import { Wordmark } from "@/components/brand/Wordmark";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useSession } from "@/hooks/useSession";
+import { useMyRoles, useSession } from "@/hooks/useSession";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { sendAccountCreatedEmail } from "@/lib/email.functions";
@@ -37,14 +37,19 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const navigate = useNavigate();
   const { user, ready } = useSession();
+  const roles = useMyRoles();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
+  // Administrators only ever land in the control centre; everyone else in the
+  // contestant dashboard. Wait for the roles read so we never bounce twice.
   useEffect(() => {
-    if (ready && user) void navigate({ to: "/dashboard", replace: true });
-  }, [ready, user, navigate]);
+    if (!ready || !user || roles.isPending) return;
+    const isAdmin = (roles.data ?? []).some((r) => r === "SUPER_ADMIN" || r === "ADMIN");
+    void navigate({ to: isAdmin ? "/admin" : "/dashboard", replace: true });
+  }, [ready, user, roles.isPending, roles.data, navigate]);
 
   // An expired or already-used confirmation / reset link returns here with the
   // reason in the URL fragment. Explain it instead of showing a bare form.
