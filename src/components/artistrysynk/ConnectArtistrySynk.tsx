@@ -160,7 +160,7 @@ export function ConnectArtistrySynk({
   const connected = data?.status === "CONNECTED";
   const revoked = data?.status === "REVOKED";
   const notConfigured = data?.status === "NOT_CONFIGURED";
-  const busy = phase === "AUTHORIZING" || connection.isLoading;
+  const busy = phase === "AUTHORIZING" || phase === "CREATING" || connection.isLoading;
 
   return (
     <div className={cn("rounded-xl border border-border bg-card/60 p-5", className)}>
@@ -217,6 +217,13 @@ export function ConnectArtistrySynk({
         <p className="mt-4 rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm text-warning">
           Connecting to {ARTISTRYSYNK.brand} is not available on this environment yet. You can still
           register and compete.
+        </p>
+      )}
+
+      {phase === "NEEDS_SIGNIN" && (
+        <p className="mt-4 rounded-lg border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
+          It looks like this email already belongs to an {ARTISTRYSYNK.brand} account. Sign in to
+          that account once to approve the connection.
         </p>
       )}
 
