@@ -3,6 +3,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import {
   ArtistrySynkError,
   createIdentityIntent,
+  exchangeClaimCode,
   lookupIdentity,
   type ArtistrySynkConfig,
 } from "./api.server";
@@ -140,5 +141,51 @@ describe("identity creation intent", () => {
         email: "existing@example.com",
       }),
     ).rejects.toMatchObject({ code: "conflict", status: 409 });
+  });
+});
+
+describe("claim completion code exchange", () => {
+  test("posts the code to claim/exchange with confidential credentials", async () => {
+    const fetchMock = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+      expect(String(input)).toBe(
+        "https://artistrysynk.example/integration/v1/identity/claim/exchange",
+      );
+      expect((init?.headers as Record<string, string>)["Authorization"]).toMatch(/^Basic /);
+      const body = JSON.parse(String(init?.body)) as Record<string, unknown>;
+      expect(body["code"]).toBe("completion-code");
+      expect(body["external_subject"]).toBe("zgt-user-1");
+      return Response.json({
+        data: {
+          identity_id: "identity-9",
+          external_subject: "zgt-user-1",
+          link_id: "link-9",
+          linked_at: "2026-09-12T13:00:00.000Z",
+          scopes: ["identity:read", "profile:read"],
+        },
+        request_id: "req-9",
+      });
+    });
+    globalThis.fetch = fetchMock as unknown as typeof fetch;
+
+    await expect(
+      exchangeClaimCode(config, {
+        code: "completion-code",
+        externalSubject: "zgt-user-1",
+        redirectUri: "https://ziksgottalent.com/oauth/artistrysynk/return",
+      }),
+    ).resolves.toMatchObject({ identity_id: "identity-9", external_subject: "zgt-user-1" });
+  });
+
+  test("surfaces an invalid, expired or replayed code as an error", async () => {
+    globalThis.fetch = vi.fn(async () =>
+      Response.json(
+        { error: { code: "invalid_grant", message: "code already used" } },
+        { status: 400 },
+      ),
+    ) as unknown as typeof fetch;
+
+    await expect(exchangeClaimCode(config, { code: "used" })).rejects.toBeInstanceOf(
+      ArtistrySynkError,
+    );
   });
 });
