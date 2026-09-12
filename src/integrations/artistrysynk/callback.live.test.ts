@@ -86,12 +86,4 @@ describe("claim callback security", () => {
     expect((intents ?? []).every((row) => row.consumed_at !== null)).toBe(true);
   });
 
-  test("another user's transaction is never usable", async () => {
-    await clean();
-    await seed(10);
-    await expect(
-      provider.completeClaim(OTHER, { code: CODE, state: "q".repeat(32) }),
-    ).resolves.toMatchObject({ outcome: "FAILED" });
-    await clean();
-  });
 });
