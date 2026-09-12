@@ -60,7 +60,10 @@ import {
 import { ROLE_LABELS } from "@/domain/roles";
 import { notifyContestant } from "@/lib/notify";
 import { sendAnnouncementEmail, type EmailSendSummary } from "@/lib/email.functions";
-
+import {
+  listArtistrySynkConnections,
+  sendArtistrySynkInvite,
+} from "@/lib/artistrysynk-admin.functions";
 
 export const Route = createFileRoute("/admin/$section")({
   loader: ({ params }) => {
@@ -113,7 +116,7 @@ function AdminSectionPage() {
         <ModerationPanel competitionSlug={competition.data?.slug ?? null} />
       )}
       {section.slug === "settings" && <SettingsPanel />}
-
+      {section.slug === "artistrysynk" && <CreativeIdentitiesPanel />}
     </div>
   );
 }
@@ -1191,8 +1194,7 @@ function ContestantsPanel({ competitionSlug }: { competitionSlug: string | null 
 
   const rows = useQuery({
     queryKey: ["admin-applications", competitionSlug, progress],
-    queryFn: () =>
-      fetchAdminApplications({ competitionSlug, progressState: progress || null }),
+    queryFn: () => fetchAdminApplications({ competitionSlug, progressState: progress || null }),
     enabled: Boolean(competitionSlug),
   });
 
@@ -1267,8 +1269,9 @@ function ContestantsPanel({ competitionSlug }: { competitionSlug: string | null 
                   <span className="text-xs text-muted-foreground">@{row.handle}</span>
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {row.category_name} · {PROGRESS_STATE_LABELS[row.progress_state] ?? row.progress_state}{" "}
-                  · media {SUBMISSION_STATE_LABELS[row.submission_state] ?? row.submission_state}
+                  {row.category_name} ·{" "}
+                  {PROGRESS_STATE_LABELS[row.progress_state] ?? row.progress_state} · media{" "}
+                  {SUBMISSION_STATE_LABELS[row.submission_state] ?? row.submission_state}
                   {row.round_name ? ` · ${row.round_name}` : ""}
                 </p>
               </div>
@@ -1283,7 +1286,12 @@ function ContestantsPanel({ competitionSlug }: { competitionSlug: string | null 
 
             {openId === row.id && (
               <div className="mt-3 space-y-3 rounded-md border border-border/60 p-3">
-                <AreaField label="Reason (recorded and emailed)" value={reason} onChange={setReason} rows={2} />
+                <AreaField
+                  label="Reason (recorded and emailed)"
+                  value={reason}
+                  onChange={setReason}
+                  rows={2}
+                />
                 <div className="flex flex-wrap gap-2">
                   {CONTESTANT_ACTIONS.map((state) => (
                     <Button
@@ -1393,7 +1401,10 @@ function ShortlistsPanel({ competitionId }: { competitionId: string | null }) {
           </p>
         )}
         {list.map((row, index) => (
-          <div key={row.application_id} className="flex flex-wrap items-center justify-between gap-3 py-3">
+          <div
+            key={row.application_id}
+            className="flex flex-wrap items-center justify-between gap-3 py-3"
+          >
             <div className="min-w-0">
               <p className="font-semibold">
                 <span className="text-muted-foreground">{index + 1}.</span> {row.display_name}{" "}
@@ -1450,8 +1461,7 @@ function ModerationPanel({ competitionSlug }: { competitionSlug: string | null }
   });
   const pending = useQuery({
     queryKey: ["admin-applications", competitionSlug, "PENDING_REVIEW-media"],
-    queryFn: () =>
-      fetchAdminApplications({ competitionSlug, submissionState: "PENDING_REVIEW" }),
+    queryFn: () => fetchAdminApplications({ competitionSlug, submissionState: "PENDING_REVIEW" }),
     enabled: Boolean(competitionSlug),
   });
   const corrections = useQuery({
@@ -1653,16 +1663,15 @@ function SettingsPanel() {
               <div className="min-w-0">
                 <p className="font-semibold">{member.display_name || member.email}</p>
                 <p className="text-xs text-muted-foreground">
-                  {member.email} · {ROLE_LABELS[member.role as keyof typeof ROLE_LABELS] ?? member.role}
+                  {member.email} ·{" "}
+                  {ROLE_LABELS[member.role as keyof typeof ROLE_LABELS] ?? member.role}
                 </p>
               </div>
               <Button
                 size="sm"
                 variant="outline"
                 disabled={revoke.isPending || !member.email}
-                onClick={() =>
-                  revoke.mutate({ email: member.email as string, role: member.role })
-                }
+                onClick={() => revoke.mutate({ email: member.email as string, role: member.role })}
               >
                 Remove role
               </Button>
@@ -1698,6 +1707,149 @@ function SettingsPanel() {
             </p>
           </li>
         </ul>
+      </Panel>
+    </div>
+  );
+}
+
+/* ----------------------- Creative identities (ArtistrySynk) ----------------------- */
+
+const IDENTITY_STATUS_LABELS: Record<string, string> = {
+  CONNECTED: "Connected",
+  AWAITING_CLAIM: "Awaiting claim",
+  EXPIRED: "Claim expired",
+  REVOKED: "Disconnected",
+  NOT_CONNECTED: "Not connected",
+};
+
+function CreativeIdentitiesPanel() {
+  const rows = useQuery({
+    queryKey: ["artistrysynk-admin"],
+    queryFn: () => listArtistrySynkConnections(),
+    refetchOnWindowFocus: true,
+  });
+  const [invite, setInvite] = useState("");
+  const send = useMutation({
+    mutationFn: (email: string) => sendArtistrySynkInvite({ data: { email } }),
+    onSuccess: (result) =>
+      result.sent
+        ? toast.success("Invitation sent")
+        : toast.error(
+            result.configured ? "The invitation could not be delivered" : "Email is not set up yet",
+          ),
+    onError: () => toast.error("The invitation could not be sent"),
+  });
+
+  const list = rows.data ?? [];
+  const counts = list.reduce<Record<string, number>>((all, row) => {
+    all[row.status] = (all[row.status] ?? 0) + 1;
+    return all;
+  }, {});
+
+  return (
+    <div className="space-y-5">
+      <Panel
+        title="Connection overview"
+        description="Live ArtistrySynk state for everyone who has entered."
+      >
+        <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          {Object.keys(IDENTITY_STATUS_LABELS).map((key) => (
+            <div key={key} className="rounded-lg border border-border/60 bg-background/40 p-4">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                {IDENTITY_STATUS_LABELS[key]}
+              </p>
+              <p className="mt-1 text-2xl font-semibold">{counts[key] ?? 0}</p>
+            </div>
+          ))}
+        </div>
+      </Panel>
+
+      <Panel
+        title="Invite someone to connect"
+        description="Sends the branded connection invitation to one email address."
+      >
+        <div className="flex flex-wrap items-end gap-3">
+          <Field
+            label="Email address"
+            value={invite}
+            onChange={setInvite}
+            placeholder="name@example.com"
+          />
+          <Button
+            className="bg-gold text-primary-foreground hover:opacity-90"
+            disabled={!invite.includes("@") || send.isPending}
+            onClick={() => send.mutate(invite.trim())}
+          >
+            {send.isPending ? "Sending…" : "Send invitation"}
+          </Button>
+        </div>
+      </Panel>
+
+      <Panel title="Entrants" description="Status, pending claim expiry and the linked identity.">
+        {rows.isLoading && <p className="text-sm text-muted-foreground">Loading…</p>}
+        {!rows.isLoading && list.length === 0 && (
+          <p className="text-sm text-muted-foreground">No entries yet.</p>
+        )}
+        {list.length > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[52rem] text-sm">
+              <thead>
+                <tr className="border-b border-border/60 text-left">
+                  {[
+                    "Contestant",
+                    "Status",
+                    "Linked identity",
+                    "Claim expires",
+                    "Linked",
+                    "Entries",
+                  ].map((head) => (
+                    <th key={head} className="px-3 py-2.5 font-semibold">
+                      {head}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {list.map((row) => (
+                  <tr key={row.userId} className="border-b border-border/40 last:border-0">
+                    <td className="px-3 py-2.5">
+                      <span className="font-semibold">{row.displayName}</span>
+                      <span className="block text-xs text-muted-foreground">
+                        {row.email ?? "no email"}
+                      </span>
+                    </td>
+                    <td className="px-3 py-2.5">
+                      {IDENTITY_STATUS_LABELS[row.status] ?? row.status}
+                    </td>
+                    <td className="px-3 py-2.5 text-muted-foreground">
+                      {row.identityRef ? (
+                        <>
+                          <span className="block font-mono text-xs">{row.identityRef}</span>
+                          {row.identityUsername && (
+                            <span className="block">@{row.identityUsername}</span>
+                          )}
+                        </>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                    <td className="px-3 py-2.5 text-muted-foreground">
+                      {row.status === "AWAITING_CLAIM" && row.intentExpiresAt
+                        ? new Date(row.intentExpiresAt).toLocaleString()
+                        : row.status === "EXPIRED" && row.intentExpiresAt
+                          ? `expired ${new Date(row.intentExpiresAt).toLocaleString()}`
+                          : "—"}
+                    </td>
+                    <td className="px-3 py-2.5 text-muted-foreground">
+                      {row.linkedAt ? new Date(row.linkedAt).toLocaleDateString() : "—"}
+                    </td>
+                    <td className="px-3 py-2.5 text-muted-foreground">{row.entries}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </Panel>
     </div>
   );

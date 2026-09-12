@@ -130,6 +130,14 @@ export const ADMIN_SECTIONS: SurfaceSection[] = [
     phase: "PHASE_1",
   },
   {
+    slug: "artistrysynk",
+    label: "Creative identities",
+    summary:
+      "ArtistrySynk connection status for every entrant, pending claim expiry and the linked identity.",
+    permission: "settings:manage",
+    phase: "PHASE_1",
+  },
+  {
     slug: "settings",
     label: "Settings",
     summary: "Platform settings, integrations and notification channels.",
