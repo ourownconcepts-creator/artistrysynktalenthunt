@@ -515,7 +515,6 @@ export async function exchangeClaimCode(
   });
 }
 
-
 /* ------------------------------------------------------------------- revoke */
 
 export async function revokeLink(
