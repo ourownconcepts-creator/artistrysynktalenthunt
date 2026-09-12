@@ -45,7 +45,8 @@ export const provisionArtistrySynkIdentity = createServerFn({ method: "POST" })
       .eq("id", context.userId)
       .maybeSingle();
 
-    const claimEmail = typeof context.claims?.["email"] === "string" ? context.claims["email"] : null;
+    const claimEmail =
+      typeof context.claims?.["email"] === "string" ? context.claims["email"] : null;
     const email = profile?.email ?? claimEmail;
     if (!email) {
       return {

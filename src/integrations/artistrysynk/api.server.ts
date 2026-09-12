@@ -420,7 +420,10 @@ export async function lookupIdentity(
   try {
     return await jsonRequest<IdentityRecord>(url, { method: "GET", authorization: basic(config) });
   } catch (error) {
-    if (error instanceof ArtistrySynkError && (error.code === "not_found" || error.status === 404)) {
+    if (
+      error instanceof ArtistrySynkError &&
+      (error.code === "not_found" || error.status === 404)
+    ) {
       return null;
     }
     throw error;

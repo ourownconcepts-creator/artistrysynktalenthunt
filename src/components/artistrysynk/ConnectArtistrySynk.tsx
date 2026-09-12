@@ -262,9 +262,14 @@ export function ConnectArtistrySynk({
           </Button>
         )}
         {!notConfigured && !connected && (
-          <Button type="button" variant="outline" onClick={connectWithSignIn} disabled={!enabled || busy}>
-            {phase === "AUTHORIZING" ? <Loader2 className="mr-1 size-4 animate-spin" /> : null}
-            I already have an {ARTISTRYSYNK.brand} account
+          <Button
+            type="button"
+            variant="outline"
+            onClick={connectWithSignIn}
+            disabled={!enabled || busy}
+          >
+            {phase === "AUTHORIZING" ? <Loader2 className="mr-1 size-4 animate-spin" /> : null}I
+            already have an {ARTISTRYSYNK.brand} account
           </Button>
         )}
         {connected && data?.profileUrl && (

@@ -1,7 +1,4 @@
-import type {
-  ArtistrySynkConnectResult,
-  ArtistrySynkConnection,
-} from "./types";
+import type { ArtistrySynkConnectResult, ArtistrySynkConnection } from "./types";
 
 /**
  * THE INTEGRATION BOUNDARY.
