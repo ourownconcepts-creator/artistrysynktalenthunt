@@ -385,12 +385,80 @@ export interface ArtistrySynkProfileProjection {
 
 export async function readProfile(
   config: ArtistrySynkConfig,
-  input: { accessToken: string; identityId: string },
+  input: { accessToken?: string; identityId: string },
 ): Promise<ArtistrySynkProfileProjection> {
   return jsonRequest<ArtistrySynkProfileProjection>(
     `${config.integrationUrl}/profile/${encodeURIComponent(input.identityId)}`,
-    { method: "GET", authorization: `Bearer ${input.accessToken}` },
+    {
+      method: "GET",
+      authorization: input.accessToken ? `Bearer ${input.accessToken}` : basic(config),
+    },
   );
+}
+
+/* ---------------------------------------------- identity lookup and create */
+
+export interface IdentityRecord {
+  identity_id: string;
+  link_id?: string | null;
+  linked_at?: string | null;
+  scopes?: string[] | null;
+  profile?: ArtistrySynkProfileProjection | null;
+}
+
+/**
+ * `GET /identity/lookup` — does this external subject already have an active
+ * ArtistrySynk identity link? Returns null when the contract says not_found.
+ */
+export async function lookupIdentity(
+  config: ArtistrySynkConfig,
+  externalSubject: string,
+): Promise<IdentityRecord | null> {
+  const url = `${config.integrationUrl}/identity/lookup?external_subject=${encodeURIComponent(
+    externalSubject,
+  )}`;
+  try {
+    return await jsonRequest<IdentityRecord>(url, { method: "GET", authorization: basic(config) });
+  } catch (error) {
+    if (error instanceof ArtistrySynkError && (error.code === "not_found" || error.status === 404)) {
+      return null;
+    }
+    throw error;
+  }
+}
+
+export interface IdentitySeed {
+  externalSubject: string;
+  email: string;
+  displayName: string;
+  username?: string | null;
+  location?: string | null;
+  primaryDiscipline?: string | null;
+}
+
+/**
+ * `POST /identity/create` — server-to-server provisioning for a contestant who
+ * has no ArtistrySynk account yet. The contestant never sees or enters
+ * ArtistrySynk credentials; ArtistrySynk owns the created identity.
+ */
+export async function createIdentity(
+  config: ArtistrySynkConfig,
+  seed: IdentitySeed,
+): Promise<IdentityRecord> {
+  return jsonRequest<IdentityRecord>(`${config.integrationUrl}/identity/create`, {
+    method: "POST",
+    authorization: basic(config),
+    body: JSON.stringify({
+      external_subject: seed.externalSubject,
+      email: seed.email,
+      display_name: seed.displayName,
+      ...(seed.username ? { username: seed.username } : {}),
+      ...(seed.location ? { location: seed.location } : {}),
+      ...(seed.primaryDiscipline ? { primary_discipline: seed.primaryDiscipline } : {}),
+      scopes: ["identity:link", "profile:read"],
+      client_id: config.clientId,
+    }),
+  });
 }
 
 /* ------------------------------------------------------------------- revoke */
