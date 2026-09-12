@@ -17,19 +17,24 @@ server-side.
 
 ## Two connection paths
 
-1. **New contestant (default).** `provisionIdentity` looks the external subject
-   up (`identity:read`); when there is none it asks ArtistrySynk to create the
-   identity server-to-server (`identity:create`) from the contestant's ZGT
-   details. The contestant is never asked for ArtistrySynk credentials.
-2. **Existing ArtistrySynk account.** If ArtistrySynk reports a conflict or
-   refuses to provision, the result is `AUTHORIZATION_REQUIRED` and the UI
-   offers the OAuth/PKCE sign-in flow, unchanged.
+1. **New identity (default).** `prepareIdentity` looks the external subject up
+   (`identity:read`); when there is none it calls `POST /identity/create`, which
+   returns a short-lived single-use **claim intent** (`intent_id`, `claim_url`,
+   `expires_at`, `status`). ZGT stores the intent server-side and opens the
+   `claim_url`; the contestant claims the identity on ArtistrySynk with their own
+   sign-up/sign-in. On return, `finalizeClaim` verifies the identity through
+   `identity/lookup` and attaches it. Creating an identity is never silent, and
+   no ArtistrySynk password ever reaches ZGT.
+2. **Existing ArtistrySynk account.** A `409 conflict` (email already belongs to
+   an ArtistrySynk identity) returns `EXISTING_ACCOUNT`; the UI then offers
+   "Connect existing ArtistrySynk account", which uses the OAuth/PKCE link flow.
 
-The `POST /identity/create` body currently sent is `external_subject`, `email`,
-`display_name`, optional `username`/`location`/`primary_discipline`, `scopes`
-and `client_id`. ArtistrySynk rejects this shape with a generic
-`invalid_request`, so the exact published field names must be confirmed before
-automatic provisioning succeeds in production.
+The `POST /identity/create` body is exactly `external_subject` (stable ZGT user
+subject, trimmed, ≤200 chars), `redirect_uri` (registered HTTPS callback, no
+fragment), `scopes` (`identity:create`, `identity:read`, `profile:read`) and the
+optional `email`. `display_name`, `username`, `location`, `discipline` and any
+password are never sent. Each genuinely new attempt carries a fresh
+`Idempotency-Key`; a live unclaimed intent is reused from storage instead.
 
 - `links.server.ts` — one-time hashed OAuth state (intents) and link storage.
 - `provider.server.ts` — `RemoteArtistrySynkProvider`: begin/complete
