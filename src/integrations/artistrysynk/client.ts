@@ -26,6 +26,22 @@ export interface ArtistrySynkIdentityProvider {
     input: { code: string; state: string },
   ): Promise<ArtistrySynkConnectResult>;
 
+  /**
+   * Server-to-server path for a contestant with no ArtistrySynk account: look
+   * up an existing link, otherwise ask ArtistrySynk to provision the identity.
+   * Never asks the contestant for ArtistrySynk credentials.
+   */
+  provisionIdentity(
+    userId: string,
+    seed: {
+      email: string;
+      displayName: string;
+      username?: string | null;
+      location?: string | null;
+      primaryDiscipline?: string | null;
+    },
+  ): Promise<ArtistrySynkConnectResult>;
+
   /** Current connection state for a Zik's Got Talent account. */
   getConnection(userId: string): Promise<ArtistrySynkConnection>;
 

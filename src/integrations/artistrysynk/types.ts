@@ -50,6 +50,8 @@ export type ArtistrySynkFailureReason =
   | "UNAVAILABLE"
   | "INVALID_CALLBACK"
   | "NOT_CONFIGURED"
+  /** ArtistrySynk needs the person to approve in their own account. */
+  | "AUTHORIZATION_REQUIRED"
   | "FAILED";
 
 export type ArtistrySynkConnectResult =
