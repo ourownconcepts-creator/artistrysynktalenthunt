@@ -439,7 +439,7 @@ export const ARTISTRYSYNK_CREATE_SCOPES = [
 
 export interface IdentityCreateIntent {
   intent_id: string;
-  claim_url: string;
+  claim_url: string | null;
   expires_at: string;
   status: string;
 }

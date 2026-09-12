@@ -257,10 +257,9 @@ export class RemoteArtistrySynkProvider implements ArtistrySynkIdentityProvider 
         return {
           outcome: "FAILED",
           reason: "UNAVAILABLE",
-          message: `${"ArtistrySynk"} did not return a claim link. Please try again shortly.`,
+          message: "ArtistrySynk did not return a claim link. Please try again shortly.",
         };
       }
-
 
       await recordIntent({
         userId,
