@@ -127,6 +127,11 @@ function JudgingPanel() {
 
       {isStaff && <TeamPanel />}
 
+      {isAdmin && competition.data && (
+        <AssignmentsPanel competitionId={competition.data.id} competitionSlug={competition.data.slug} />
+      )}
+
+
       <section className="space-y-4">
         <h2 className="text-2xl">Contestants to score</h2>
         {queue.isLoading ? (
