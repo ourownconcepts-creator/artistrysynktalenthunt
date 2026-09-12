@@ -1151,6 +1151,26 @@ export type Database = {
     Functions: {
       active_competition_id: { Args: never; Returns: string }
       active_competition_slug: { Args: never; Returns: string }
+      admin_accounts: {
+        Args: { _limit?: number; _search?: string }
+        Returns: {
+          artistrysynk_status: string
+          created_at: string
+          display_name: string
+          email: string
+          email_confirmed_at: string
+          entry_category: string
+          entry_name: string
+          entry_progress_state: string
+          entry_reference: string
+          entry_submission_state: string
+          handle: string
+          is_owner: boolean
+          last_sign_in_at: string
+          roles: string[]
+          user_id: string
+        }[]
+      }
       admin_applications: {
         Args: {
           _competition_slug?: string
@@ -1249,6 +1269,7 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_owner_admin: { Args: { _user_id: string }; Returns: boolean }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
       judge_can_score: {
         Args: { _application_id: string; _judge_id: string }
@@ -1314,6 +1335,7 @@ export type Database = {
           user_id: string
         }[]
       }
+      owner_admin_email: { Args: never; Returns: string }
       progress_state_valid: { Args: { _state: string }; Returns: boolean }
       public_contestants: {
         Args: { _competition_slug?: string }
