@@ -37,6 +37,8 @@ export async function recordIntent(input: {
   userId: string;
   stateHash: string;
   intentId?: string;
+  kind?: "LINK" | "CLAIM";
+  claimUrl?: string;
   redirectUri: string;
   externalSubject: string;
   scopes: string[];
@@ -50,6 +52,8 @@ export async function recordIntent(input: {
       user_id: input.userId,
       state_hash: input.stateHash,
       intent_id: input.intentId ?? null,
+      kind: input.kind ?? "LINK",
+      claim_url: input.claimUrl ?? null,
       redirect_uri: input.redirectUri,
       external_subject: input.externalSubject,
       scopes: input.scopes,
@@ -60,6 +64,36 @@ export async function recordIntent(input: {
     .single();
   if (error) throw error;
   return data.id;
+}
+
+/** The live, unclaimed identity-creation intent for this contestant, if any. */
+export async function getPendingClaimIntent(
+  userId: string,
+): Promise<{ id: string; claim_url: string; expires_at: string } | null> {
+  const db = await admin();
+  const { data, error } = await db
+    .from("artistrysynk_link_intents")
+    .select("id, claim_url, expires_at")
+    .eq("user_id", userId)
+    .eq("kind", "CLAIM")
+    .is("consumed_at", null)
+    .gt("expires_at", new Date().toISOString())
+    .order("expires_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  return data?.claim_url ? (data as { id: string; claim_url: string; expires_at: string }) : null;
+}
+
+/** Mark any intent consumed (single use), regardless of claim state. */
+export async function consumeIntent(id: string): Promise<void> {
+  const db = await admin();
+  const { error } = await db
+    .from("artistrysynk_link_intents")
+    .update({ consumed_at: new Date().toISOString() })
+    .eq("id", id)
+    .is("consumed_at", null);
+  if (error) throw error;
 }
 
 export async function finalizeIntent(

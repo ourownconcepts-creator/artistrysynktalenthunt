@@ -233,6 +233,7 @@ export type Database = {
       }
       artistrysynk_link_intents: {
         Row: {
+          claim_url: string | null
           code_verifier: string | null
           consumed_at: string | null
           created_at: string
@@ -240,6 +241,7 @@ export type Database = {
           external_subject: string
           id: string
           intent_id: string | null
+          kind: string
           processing_at: string | null
           redirect_uri: string
           scopes: string[]
@@ -247,6 +249,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          claim_url?: string | null
           code_verifier?: string | null
           consumed_at?: string | null
           created_at?: string
@@ -254,6 +257,7 @@ export type Database = {
           external_subject: string
           id?: string
           intent_id?: string | null
+          kind?: string
           processing_at?: string | null
           redirect_uri: string
           scopes?: string[]
@@ -261,6 +265,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          claim_url?: string | null
           code_verifier?: string | null
           consumed_at?: string | null
           created_at?: string
@@ -268,6 +273,7 @@ export type Database = {
           external_subject?: string
           id?: string
           intent_id?: string | null
+          kind?: string
           processing_at?: string | null
           redirect_uri?: string
           scopes?: string[]

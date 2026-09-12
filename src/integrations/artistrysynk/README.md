@@ -30,6 +30,7 @@ The `POST /identity/create` body currently sent is `external_subject`, `email`,
 and `client_id`. ArtistrySynk rejects this shape with a generic
 `invalid_request`, so the exact published field names must be confirmed before
 automatic provisioning succeeds in production.
+
 - `links.server.ts` — one-time hashed OAuth state (intents) and link storage.
 - `provider.server.ts` — `RemoteArtistrySynkProvider`: begin/complete
   connection, status, disconnect, duplicate-identity rejection.

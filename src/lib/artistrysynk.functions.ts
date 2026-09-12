@@ -31,39 +31,38 @@ export const getArtistrySynkConnection = createServerFn({ method: "GET" })
   });
 
 /**
- * Automatic connection for a contestant who has no ArtistrySynk account: the
- * identity is created server-to-server from their Zik's Got Talent details.
- * They are never asked for ArtistrySynk credentials.
+ * Prepare a new ArtistrySynk creative identity. ArtistrySynk returns a
+ * single-use claim URL that the contestant opens to claim the identity with
+ * their own ArtistrySynk sign-up/sign-in. No password is ever handled here, and
+ * no profile detail beyond the optional email is sent.
  */
-export const provisionArtistrySynkIdentity = createServerFn({ method: "POST" })
+export const prepareArtistrySynkIdentity = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<ArtistrySynkConnectResult> => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: profile } = await supabaseAdmin
       .from("profiles")
-      .select("display_name, email, handle, location, primary_discipline")
+      .select("email")
       .eq("id", context.userId)
       .maybeSingle();
-
     const claimEmail =
       typeof context.claims?.["email"] === "string" ? context.claims["email"] : null;
-    const email = profile?.email ?? claimEmail;
-    if (!email) {
-      return {
-        outcome: "FAILED",
-        reason: "FAILED",
-        message: "Add your email address to your entry before connecting.",
-      };
-    }
 
     const { getArtistrySynkProvider } = await import("@/integrations/artistrysynk/provider.server");
-    return getArtistrySynkProvider().provisionIdentity(context.userId, {
-      email,
-      displayName: profile?.display_name?.trim() || email.split("@")[0]!,
-      username: profile?.handle ?? null,
-      location: profile?.location ?? null,
-      primaryDiscipline: profile?.primary_discipline ?? null,
-    });
+    const { resolveReturnOrigin } = await import("@/integrations/artistrysynk/api.server");
+    return getArtistrySynkProvider().prepareIdentity(
+      context.userId,
+      { email: profile?.email ?? claimEmail },
+      resolveReturnOrigin(requestOrigin()),
+    );
+  });
+
+/** After the ArtistrySynk claim page returns: verify and attach the identity. */
+export const finalizeArtistrySynkClaim = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<ArtistrySynkConnectResult> => {
+    const { getArtistrySynkProvider } = await import("@/integrations/artistrysynk/provider.server");
+    return getArtistrySynkProvider().finalizeClaim(context.userId);
   });
 
 export const startArtistrySynkConnection = createServerFn({ method: "POST" })

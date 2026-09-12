@@ -1,6 +1,11 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 
-import { createIdentity, lookupIdentity, type ArtistrySynkConfig } from "./api.server";
+import {
+  ArtistrySynkError,
+  createIdentityIntent,
+  lookupIdentity,
+  type ArtistrySynkConfig,
+} from "./api.server";
 
 const config: ArtistrySynkConfig = {
   baseUrl: "https://artistrysynk.example",
@@ -17,8 +22,8 @@ afterEach(() => {
   globalThis.fetch = originalFetch;
 });
 
-describe("server-to-server identity provisioning", () => {
-  test("lookup asks by external subject with confidential credentials", async () => {
+describe("identity lookup", () => {
+  test("asks by external subject with confidential credentials", async () => {
     const fetchMock = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
       expect(String(input)).toContain("/identity/lookup?external_subject=zgt-user-1");
       expect((init?.headers as Record<string, string>)["Authorization"]).toMatch(/^Basic /);
@@ -31,7 +36,7 @@ describe("server-to-server identity provisioning", () => {
     });
   });
 
-  test("lookup returns null when no identity exists yet", async () => {
+  test("returns null when no identity exists yet", async () => {
     globalThis.fetch = vi.fn(async () =>
       Response.json(
         { error: { code: "not_found", message: "No active identity link was found" } },
@@ -41,41 +46,98 @@ describe("server-to-server identity provisioning", () => {
 
     await expect(lookupIdentity(config, "zgt-new-user")).resolves.toBeNull();
   });
+});
 
-  test("create sends the contestant details and never a credential", async () => {
+describe("identity creation intent", () => {
+  test("sends only the contracted fields and returns the claim url", async () => {
     const fetchMock = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
-      expect(String(input)).toContain("/identity/create");
+      expect(String(input)).toBe("https://artistrysynk.example/integration/v1/identity/create");
+      const headers = init?.headers as Record<string, string>;
+      expect(headers["Authorization"]).toMatch(/^Basic /);
+      expect(headers["Idempotency-Key"]).toBe("key-1");
       const body = JSON.parse(String(init?.body)) as Record<string, unknown>;
+      expect(Object.keys(body).sort()).toEqual(
+        ["email", "external_subject", "redirect_uri", "scopes"].sort(),
+      );
       expect(body["external_subject"]).toBe("zgt-new-user");
-      expect(body["email"]).toBe("new@example.com");
-      expect(body["display_name"]).toBe("New Act");
+      expect(body["redirect_uri"]).toBe("https://ziksgottalent.com/oauth/artistrysynk/return");
+      expect(body["scopes"]).toEqual(["identity:create", "identity:read", "profile:read"]);
       expect(JSON.stringify(body)).not.toContain("api-secret");
-      return Response.json({ data: { identity_id: "identity-2", link_id: "link-2" } });
+      return Response.json(
+        {
+          data: {
+            intent_id: "intent-1",
+            claim_url: "https://artistrysynk.example/claim/intent-1",
+            expires_at: "2026-09-12T13:00:00.000Z",
+            status: "pending",
+          },
+          request_id: "req-1",
+        },
+        { status: 201 },
+      );
     });
     globalThis.fetch = fetchMock as unknown as typeof fetch;
 
     await expect(
-      createIdentity(config, {
-        externalSubject: "zgt-new-user",
+      createIdentityIntent(config, {
+        externalSubject: "  zgt-new-user  ",
+        redirectUri: "https://ziksgottalent.com/oauth/artistrysynk/return#frag",
         email: "new@example.com",
-        displayName: "New Act",
+        idempotencyKey: "key-1",
       }),
-    ).resolves.toMatchObject({ identity_id: "identity-2" });
+    ).resolves.toMatchObject({ claim_url: "https://artistrysynk.example/claim/intent-1" });
   });
 
-  test("an existing account surfaces a conflict for the approval path", async () => {
+  test("never sends profile detail or a password", async () => {
+    const fetchMock = vi.fn(async (_input: string | URL | Request, init?: RequestInit) => {
+      const raw = String(init?.body);
+      for (const forbidden of ["display_name", "username", "location", "discipline", "password"]) {
+        expect(raw).not.toContain(forbidden);
+      }
+      return Response.json(
+        {
+          data: {
+            intent_id: "i",
+            claim_url: "https://x/claim",
+            expires_at: "z",
+            status: "pending",
+          },
+        },
+        { status: 201 },
+      );
+    });
+    globalThis.fetch = fetchMock as unknown as typeof fetch;
+
+    await createIdentityIntent(config, {
+      externalSubject: "zgt-user",
+      redirectUri: "https://ziksgottalent.com/oauth/artistrysynk/return",
+    });
+  });
+
+  test("rejects a non-HTTPS return address before calling ArtistrySynk", async () => {
+    globalThis.fetch = vi.fn(async () => Response.json({})) as unknown as typeof fetch;
+    await expect(
+      createIdentityIntent(config, {
+        externalSubject: "zgt-user",
+        redirectUri: "http://ziksgottalent.com/oauth/artistrysynk/return",
+      }),
+    ).rejects.toBeInstanceOf(ArtistrySynkError);
+    expect(globalThis.fetch).not.toHaveBeenCalled();
+  });
+
+  test("surfaces a 409 conflict for an existing ArtistrySynk account", async () => {
     globalThis.fetch = vi.fn(async () =>
       Response.json(
-        { error: { code: "conflict", message: "That account already exists" } },
+        { error: { code: "conflict", message: "identity already exists" } },
         { status: 409 },
       ),
     ) as unknown as typeof fetch;
 
     await expect(
-      createIdentity(config, {
-        externalSubject: "zgt-existing",
-        email: "taken@example.com",
-        displayName: "Taken",
+      createIdentityIntent(config, {
+        externalSubject: "zgt-user",
+        redirectUri: "https://ziksgottalent.com/oauth/artistrysynk/return",
+        email: "existing@example.com",
       }),
     ).rejects.toMatchObject({ code: "conflict", status: 409 });
   });
