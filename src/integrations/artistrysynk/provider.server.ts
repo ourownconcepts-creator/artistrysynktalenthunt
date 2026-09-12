@@ -2,6 +2,8 @@
  * The real ArtistrySynk identity provider (Integration API v1). Server-only.
  */
 
+import { randomUUID } from "node:crypto";
+
 import { artistrysynkProfileUrl } from "@/config/app";
 import {
   ARTISTRYSYNK_CREATE_SCOPES,
