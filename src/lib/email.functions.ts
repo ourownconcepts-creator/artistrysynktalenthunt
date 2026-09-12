@@ -25,6 +25,28 @@ async function isAdmin(
   return !error && data === true;
 }
 
+/**
+ * Sends the account-created confirmation. Called right after signup, before
+ * the user has a session, so it is public: it only ever sends one fixed
+ * welcome template to the address given, with no caller-controlled content.
+ */
+export const sendAccountCreatedEmail = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) =>
+    z.object({ email: z.string().email().max(320) }).parse(input),
+  )
+  .handler(async ({ data }): Promise<EmailSendSummary> => {
+    const { sendEmail, emailConfig } = await import("./email/queensmtp.server");
+    const { accountCreatedEmail } = await import("./email/templates.server");
+
+    const message = accountCreatedEmail(data.email.trim().toLowerCase());
+    const result = await sendEmail({ to: data.email, ...message });
+    return {
+      sent: result.sent ? 1 : 0,
+      skipped: result.sent ? 0 : 1,
+      configured: !!emailConfig().apiKey,
+    };
+  });
+
 /** Sends the confirmation for the signed-in contestant's own latest entry. */
 export const sendEntryEmails = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
