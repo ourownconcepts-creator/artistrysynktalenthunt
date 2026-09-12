@@ -50,6 +50,7 @@ import {
   SUBMISSION_STATE_LABELS,
   describeResult,
   decideRoundResult,
+  fetchAdminAccounts,
   fetchAdminApplications,
   fetchRoundResults,
   fetchScoreCorrections,
@@ -115,6 +116,7 @@ function AdminSectionPage() {
       {section.slug === "moderation" && (
         <ModerationPanel competitionSlug={competition.data?.slug ?? null} />
       )}
+      {section.slug === "accounts" && <AccountsPanel />}
       {section.slug === "settings" && <SettingsPanel />}
       {section.slug === "artistrysynk" && <CreativeIdentitiesPanel />}
     </div>
