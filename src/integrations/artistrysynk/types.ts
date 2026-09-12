@@ -49,8 +49,14 @@ export type ArtistrySynkFailureReason =
   | "NOT_CONFIGURED"
   /** ArtistrySynk needs the person to approve in their own account. */
   | "AUTHORIZATION_REQUIRED"
+  /** The email already belongs to an ArtistrySynk identity. */
+  | "EXISTING_ACCOUNT"
+  /** The creation intent exists but the identity has not been claimed yet. */
+  | "CLAIM_INCOMPLETE"
   | "FAILED";
 
 export type ArtistrySynkConnectResult =
   | { outcome: "CONNECTED"; connection: ArtistrySynkConnection }
+  /** ArtistrySynk prepared an identity; the contestant must claim it there. */
+  | { outcome: "CLAIM_REQUIRED"; claimUrl: string; expiresAt: string }
   | { outcome: "FAILED"; reason: ArtistrySynkFailureReason; message: string };

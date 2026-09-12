@@ -9,17 +9,25 @@ import type { ArtistrySynkConnection } from "@/integrations/artistrysynk/types";
 import {
   completeArtistrySynkConnection,
   disconnectArtistrySynk,
+  finalizeArtistrySynkClaim,
   getArtistrySynkConnection,
-  provisionArtistrySynkIdentity,
+  prepareArtistrySynkIdentity,
   startArtistrySynkConnection,
 } from "@/lib/artistrysynk.functions";
 import { cn } from "@/lib/utils";
 
-type Phase = "IDLE" | "CREATING" | "AUTHORIZING" | "NEEDS_SIGNIN" | "CANCELLED" | "FAILED";
+type Phase =
+  "IDLE" | "PREPARING" | "CLAIMING" | "AUTHORIZING" | "EXISTING" | "CANCELLED" | "FAILED";
 
-/** Same-origin, popup-scoped wait for the authorization result. */
-function waitForResult(popup: Window) {
-  return new Promise<{ code: string; state: string }>((resolve, reject) => {
+interface ReturnPayload {
+  code: string | null;
+  state: string | null;
+  error: string | null;
+}
+
+/** Same-origin, popup-scoped wait for whatever ArtistrySynk returns. */
+function waitForReturn(popup: Window) {
+  return new Promise<ReturnPayload>((resolve, reject) => {
     let poll: number | undefined;
     const cleanup = () => {
       window.removeEventListener("message", onMessage);
@@ -34,12 +42,12 @@ function waitForResult(popup: Window) {
         return;
       }
       cleanup();
-      const data = event.data as { code?: string; state?: string; error?: string | null };
-      if (data.error || !data.code || !data.state) {
+      const data = event.data as Partial<ReturnPayload>;
+      if (data.error) {
         reject(new Error(data.error === "access_denied" ? "CANCELLED" : "INVALID_CALLBACK"));
         return;
       }
-      resolve({ code: data.code, state: data.state });
+      resolve({ code: data.code ?? null, state: data.state ?? null, error: null });
     };
     window.addEventListener("message", onMessage);
     poll = window.setInterval(() => {
@@ -80,32 +88,95 @@ export function ConnectArtistrySynk({
     onChange?.(data);
   }, [data, onChange]);
 
-  /** Default path: no ArtistrySynk account needed, nothing to type. */
-  async function connect() {
+  async function connected(message: string) {
+    setPhase("IDLE");
+    await connection.refetch();
+    toast.success(message);
+  }
+
+  /**
+   * New creative identity: ArtistrySynk prepares it, the contestant claims it on
+   * ArtistrySynk. No ArtistrySynk password is ever entered on Zik's Got Talent.
+   */
+  async function createIdentity() {
     setFailure(null);
-    setPhase("CREATING");
+    const popup = window.open("", "artistrysynk-claim", "width=600,height=760");
+    if (!popup) {
+      setPhase("FAILED");
+      setFailure("Allow pop-ups for this site, then try again.");
+      return;
+    }
+    setPhase("PREPARING");
     try {
-      const result = await provisionArtistrySynkIdentity();
-      if (result.outcome === "CONNECTED") {
-        setPhase("IDLE");
-        await connection.refetch();
-        toast.success(`Connected to ${ARTISTRYSYNK.brand}`);
+      const prepared = await prepareArtistrySynkIdentity();
+      if (prepared.outcome === "CONNECTED") {
+        popup.close();
+        await connected(`Connected to ${ARTISTRYSYNK.brand}`);
         return;
       }
-      if (result.reason === "AUTHORIZATION_REQUIRED") {
-        setPhase("NEEDS_SIGNIN");
+      if (prepared.outcome === "FAILED") {
+        popup.close();
+        if (
+          prepared.reason === "EXISTING_ACCOUNT" ||
+          prepared.reason === "AUTHORIZATION_REQUIRED"
+        ) {
+          setPhase("EXISTING");
+          return;
+        }
+        setPhase("FAILED");
+        setFailure(prepared.message);
+        return;
+      }
+
+      setPhase("CLAIMING");
+      const waiting = waitForReturn(popup);
+      popup.location.href = prepared.claimUrl;
+      const returned = await waiting;
+
+      // A claim that comes back with an authorization code completes through the
+      // standard exchange; otherwise verify the claimed identity directly.
+      const result =
+        returned.code && returned.state
+          ? await completeArtistrySynkConnection({
+              data: { code: returned.code, state: returned.state },
+            })
+          : await finalizeArtistrySynkClaim();
+
+      if (result.outcome === "CONNECTED") {
+        await connected(`Connected to ${ARTISTRYSYNK.brand}`);
+        return;
+      }
+      if (result.outcome === "CLAIM_REQUIRED") {
+        setPhase("FAILED");
+        setFailure(`Finish claiming your ${ARTISTRYSYNK.brand} identity, then try again.`);
         return;
       }
       setPhase("FAILED");
       setFailure(result.message);
-    } catch {
+    } catch (error) {
+      popup.close();
+      const reason = error instanceof Error ? error.message : "FAILED";
+      if (reason === "CANCELLED") {
+        // The claim may still have succeeded before the window closed.
+        const verified = await finalizeArtistrySynkClaim().catch(() => null);
+        if (verified?.outcome === "CONNECTED") {
+          await connected(`Connected to ${ARTISTRYSYNK.brand}`);
+          return;
+        }
+        setPhase("CANCELLED");
+        return;
+      }
       setPhase("FAILED");
-      setFailure(`We couldn't reach ${ARTISTRYSYNK.brand}. Your entry is unaffected — try later.`);
+      setFailure(
+        reason === "INVALID_CALLBACK"
+          ? `The ${ARTISTRYSYNK.brand} response could not be verified. Please try again.`
+          : `We couldn't reach ${ARTISTRYSYNK.brand}. Your entry is unaffected — try again later.`,
+      );
     }
   }
 
-  /** For someone who already has an ArtistrySynk account: their own approval. */
-  async function connectWithSignIn() {
+  /** Existing ArtistrySynk account: their own sign-in and approval. */
+  async function connectExisting() {
     setFailure(null);
     const popup = window.open("", "artistrysynk-oauth", "width=600,height=760");
     if (!popup) {
@@ -122,19 +193,22 @@ export function ConnectArtistrySynk({
         setFailure(started.message);
         return;
       }
-      const waiting = waitForResult(popup);
+      const waiting = waitForReturn(popup);
       popup.location.href = started.authorizationUrl;
       const { code, state } = await waiting;
+      if (!code || !state) {
+        setPhase("FAILED");
+        setFailure(`The ${ARTISTRYSYNK.brand} response was incomplete. Please try again.`);
+        return;
+      }
 
       const result = await completeArtistrySynkConnection({ data: { code, state } });
       if (result.outcome !== "CONNECTED") {
         setPhase("FAILED");
-        setFailure(result.message);
+        setFailure(result.outcome === "FAILED" ? result.message : "Please try connecting again.");
         return;
       }
-      setPhase("IDLE");
-      await connection.refetch();
-      toast.success(`Connected to ${ARTISTRYSYNK.brand}`);
+      await connected(`Connected to ${ARTISTRYSYNK.brand}`);
     } catch (error) {
       popup.close();
       const reason = error instanceof Error ? error.message : "FAILED";
@@ -157,33 +231,43 @@ export function ConnectArtistrySynk({
     toast.success(`Disconnected from ${ARTISTRYSYNK.brand}`);
   }
 
-  const connected = data?.status === "CONNECTED";
+  const isConnected = data?.status === "CONNECTED";
   const revoked = data?.status === "REVOKED";
   const notConfigured = data?.status === "NOT_CONFIGURED";
-  const busy = phase === "AUTHORIZING" || phase === "CREATING" || connection.isLoading;
+  const busy =
+    phase === "PREPARING" ||
+    phase === "CLAIMING" ||
+    phase === "AUTHORIZING" ||
+    connection.isLoading;
 
   return (
     <div className={cn("rounded-xl border border-border bg-card/60 p-5", className)}>
       <div className="flex items-start justify-between gap-4">
         <div>
           <h3 className="flex items-center gap-2 text-lg font-semibold">
-            {connected ? (
+            {isConnected ? (
               <BadgeCheck className="size-5 text-success" />
             ) : (
               <Link2 className="size-5 text-primary" />
             )}
-            {ARTISTRYSYNK.brand} creative identity
+            {isConnected
+              ? `${ARTISTRYSYNK.brand} creative identity`
+              : `Create your ${ARTISTRYSYNK.brand} creative identity`}
           </h3>
-          <p className="mt-2 max-w-prose text-sm text-muted-foreground">{ARTISTRYSYNK.promise}</p>
+          <p className="mt-2 max-w-prose text-sm text-muted-foreground">
+            {isConnected
+              ? ARTISTRYSYNK.promise
+              : `We'll prepare your ${ARTISTRYSYNK.brand} identity and take you to ${ARTISTRYSYNK.brand} to claim it. You won't enter an ${ARTISTRYSYNK.brand} password on Zik's Got Talent.`}
+          </p>
         </div>
-        {connected && (
+        {isConnected && (
           <span className="rounded-full bg-success/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-success">
             Connected
           </span>
         )}
       </div>
 
-      {connected && data?.identity && (
+      {isConnected && data?.identity && (
         <div className="mt-4 flex items-center gap-3 rounded-lg border border-border/60 bg-background/40 p-3">
           {data.identity.avatarUrl ? (
             <img
@@ -220,16 +304,22 @@ export function ConnectArtistrySynk({
         </p>
       )}
 
-      {phase === "NEEDS_SIGNIN" && (
+      {phase === "CLAIMING" && (
         <p className="mt-4 rounded-lg border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
-          It looks like this email already belongs to an {ARTISTRYSYNK.brand} account. Sign in to
-          that account once to approve the connection.
+          Finish claiming your identity in the {ARTISTRYSYNK.brand} window, then come back here.
+        </p>
+      )}
+
+      {phase === "EXISTING" && (
+        <p className="mt-4 rounded-lg border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
+          An {ARTISTRYSYNK.brand} account already exists for this email. Use{" "}
+          <strong>Connect existing {ARTISTRYSYNK.brand} account</strong> below to link it.
         </p>
       )}
 
       {phase === "CANCELLED" && (
         <p className="mt-4 rounded-lg border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
-          Authorization was cancelled. Nothing was connected — you can try again any time.
+          Nothing was connected and your entry is safe — you can try again any time.
         </p>
       )}
 
@@ -244,47 +334,54 @@ export function ConnectArtistrySynk({
         {!notConfigured && (
           <Button
             type="button"
-            onClick={connect}
+            onClick={createIdentity}
             disabled={!enabled || busy}
-            className={cn(!connected && "bg-gold text-primary-foreground hover:opacity-90")}
-            variant={connected ? "outline" : "default"}
+            className={cn(!isConnected && "bg-gold text-primary-foreground hover:opacity-90")}
+            variant={isConnected ? "outline" : "default"}
           >
             {busy ? (
               <Loader2 className="mr-1 size-4 animate-spin" />
-            ) : connected || revoked ? (
+            ) : isConnected || revoked ? (
               <RefreshCw className="mr-1 size-4" />
             ) : null}
-            {connected
+            {isConnected
               ? `Reconnect ${ARTISTRYSYNK.brand}`
               : revoked || phase === "FAILED" || phase === "CANCELLED"
                 ? "Try again"
-                : `Connect ${ARTISTRYSYNK.brand}`}
+                : `Create my ${ARTISTRYSYNK.brand} identity`}
           </Button>
         )}
-        {!notConfigured && !connected && (
+        {!notConfigured && !isConnected && (
           <Button
             type="button"
             variant="outline"
-            onClick={connectWithSignIn}
+            onClick={connectExisting}
             disabled={!enabled || busy}
           >
-            {phase === "AUTHORIZING" ? <Loader2 className="mr-1 size-4 animate-spin" /> : null}I
-            already have an {ARTISTRYSYNK.brand} account
+            {phase === "AUTHORIZING" ? <Loader2 className="mr-1 size-4 animate-spin" /> : null}
+            Connect existing {ARTISTRYSYNK.brand} account
           </Button>
         )}
-        {connected && data?.profileUrl && (
+        {isConnected && data?.profileUrl && (
           <Button asChild variant="outline">
             <a href={data.profileUrl} target="_blank" rel="noreferrer noopener">
               View profile <ExternalLink className="ml-1 size-3.5" />
             </a>
           </Button>
         )}
-        {connected && (
+        {isConnected && (
           <Button type="button" variant="ghost" onClick={disconnect}>
             Disconnect
           </Button>
         )}
       </div>
+
+      {!isConnected && !notConfigured && (
+        <p className="mt-3 text-xs text-muted-foreground">
+          Already have an {ARTISTRYSYNK.brand} account? Connect your existing creative identity
+          instead. Connecting is optional — you can do it later from your dashboard.
+        </p>
+      )}
 
       {!enabled && (
         <p className="mt-3 text-xs text-muted-foreground">

@@ -430,36 +430,56 @@ export async function lookupIdentity(
   }
 }
 
-export interface IdentitySeed {
-  externalSubject: string;
-  email: string;
-  displayName: string;
-  username?: string | null;
-  location?: string | null;
-  primaryDiscipline?: string | null;
+/** Scopes requested when preparing a new creative identity. */
+export const ARTISTRYSYNK_CREATE_SCOPES = [
+  "identity:create",
+  "identity:read",
+  "profile:read",
+] as const;
+
+export interface IdentityCreateIntent {
+  intent_id: string;
+  claim_url: string;
+  expires_at: string;
+  status: string;
 }
 
 /**
- * `POST /identity/create` — server-to-server provisioning for a contestant who
- * has no ArtistrySynk account yet. The contestant never sees or enters
- * ArtistrySynk credentials; ArtistrySynk owns the created identity.
+ * `POST /identity/create` — prepares a short-lived, single-use identity creation
+ * intent. This does NOT create an account silently: the contestant opens the
+ * returned `claim_url` and claims the identity on ArtistrySynk. No password, and
+ * no profile detail beyond an optional email, is ever sent from here.
+ *
+ * A 409 conflict means the email already belongs to an ArtistrySynk identity —
+ * the caller must then use the existing-account OAuth/PKCE link flow.
  */
-export async function createIdentity(
+export async function createIdentityIntent(
   config: ArtistrySynkConfig,
-  seed: IdentitySeed,
-): Promise<IdentityRecord> {
-  return jsonRequest<IdentityRecord>(`${config.integrationUrl}/identity/create`, {
+  input: {
+    externalSubject: string;
+    redirectUri: string;
+    email?: string | null;
+    idempotencyKey?: string;
+  },
+): Promise<IdentityCreateIntent> {
+  const externalSubject = input.externalSubject.trim();
+  if (!externalSubject || externalSubject.length > 200) {
+    throw new ArtistrySynkError("invalid_request", "The contestant subject is invalid.", 400);
+  }
+  const redirect = new URL(input.redirectUri);
+  if (redirect.protocol !== "https:") {
+    throw new ArtistrySynkError("invalid_request", "The return address must be HTTPS.", 400);
+  }
+  redirect.hash = "";
+  return jsonRequest<IdentityCreateIntent>(`${config.integrationUrl}/identity/create`, {
     method: "POST",
     authorization: basic(config),
+    ...(input.idempotencyKey ? { headers: { "Idempotency-Key": input.idempotencyKey } } : {}),
     body: JSON.stringify({
-      external_subject: seed.externalSubject,
-      email: seed.email,
-      display_name: seed.displayName,
-      ...(seed.username ? { username: seed.username } : {}),
-      ...(seed.location ? { location: seed.location } : {}),
-      ...(seed.primaryDiscipline ? { primary_discipline: seed.primaryDiscipline } : {}),
-      scopes: ["identity:link", "profile:read"],
-      client_id: config.clientId,
+      external_subject: externalSubject,
+      redirect_uri: redirect.toString(),
+      scopes: [...ARTISTRYSYNK_CREATE_SCOPES],
+      ...(input.email ? { email: input.email } : {}),
     }),
   });
 }

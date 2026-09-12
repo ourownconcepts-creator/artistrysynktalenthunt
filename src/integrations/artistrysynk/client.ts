@@ -24,20 +24,18 @@ export interface ArtistrySynkIdentityProvider {
   ): Promise<ArtistrySynkConnectResult>;
 
   /**
-   * Server-to-server path for a contestant with no ArtistrySynk account: look
-   * up an existing link, otherwise ask ArtistrySynk to provision the identity.
-   * Never asks the contestant for ArtistrySynk credentials.
+   * Prepare a creative identity for a contestant who has no ArtistrySynk
+   * account. Returns a single-use claim URL the contestant opens on
+   * ArtistrySynk; no ArtistrySynk password is ever handled by ZGT.
    */
-  provisionIdentity(
+  prepareIdentity(
     userId: string,
-    seed: {
-      email: string;
-      displayName: string;
-      username?: string | null;
-      location?: string | null;
-      primaryDiscipline?: string | null;
-    },
+    input: { email?: string | null },
+    origin: string,
   ): Promise<ArtistrySynkConnectResult>;
+
+  /** After the claim redirect: verify and attach the claimed identity. */
+  finalizeClaim(userId: string): Promise<ArtistrySynkConnectResult>;
 
   /** Current connection state for a Zik's Got Talent account. */
   getConnection(userId: string): Promise<ArtistrySynkConnection>;

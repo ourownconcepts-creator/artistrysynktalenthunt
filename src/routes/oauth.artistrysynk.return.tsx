@@ -33,11 +33,13 @@ function ArtistrySynkReturn() {
     const state = params.get("state");
     const error = params.get("error");
 
+    // An authorization return carries code + state. A claim return may carry
+    // neither: the opener then verifies the claimed identity server-side.
     const payload = {
       type: "artistrysynkOAuthResult" as const,
       code,
       state,
-      error: error ?? (code && state ? null : "invalid_callback"),
+      error: error ?? null,
     };
 
     if (window.opener) {

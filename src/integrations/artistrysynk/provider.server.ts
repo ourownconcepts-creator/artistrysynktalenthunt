@@ -4,10 +4,11 @@
 
 import { artistrysynkProfileUrl } from "@/config/app";
 import {
+  ARTISTRYSYNK_CREATE_SCOPES,
   ARTISTRYSYNK_SCOPES,
   ArtistrySynkError,
   completeLink,
-  createIdentity,
+  createIdentityIntent,
   exchangeCode,
   lookupIdentity,
   readArtistrySynkConfig,
@@ -22,11 +23,13 @@ import {
   applyIdentityToApplications,
   claimIntent,
   consumeClaimedIntent,
+  consumeIntent,
   deleteIntent,
   externalSubjectFor,
   finalizeIntent,
   findConflictingLink,
   getLink,
+  getPendingClaimIntent,
   hashState,
   markRevoked,
   recordIntent,
@@ -152,21 +155,60 @@ export class RemoteArtistrySynkProvider implements ArtistrySynkIdentityProvider 
     }
   }
 
-  /**
-   * Automatic path. A contestant who has no ArtistrySynk account gets one
-   * provisioned server-to-server; nobody is asked for ArtistrySynk credentials.
-   * When ArtistrySynk says the person must approve in their own account, this
-   * returns AUTHORIZATION_REQUIRED so the caller can fall back to sign-in.
-   */
-  async provisionIdentity(
+  /** Attach a verified identity to this account and its entries. */
+  private async attach(
     userId: string,
-    seed: {
-      email: string;
-      displayName: string;
-      username?: string | null;
-      location?: string | null;
-      primaryDiscipline?: string | null;
+    externalSubject: string,
+    record: {
+      identity_id: string;
+      link_id?: string | null;
+      linked_at?: string | null;
+      scopes?: string[] | null;
+      profile?: ArtistrySynkProfileProjection | null;
     },
+    config: ReturnType<typeof requireArtistrySynkConfig>,
+  ): Promise<ArtistrySynkConnectResult> {
+    const conflict = await findConflictingLink(record.identity_id, userId);
+    if (conflict) {
+      return {
+        outcome: "FAILED",
+        reason: "DUPLICATE_IDENTITY",
+        message:
+          "That ArtistrySynk identity is already connected to another Zik's Got Talent account.",
+      };
+    }
+    let projection: ArtistrySynkProfileProjection | null = record.profile ?? null;
+    if (!projection) {
+      try {
+        projection = await readProfile(config, { identityId: record.identity_id });
+      } catch {
+        projection = null;
+      }
+    }
+    await saveLink({
+      userId,
+      externalSubject,
+      identityId: record.identity_id,
+      linkId: record.link_id ?? record.identity_id,
+      scopes: record.scopes ?? [...ARTISTRYSYNK_CREATE_SCOPES],
+      linkedAt: record.linked_at ?? new Date().toISOString(),
+      profile: projection,
+    });
+    await applyIdentityToApplications(userId, record.identity_id);
+    return { outcome: "CONNECTED", connection: await this.getConnection(userId) };
+  }
+
+  /**
+   * Prepare a new creative identity. ArtistrySynk returns a short-lived,
+   * single-use claim URL: the contestant claims the identity there, with their
+   * own sign-up/sign-in. ZGT sends only the stable subject, the registered
+   * return address, the granted scopes and (optionally) the email — never a
+   * password, display name, username, location or discipline.
+   */
+  async prepareIdentity(
+    userId: string,
+    input: { email?: string | null },
+    origin: string,
   ): Promise<ArtistrySynkConnectResult> {
     const config = readArtistrySynkConfig();
     if (!config) {
@@ -183,71 +225,106 @@ export class RemoteArtistrySynkProvider implements ArtistrySynkIdentityProvider 
     }
 
     const externalSubject = externalSubjectFor(userId);
-    try {
-      let record = await lookupIdentity(config, externalSubject);
-      if (!record) {
-        record = await createIdentity(config, {
-          externalSubject,
-          email: seed.email,
-          displayName: seed.displayName,
-          username: seed.username ?? null,
-          location: seed.location ?? null,
-          primaryDiscipline: seed.primaryDiscipline ?? null,
-        });
-      }
+    const redirectUri = this.redirectUri(origin);
 
-      const conflict = await findConflictingLink(record.identity_id, userId);
-      if (conflict) {
+    try {
+      // Already claimed on a previous attempt? Then just attach it.
+      const known = await lookupIdentity(config, externalSubject);
+      if (known?.identity_id) return this.attach(userId, externalSubject, known, config);
+
+      // Reuse a live, unclaimed intent rather than minting another one.
+      const pending = await getPendingClaimIntent(userId);
+      if (pending?.claim_url) {
         return {
-          outcome: "FAILED",
-          reason: "DUPLICATE_IDENTITY",
-          message:
-            "That ArtistrySynk identity is already connected to another Zik's Got Talent account.",
+          outcome: "CLAIM_REQUIRED",
+          claimUrl: pending.claim_url,
+          expiresAt: pending.expires_at,
         };
       }
 
-      let projection: ArtistrySynkProfileProjection | null = record.profile ?? null;
-      if (!projection) {
-        try {
-          projection = await readProfile(config, { identityId: record.identity_id });
-        } catch {
-          projection = null;
-        }
-      }
-
-      await saveLink({
-        userId,
+      const { state, codeVerifier } = createPkceTransaction();
+      const intent = await createIdentityIntent(config, {
         externalSubject,
-        identityId: record.identity_id,
-        linkId: record.link_id ?? record.identity_id,
-        scopes: record.scopes ?? [...ARTISTRYSYNK_SCOPES],
-        linkedAt: record.linked_at ?? new Date().toISOString(),
-        profile: projection,
+        redirectUri,
+        email: input.email ?? null,
+        idempotencyKey: hashState(`${externalSubject}:${redirectUri}:create`).slice(0, 40),
       });
-      await applyIdentityToApplications(userId, record.identity_id);
-      return { outcome: "CONNECTED", connection: await this.getConnection(userId) };
+
+      await recordIntent({
+        userId,
+        kind: "CLAIM",
+        stateHash: hashState(state),
+        intentId: intent.intent_id,
+        claimUrl: intent.claim_url,
+        redirectUri,
+        externalSubject,
+        scopes: [...ARTISTRYSYNK_CREATE_SCOPES],
+        expiresAt: intent.expires_at,
+        codeVerifier,
+      });
+
+      return {
+        outcome: "CLAIM_REQUIRED",
+        claimUrl: intent.claim_url,
+        expiresAt: intent.expires_at,
+      };
     } catch (error) {
-      console.error("ArtistrySynk automatic identity provisioning failed", {
+      console.error("ArtistrySynk identity creation intent failed", {
         code: error instanceof ArtistrySynkError ? error.code : "internal_error",
         status: error instanceof ArtistrySynkError ? error.status : 0,
         requestId: error instanceof ArtistrySynkError ? error.requestId : null,
         validation: error instanceof ArtistrySynkError ? error.validation : [],
       });
-      if (error instanceof ArtistrySynkError) {
-        // A conflicting or already-owned account, or a request ArtistrySynk will
-        // only honour with the person's own approval: use the sign-in flow.
-        if (
-          ["conflict", "already_exists", "invalid_request", "forbidden", "unsupported"].includes(
-            error.code,
-          )
-        ) {
-          return {
-            outcome: "FAILED",
-            reason: "AUTHORIZATION_REQUIRED",
-            message: "This contestant needs to approve the connection in ArtistrySynk.",
-          };
-        }
+      if (
+        error instanceof ArtistrySynkError &&
+        (error.status === 409 || error.code === "conflict" || error.code === "already_exists")
+      ) {
+        return {
+          outcome: "FAILED",
+          reason: "EXISTING_ACCOUNT",
+          message: "An ArtistrySynk account already exists for this email.",
+        };
       }
+      return { outcome: "FAILED", ...reasonFor(error) };
+    }
+  }
+
+  /**
+   * After ArtistrySynk redirects back from the claim page: verify the identity
+   * now bound to this contestant's subject and attach it.
+   */
+  async finalizeClaim(userId: string): Promise<ArtistrySynkConnectResult> {
+    const config = readArtistrySynkConfig();
+    if (!config) {
+      return {
+        outcome: "FAILED",
+        reason: "NOT_CONFIGURED",
+        message: "ArtistrySynk is not configured yet.",
+      };
+    }
+    const existing = await getLink(userId);
+    if (existing?.status === "LINKED") {
+      return { outcome: "CONNECTED", connection: await this.getConnection(userId) };
+    }
+    const externalSubject = externalSubjectFor(userId);
+    try {
+      const record = await lookupIdentity(config, externalSubject);
+      if (!record?.identity_id) {
+        return {
+          outcome: "FAILED",
+          reason: "CLAIM_INCOMPLETE",
+          message:
+            "Your ArtistrySynk identity has not been claimed yet. Finish the ArtistrySynk step, then try again.",
+        };
+      }
+      const pending = await getPendingClaimIntent(userId);
+      const result = await this.attach(userId, externalSubject, record, config);
+      if (result.outcome === "CONNECTED" && pending) {
+        await consumeIntent(pending.id).catch(() => undefined);
+      }
+      return result;
+    } catch (error) {
+      console.error("ArtistrySynk claim finalization failed", error);
       return { outcome: "FAILED", ...reasonFor(error) };
     }
   }
