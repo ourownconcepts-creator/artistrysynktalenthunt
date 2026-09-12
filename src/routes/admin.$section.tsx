@@ -1584,6 +1584,96 @@ function ModerationPanel({ competitionSlug }: { competitionSlug: string | null }
   );
 }
 
+/* ---------------------------- Accounts ---------------------------- */
+
+function formatDate(value: string | null): string {
+  return value ? new Date(value).toLocaleString() : "—";
+}
+
+function AccountsPanel() {
+  const [search, setSearch] = useState("");
+  const accounts = useQuery({
+    queryKey: ["admin-accounts"],
+    queryFn: () => fetchAdminAccounts(),
+    retry: false,
+  });
+
+  const term = search.trim().toLowerCase();
+  const list = (accounts.data ?? []).filter(
+    (row) =>
+      !term ||
+      (row.email ?? "").toLowerCase().includes(term) ||
+      row.display_name.toLowerCase().includes(term) ||
+      (row.entry_reference ?? "").toLowerCase().includes(term),
+  );
+
+  return (
+    <Panel
+      title="Registered accounts"
+      description="Every account created on Zik's Got Talent, whether or not it has an entry: confirmation status, roles, the entry it owns and its creative identity."
+    >
+      <Field label="Search email, name or entry code" value={search} onChange={setSearch} />
+
+      <p className="mt-4 text-xs uppercase tracking-widest text-muted-foreground">
+        {list.length} of {accounts.data?.length ?? 0} accounts
+      </p>
+
+      <div className="mt-3 divide-y divide-border/60">
+        {accounts.isLoading && <p className="py-3 text-sm text-muted-foreground">Loading…</p>}
+        {accounts.isError && (
+          <p className="py-3 text-sm text-muted-foreground">
+            Only administrators can view registered accounts.
+          </p>
+        )}
+        {!accounts.isLoading && list.length === 0 && (
+          <p className="py-3 text-sm text-muted-foreground">No accounts match that search.</p>
+        )}
+        {list.map((row) => (
+          <div key={row.user_id} className="py-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="min-w-0">
+                <p className="font-semibold">
+                  {row.display_name || row.email || "Unnamed account"}{" "}
+                  {row.is_owner && (
+                    <span className="rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary">
+                      Owner
+                    </span>
+                  )}
+                </p>
+                <p className="text-xs text-muted-foreground">{row.email}</p>
+              </div>
+              <span
+                className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest ${
+                  row.email_confirmed_at
+                    ? "border-success/40 bg-success/10 text-success"
+                    : "border-warning/40 bg-warning/10 text-warning"
+                }`}
+              >
+                {row.email_confirmed_at ? "Confirmed" : "Unconfirmed"}
+              </span>
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Joined {formatDate(row.created_at)} · Last sign-in {formatDate(row.last_sign_in_at)} ·
+              Roles {row.roles.length ? row.roles.map((r) => ROLE_LABELS[r as never] ?? r).join(", ") : "None"} ·
+              Identity {row.artistrysynk_status === "NOT_LINKED" ? "Not connected" : "Connected"}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {row.entry_reference
+                ? `Entry ${row.entry_reference} — ${row.entry_name ?? ""} · ${row.entry_category ?? ""} · ${
+                    PROGRESS_STATE_LABELS[row.entry_progress_state ?? ""] ?? row.entry_progress_state
+                  } · media ${
+                    SUBMISSION_STATE_LABELS[row.entry_submission_state ?? ""] ??
+                    row.entry_submission_state
+                  }`
+                : "No entry submitted"}
+            </p>
+          </div>
+        ))}
+      </div>
+    </Panel>
+  );
+}
+
 /* ---------------------------- Settings ---------------------------- */
 
 const GRANTABLE_ROLES = ["ADMIN", "MODERATOR", "JUDGE", "SPONSOR_MANAGER"] as const;
