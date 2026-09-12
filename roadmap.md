@@ -27,8 +27,9 @@
   from ziksgottalent.com meanwhile.
 - Branded sign-in emails from notify.ziksgottalent.com are built and styled;
   they start sending as soon as the domain's DNS check finishes.
-- Approve the Demo Connect Act entry — waiting on the user to approve the
-  ArtistrySynk consent so the linked profile can be verified first.
+- Fresh ArtistrySynk connection test: the old demo account and its entry were
+  deleted completely (sign-in, profile, entry, connection attempts), so the next
+  test starts from a brand-new real sign-up.
 
 ## Release Gate 1 (security) — 12 Sep 2026
 - Fixed: artistrysynk_apply_link was executable by any signed-in user with an arbitrary target user (identity hijack). EXECUTE revoked to service_role only.
@@ -50,6 +51,6 @@
 - Legal copy: Terms and Privacy now state plainly that auditions are external
   links and that video access depends on the hosting site's permissions.
 - Cleanup: removed a stand-in identity reference and a revoked test connection.
-- Still open before production: real-person ArtistrySynk claim (new user) and
+- Still open before production: real-person ArtistrySynk claim (fresh sign-up) and
   existing-account PKCE consent (NOT LIVE-VERIFIED); final legal copy;
   backup/restore procedure confirmation from the platform.
