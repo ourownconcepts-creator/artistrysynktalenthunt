@@ -13,13 +13,13 @@ import { completeArtistrySynkClaim } from "@/lib/artistrysynk.functions";
 export const Route = createFileRoute("/oauth/artistrysynk/return")({
   head: () => ({
     meta: [
-      { title: "Finishing your ArtistrySynk connection — Zik's Got Talent" },
+      { title: "Zik's Got Talent — finishing your creative profile connection" },
       {
         name: "description",
-        content: "Completing the secure ArtistrySynk creative identity connection.",
+        content: "Zik's Got Talent is completing your creative profile connection.",
       },
-      { property: "og:title", content: "Finishing your ArtistrySynk connection" },
-      { property: "og:description", content: "Completing your creative identity connection." },
+      { property: "og:title", content: "Zik's Got Talent — connection in progress" },
+      { property: "og:description", content: "Completing your creative profile connection." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
