@@ -27,9 +27,10 @@
   from ziksgottalent.com meanwhile.
 - Branded sign-in emails from notify.ziksgottalent.com are built and styled;
   they start sending as soon as the domain's DNS check finishes.
-- Fresh ArtistrySynk connection test: the old demo account and its entry were
-  deleted completely (sign-in, profile, entry, connection attempts), so the next
-  test starts from a brand-new real sign-up.
+- Fresh ArtistrySynk connection test running: old demo account fully deleted; a
+  new confirmed sign-in (zgt.connect.demo@artistrysynk.app) with entry
+  ZGT-DCEGF4DY now has a live claim link awaiting a real person to claim it on
+  ArtistrySynk. Entry stays unapproved until the identity is verified.
 
 ## Release Gate 1 (security) — 12 Sep 2026
 - Fixed: artistrysynk_apply_link was executable by any signed-in user with an arbitrary target user (identity hijack). EXECUTE revoked to service_role only.
