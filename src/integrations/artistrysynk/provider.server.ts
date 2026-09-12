@@ -243,12 +243,22 @@ export class RemoteArtistrySynkProvider implements ArtistrySynkIdentityProvider 
       }
 
       const { state, codeVerifier } = createPkceTransaction();
+      // One key per genuinely new attempt: replaying a key returns the earlier
+      // intent without a claim URL, and a live intent is reused from storage above.
       const intent = await createIdentityIntent(config, {
         externalSubject,
         redirectUri,
         email: input.email ?? null,
-        idempotencyKey: hashState(`${externalSubject}:${redirectUri}:create`).slice(0, 40),
+        idempotencyKey: randomUUID(),
       });
+      if (!intent.claim_url) {
+        return {
+          outcome: "FAILED",
+          reason: "UNAVAILABLE",
+          message: `${"ArtistrySynk"} did not return a claim link. Please try again shortly.`,
+        };
+      }
+
 
       await recordIntent({
         userId,
