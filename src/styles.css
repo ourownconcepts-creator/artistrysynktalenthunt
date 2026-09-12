@@ -135,6 +135,13 @@
   --shadow-stage: 0 30px 80px -40px oklch(0.05 0.02 285 / 0.9);
   --shadow-glow: 0 0 0 1px oklch(0.82 0.16 84 / 0.28), 0 18px 50px -28px oklch(0.82 0.16 84 / 0.45);
   --transition-stage: 260ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Printed-paper surface: the exact gold-on-white look of our emails */
+  --paper: oklch(1 0 0);
+  --paper-ink: oklch(0.26 0.012 60);
+  --paper-dim: oklch(0.56 0.015 70);
+  --paper-line: oklch(0.26 0.012 60 / 14%);
+  --paper-accent: oklch(0.52 0.11 76);
 }
 
 /* Single visual identity: the dark stage theme is the theme. */
