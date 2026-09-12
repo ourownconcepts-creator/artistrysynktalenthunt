@@ -571,3 +571,30 @@ export async function fetchOpsSnapshot(competitionSlug?: string): Promise<OpsSna
   if (error) throw error;
   return data as never;
 }
+
+export interface AdminAccountRow {
+  user_id: string;
+  email: string | null;
+  display_name: string;
+  handle: string | null;
+  created_at: string;
+  email_confirmed_at: string | null;
+  last_sign_in_at: string | null;
+  is_owner: boolean;
+  roles: string[];
+  entry_reference: string | null;
+  entry_name: string | null;
+  entry_category: string | null;
+  entry_progress_state: string | null;
+  entry_submission_state: string | null;
+  artistrysynk_status: string | null;
+}
+
+/** Every registered account. Server-side admin-only. */
+export async function fetchAdminAccounts(search?: string): Promise<AdminAccountRow[]> {
+  const { data, error } = await supabase.rpc("admin_accounts", rpcArgs({
+    _search: search && search.trim() ? search.trim() : undefined,
+  }));
+  if (error) throw error;
+  return (data ?? []) as unknown as AdminAccountRow[];
+}
