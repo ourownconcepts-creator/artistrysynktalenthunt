@@ -119,7 +119,7 @@ export async function claimPendingClaimIntent(
     .maybeSingle();
   if (pendingError) throw pendingError;
   if (!pending) return { ok: false, reason: "INVALID_STATE" };
-  if (pending.consumed_at) return { ok: false, reason: "ALREADY_USED" };
+  if (pending.consumed_at || pending.processing_at) return { ok: false, reason: "ALREADY_USED" };
 
   const { data: claimed, error } = await db
     .from("artistrysynk_link_intents")
@@ -127,6 +127,7 @@ export async function claimPendingClaimIntent(
     .eq("id", pending.id)
     .eq("user_id", userId)
     .is("consumed_at", null)
+    .is("processing_at", null)
     .gt("expires_at", now)
     .select(
       "id, user_id, redirect_uri, external_subject, expires_at, consumed_at, processing_at, code_verifier",
