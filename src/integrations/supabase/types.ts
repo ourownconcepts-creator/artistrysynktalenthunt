@@ -1201,6 +1201,7 @@ export type Database = {
           submitted_at: string
         }[]
       }
+      admin_entry_detail: { Args: { _application_id: string }; Returns: Json }
       admin_ops_snapshot: {
         Args: { _competition_slug?: string }
         Returns: Json
