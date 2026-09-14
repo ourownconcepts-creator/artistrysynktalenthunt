@@ -296,6 +296,88 @@ export async function fetchAdminApplications(filters?: {
   return (data ?? []) as unknown as AdminApplicationRow[];
 }
 
+/* ------------------------------------------------------------------ */
+/* Single entry detail (review sheet)                                  */
+/* ------------------------------------------------------------------ */
+
+export interface EntryDetail {
+  ok: boolean;
+  reason?: string;
+  entry?: {
+    id: string;
+    reference_code: string | null;
+    display_name: string;
+    handle: string;
+    category_name: string;
+    group_name: string;
+    competition_name: string;
+    round_name: string;
+    status: string;
+    progress_state: string;
+    submission_state: string;
+    media_is_public: boolean;
+    is_public: boolean;
+    review_decision: string | null;
+    review_reason: string | null;
+    reviewed_at: string | null;
+    state_reason: string | null;
+    location: string;
+    bio: string;
+    experience: string;
+    audition_url: string;
+    audition_notes: string;
+    submission_answers: Record<string, unknown> | null;
+    created_at: string;
+    submitted_at: string | null;
+    updated_at: string;
+  };
+  profile?: {
+    display_name: string;
+    handle: string | null;
+    bio: string;
+    location: string;
+    primary_discipline: string;
+    avatar_url: string | null;
+    is_public: boolean;
+  } | null;
+  artistrysynk?: {
+    status: string;
+    external_subject?: string;
+    identity_id?: string;
+    scopes?: string[];
+    linked_at?: string | null;
+    snapshot_at?: string | null;
+  };
+  criteria?: {
+    id: string;
+    name: string;
+    max_score: number;
+    weight: number;
+    sort_order: number;
+    average: number | null;
+    judges_scored: number;
+  }[];
+  scores?: {
+    criterion_name: string;
+    value: number;
+    max_score: number;
+    comment: string;
+    round_name: string;
+    updated_at: string;
+  }[];
+  judges_scored?: number;
+  valid_votes?: number;
+  results?: { round_name: string; outcome: string; decided_at: string }[];
+}
+
+export async function fetchEntryDetail(applicationId: string): Promise<EntryDetail> {
+  const { data, error } = await supabase.rpc("admin_entry_detail", {
+    _application_id: applicationId,
+  });
+  if (error) throw error;
+  return data as unknown as EntryDetail;
+}
+
 export async function reviewApplication(
   applicationId: string,
   decision: "APPROVED" | "REJECTED" | "CORRECTION_REQUESTED" | "UNDER_REVIEW",
