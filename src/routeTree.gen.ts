@@ -41,6 +41,7 @@ import { Route as ContestantsIndexRouteImport } from './routes/contestants.index
 import { Route as ContestantsHandleRouteImport } from './routes/contestants.$handle'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardSectionRouteImport } from './routes/dashboard.$section'
+import { Route as AdminEntriesIdRouteImport } from './routes/admin.entries.$id'
 import { Route as OauthArtistrysynkReturnRouteImport } from './routes/oauth.artistrysynk.return'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
@@ -205,6 +206,11 @@ const DashboardSectionRoute = DashboardSectionRouteImport.update({
   path: '/$section',
   getParentRoute: () => DashboardRoute,
 } as any)
+const AdminEntriesIdRoute = AdminEntriesIdRouteImport.update({
+  id: '/entries/$id',
+  path: '/entries/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
 const OauthArtistrysynkReturnRoute = OauthArtistrysynkReturnRouteImport.update({
   id: '/oauth/artistrysynk/return',
   path: '/oauth/artistrysynk/return',
@@ -254,6 +260,7 @@ export interface FileRoutesByFullPath {
   '/competitions/': typeof CompetitionsIndexRoute
   '/contestants/': typeof ContestantsIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/admin/entries/$id': typeof AdminEntriesIdRoute
   '/oauth/artistrysynk/return': typeof OauthArtistrysynkReturnRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -289,6 +296,7 @@ export interface FileRoutesByTo {
   '/competitions': typeof CompetitionsIndexRoute
   '/contestants': typeof ContestantsIndexRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/admin/entries/$id': typeof AdminEntriesIdRoute
   '/oauth/artistrysynk/return': typeof OauthArtistrysynkReturnRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -327,6 +335,7 @@ export interface FileRoutesById {
   '/competitions/': typeof CompetitionsIndexRoute
   '/contestants/': typeof ContestantsIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/admin/entries/$id': typeof AdminEntriesIdRoute
   '/oauth/artistrysynk/return': typeof OauthArtistrysynkReturnRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -366,6 +375,7 @@ export interface FileRouteTypes {
     | '/competitions/'
     | '/contestants/'
     | '/dashboard/'
+    | '/admin/entries/$id'
     | '/oauth/artistrysynk/return'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -401,6 +411,7 @@ export interface FileRouteTypes {
     | '/competitions'
     | '/contestants'
     | '/dashboard'
+    | '/admin/entries/$id'
     | '/oauth/artistrysynk/return'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -438,6 +449,7 @@ export interface FileRouteTypes {
     | '/competitions/'
     | '/contestants/'
     | '/dashboard/'
+    | '/admin/entries/$id'
     | '/oauth/artistrysynk/return'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -697,6 +709,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardSectionRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/admin/entries/$id': {
+      id: '/admin/entries/$id'
+      path: '/entries/$id'
+      fullPath: '/admin/entries/$id'
+      preLoaderRoute: typeof AdminEntriesIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/oauth/artistrysynk/return': {
       id: '/oauth/artistrysynk/return'
       path: '/oauth/artistrysynk/return'
@@ -730,6 +749,7 @@ interface AdminRouteChildren {
   AdminSubmissionsRoute: typeof AdminSubmissionsRoute
   AdminVotingRoute: typeof AdminVotingRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminEntriesIdRoute: typeof AdminEntriesIdRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -741,6 +761,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminSubmissionsRoute: AdminSubmissionsRoute,
   AdminVotingRoute: AdminVotingRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminEntriesIdRoute: AdminEntriesIdRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

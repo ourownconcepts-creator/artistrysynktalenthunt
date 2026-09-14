@@ -55,3 +55,15 @@
 - Still open before production: real-person ArtistrySynk claim (fresh sign-up) and
   existing-account PKCE consent (NOT LIVE-VERIFIED); final legal copy;
   backup/restore procedure confirmation from the platform.
+
+## 14 Sep 2026
+- Entry review sheet at /admin/entries/{id}: profile, ArtistrySynk connection,
+  audition, per-criterion averages, judge comments, votes and round outcomes.
+  Reachable from "View entry" on each contestant row. Judges and staff only.
+- Demo Connect Act (ZGT-DCEGF4DY) confirmed approved, judged and scored 48/60.
+- Published to ziksgottalent.com so the owner admin can sign in live.
+
+## Open questions (user skipped)
+- "Connect Act" branding/entries: unclear whether it is a new competition, a
+  rename, or just the demo entry's name. Real entries need real sign-ups.
+- Entry forms already exist at /register; unclear what is missing.

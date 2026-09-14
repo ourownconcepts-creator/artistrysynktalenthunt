@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -1277,13 +1277,20 @@ function ContestantsPanel({ competitionSlug }: { competitionSlug: string | null 
                   {row.round_name ? ` · ${row.round_name}` : ""}
                 </p>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setOpenId(openId === row.id ? null : row.id)}
-              >
-                {openId === row.id ? "Close" : "Manage"}
-              </Button>
+              <div className="flex flex-wrap gap-2">
+                <Button asChild variant="secondary" size="sm">
+                  <Link to="/admin/entries/$id" params={{ id: row.id }}>
+                    View entry
+                  </Link>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setOpenId(openId === row.id ? null : row.id)}
+                >
+                  {openId === row.id ? "Close" : "Manage"}
+                </Button>
+              </div>
             </div>
 
             {openId === row.id && (
