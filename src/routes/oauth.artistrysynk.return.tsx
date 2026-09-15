@@ -11,6 +11,7 @@ import { completeArtistrySynkClaim } from "@/lib/artistrysynk.functions";
  * the same origin. No credential is ever handled here.
  */
 export const Route = createFileRoute("/oauth/artistrysynk/return")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Finishing your ArtistrySynk connection — Zik's Got Talent" },

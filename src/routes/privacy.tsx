@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 
 export const Route = createFileRoute("/privacy")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Privacy | ZIK’S GOT TALENT" },

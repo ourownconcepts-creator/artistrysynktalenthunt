@@ -67,6 +67,7 @@ import {
 } from "@/lib/artistrysynk-admin.functions";
 
 export const Route = createFileRoute("/admin/$section")({
+  staticData: { sitemap: false },
   loader: ({ params }) => {
     const section = ADMIN_SECTIONS.find((s) => s.slug === params.section);
     if (!section) throw notFound();

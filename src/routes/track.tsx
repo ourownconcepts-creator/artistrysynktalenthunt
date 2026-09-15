@@ -11,6 +11,7 @@ import { fetchCategories } from "@/lib/live-data";
 import { stageExplanation, trackApplication, type TrackedApplication } from "@/lib/tracking";
 
 export const Route = createFileRoute("/track")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Track Your Entry | ZIK’S GOT TALENT 1.0" },

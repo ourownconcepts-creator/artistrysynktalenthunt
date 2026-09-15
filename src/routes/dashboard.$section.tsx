@@ -19,6 +19,7 @@ import {
 } from "@/lib/live-data";
 
 export const Route = createFileRoute("/dashboard/$section")({
+  staticData: { sitemap: false },
   loader: ({ params }) => {
     const section = DASHBOARD_SECTIONS.find((s) => s.slug === params.section);
     if (!section) throw notFound();

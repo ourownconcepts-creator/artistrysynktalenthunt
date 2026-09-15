@@ -9,6 +9,7 @@ import { fetchJudgeQueue } from "@/lib/live-data";
 import { ScoringPanel } from "@/components/admin/ScoringPanel";
 
 export const Route = createFileRoute("/judge")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Judge dashboard — Zik's Got Talent" },

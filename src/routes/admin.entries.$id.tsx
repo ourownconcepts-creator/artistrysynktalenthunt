@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { PROGRESS_STATE_LABELS, SUBMISSION_STATE_LABELS, fetchEntryDetail } from "@/lib/operations";
 
 export const Route = createFileRoute("/admin/entries/$id")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Entry details — Zik's Got Talent admin" },

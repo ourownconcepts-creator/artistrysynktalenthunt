@@ -4,6 +4,7 @@ import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 import { useCategoryGroups, useCompetition } from "@/hooks/useCompetition";
 
 export const Route = createFileRoute("/categories/")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Talent Categories | ZIK’S GOT TALENT 1.0" },

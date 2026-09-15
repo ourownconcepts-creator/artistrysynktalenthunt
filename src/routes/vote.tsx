@@ -9,6 +9,7 @@ import { useSession } from "@/hooks/useSession";
 import { VOTE_MESSAGES, castVote, fetchCompetition, fetchPublicContestants } from "@/lib/live-data";
 
 export const Route = createFileRoute("/vote")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Vote | ZIK’S GOT TALENT 1.0" },

@@ -10,6 +10,7 @@ import { ROUND_STATUS_LABELS, fetchOpsSnapshot } from "@/lib/operations";
 import { useSession } from "@/hooks/useSession";
 
 export const Route = createFileRoute("/admin/")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Admin — Zik's Got Talent control centre" },

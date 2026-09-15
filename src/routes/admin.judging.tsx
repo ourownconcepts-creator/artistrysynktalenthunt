@@ -30,6 +30,7 @@ import {
 } from "@/lib/live-data";
 
 export const Route = createFileRoute("/admin/judging")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Judging panel — Zik's Got Talent admin" },

@@ -19,6 +19,7 @@ import {
 import { notifyContestant } from "@/lib/notify";
 
 export const Route = createFileRoute("/admin/submissions")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Audition review — Zik's Got Talent admin" },

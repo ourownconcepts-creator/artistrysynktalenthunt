@@ -5,6 +5,7 @@ import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 import { fetchPublicContestants } from "@/lib/live-data";
 
 export const Route = createFileRoute("/contestants/")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Contestants | ZIK’S GOT TALENT 1.0" },

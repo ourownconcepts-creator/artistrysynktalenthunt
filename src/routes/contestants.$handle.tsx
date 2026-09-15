@@ -10,6 +10,7 @@ import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
 import { VOTE_MESSAGES, castVote, fetchPublicContestant } from "@/lib/live-data";
 
 export const Route = createFileRoute("/contestants/$handle")({
+  staticData: { sitemap: false },
   head: ({ params }) => ({
     meta: [
       { title: `${params.handle} | ZIK’S GOT TALENT contestant` },

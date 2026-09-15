@@ -6,6 +6,7 @@ import { useCompetition, useSponsors } from "@/hooks/useCompetition";
 import { SPONSOR_TIERS, SPONSOR_TIER_LABELS } from "@/lib/live-data";
 
 export const Route = createFileRoute("/sponsors")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Sponsors & Partners | ZIK’S GOT TALENT" },
