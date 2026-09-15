@@ -7,23 +7,38 @@ import { Button } from "@/components/ui/button";
 import { useCategoryGroups, useCompetition } from "@/hooks/useCompetition";
 import { REQUIREMENT_KIND_LABELS, fetchCategoryBySlug, fetchRequirements } from "@/lib/live-data";
 
+function categoryTitleFromSlug(slug: string): string {
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 export const Route = createFileRoute("/categories/$slug")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `${params.slug.replace(/-/g, " ")} | ZIK’S GOT TALENT` },
-      {
-        name: "description",
-        content: `Explore this ZIK’S GOT TALENT category and see what to prepare for your University of Ibadan talent competition entry.`,
-      },
-      { property: "og:title", content: `ZIK’S GOT TALENT category` },
-      {
-        property: "og:description",
-        content: "What this category is looking for and exactly what to submit.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  staticData: { sitemap: true },
+  head: ({ params }) => {
+    const name = categoryTitleFromSlug(params.slug);
+    const url = `https://ziksgottalent.com/categories/${params.slug}`;
+    return {
+      meta: [
+        { title: `${name} Category | ZIK’S GOT TALENT` },
+        {
+          name: "description",
+          content: `Explore the ${name} category at ZIK’S GOT TALENT and see what to prepare for your University of Ibadan talent competition entry.`,
+        },
+        { property: "og:title", content: `${name} Category — ZIK’S GOT TALENT` },
+        {
+          property: "og:description",
+          content: `What the ${name} category is looking for and exactly what to submit for ZIK’S GOT TALENT 1.0.`,
+        },
+        { property: "og:url", content: url },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
   component: CategoryDetail,
 });
 
