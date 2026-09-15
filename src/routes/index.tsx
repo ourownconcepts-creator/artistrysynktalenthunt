@@ -18,17 +18,17 @@ import { describeVotingModel, formatDateRange, isRegistrationOpen } from "@/lib/
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Zik's Got Talent — Your talent deserves to be discovered" },
+      { title: "ZIK’S GOT TALENT 1.0 | University of Ibadan Talent Competition" },
       {
         name: "description",
         content:
-          "A national multi-category talent competition for singers, dancers, comedians, designers, photographers, coders and creators. Entry is free.",
+          "ZIK’S GOT TALENT is a University of Ibadan campus-wide talent competition discovering, showcasing and celebrating student talent across music, dance, comedy, spoken word, rap, acting, fashion and more.",
       },
-      { property: "og:title", content: "Zik's Got Talent — Your talent deserves to be discovered" },
+      { property: "og:title", content: "ZIK’S GOT TALENT 1.0 — Where Talent Meets Opportunity" },
       {
         property: "og:description",
         content:
-          "Enter across every talent category. Every contestant leaves with a free ArtistrySynk creative profile.",
+          "ZIK’S GOT TALENT 1.0 — Where Talent Meets Opportunity. A University of Ibadan campus-wide talent competition discovering, showcasing and celebrating exceptional student talent.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -85,22 +85,22 @@ function Landing() {
           </div>
 
           <h1 className="relative mt-7 max-w-4xl lg:max-w-[42rem] text-5xl sm:text-7xl lg:text-8xl">
-            Your talent
+            ZIK&rsquo;S GOT TALENT 1.0
             <br />
-            <span className="text-gold">deserves to be</span>
+            <span className="text-gold">Where Talent Meets</span>
             <br />
-            <span className="text-heat">discovered.</span>
+            <span className="text-heat">Opportunity.</span>
           </h1>
 
           <p className="mt-7 max-w-xl text-base text-muted-foreground sm:text-lg">
-            {data?.description ??
-              "A national multi-category talent competition. Entry is free, and every entrant keeps a permanent creative profile."}
+            A University of Ibadan campus-wide talent competition created to discover, showcase and
+            celebrate exceptional student talent.
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Button asChild size="lg" className="bg-gold text-primary-foreground hover:opacity-90">
               <Link to="/register">
-                {data ? `Enter ${data.name}` : "Enter the competition"}
+                Enter ZIK&rsquo;S GOT TALENT
                 <ArrowRight className="ml-1 size-4" />
               </Link>
             </Button>
@@ -116,7 +116,7 @@ function Landing() {
 
           <dl className="mt-14 grid grid-cols-2 gap-6 border-t border-border/60 pt-8 sm:grid-cols-4">
             <Stat label="Talent categories" value={String(categoryCount)} icon={Sparkles} />
-            <Stat label="Cities" value={String(data?.cities ?? 0)} icon={Users} />
+            <Stat label="Campus community" value="UI" icon={Users} />
             <Stat label="Prize pool" value={data?.prize_pool || "TBC"} icon={Trophy} />
             <Stat label="Rounds" value={String(activeRounds.length)} icon={BadgeCheck} />
           </dl>
@@ -129,7 +129,7 @@ function Landing() {
       <section className="border-y border-border/70 bg-surface/50">
         <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:items-center">
           <div>
-            <p className="eyebrow">The competition ends. Your identity doesn&rsquo;t.</p>
+            <p className="eyebrow">From talent discovery to creative connection</p>
             <h2 className="mt-4 text-3xl sm:text-4xl">{ARTISTRYSYNK.ecosystem}</h2>
             <p className="mt-5 max-w-xl text-muted-foreground">{ARTISTRYSYNK.promise}</p>
             <a
@@ -144,10 +144,10 @@ function Landing() {
           </div>
           <ol className="card-stage divide-y divide-border/60 p-2">
             {[
-              "Register for Zik's Got Talent",
+              "Register for ZIK’S GOT TALENT",
               "Your ArtistrySynk identity is created or connected",
-              "Your creative profile goes live",
-              "Your contestant application enters the competition",
+              "Showcase your talent in your chosen category",
+              "Connect with a wider creative community",
             ].map((step, index) => (
               <li key={step} className="flex items-center gap-4 px-4 py-4">
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/15 font-display text-sm text-primary">
@@ -165,7 +165,7 @@ function Landing() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Talent categories</p>
-            <h2 className="mt-3 text-3xl sm:text-4xl">Pick your lane</h2>
+            <h2 className="mt-3 text-3xl sm:text-4xl">Showcase your gift</h2>
           </div>
           <Button asChild variant="outline">
             <Link to="/categories">All categories</Link>
@@ -198,7 +198,7 @@ function Landing() {
       <section className="border-y border-border/70 bg-surface/50">
         <div className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6">
           <p className="eyebrow">The road to the final</p>
-          <h2 className="mt-3 text-3xl sm:text-4xl">{activeRounds.length} configurable rounds</h2>
+          <h2 className="mt-3 text-3xl sm:text-4xl">From talent to opportunity</h2>
           {data && (
             <p className="mt-4 max-w-2xl text-muted-foreground">
               Judging is weighted {describeVotingModel(data).toLowerCase()} once public voting
@@ -254,10 +254,10 @@ function Landing() {
         />
         <div className="relative mx-auto w-full max-w-4xl px-4 py-24 text-center sm:px-6">
           <h2 className="text-4xl sm:text-6xl">
-            One entry. <span className="text-gold">One shot.</span>
+            Your stage <span className="text-gold">starts here.</span>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-muted-foreground">
-            Registration is free and takes about ten minutes.
+            Discover your talent. Showcase your ability. Meet your opportunity.
           </p>
           <Button
             asChild

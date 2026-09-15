@@ -8,16 +8,16 @@ import { SPONSOR_TIERS, SPONSOR_TIER_LABELS } from "@/lib/live-data";
 export const Route = createFileRoute("/sponsors")({
   head: () => ({
     meta: [
-      { title: "Sponsors & Partners — Zik's Got Talent" },
+      { title: "Sponsors & Partners | ZIK’S GOT TALENT" },
       {
         name: "description",
         content:
-          "The sponsors, partners and media partners behind Zik's Got Talent — every tier and placement is configured by admins.",
+          "Meet the partners supporting talent discovery, youth development and creative opportunity through ZIK’S GOT TALENT at the University of Ibadan.",
       },
-      { property: "og:title", content: "Sponsors & Partners — Zik's Got Talent" },
+      { property: "og:title", content: "Sponsors & Partners | ZIK’S GOT TALENT" },
       {
         property: "og:description",
-        content: "The sponsors and partners powering Zik's Got Talent.",
+        content: "Partners supporting emerging student talent and creativity at the University of Ibadan.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -33,9 +33,9 @@ function Sponsors() {
   return (
     <PublicShell>
       <PageHeader
-        eyebrow="Powered by"
-        title="Sponsors & partners"
-        intro="Sponsor tiers, logos, descriptions, links, competition and placement are all admin-configurable — no code change is needed to add a sponsor."
+        eyebrow="Building opportunity together"
+        title="Partners in talent discovery"
+        intro="Partnering with ZIK’S GOT TALENT means supporting emerging student talent while connecting with a vibrant University of Ibadan community."
       />
       <section className="mx-auto w-full max-w-7xl space-y-12 px-4 py-16 sm:px-6">
         {sponsors.isLoading && <p className="text-sm text-muted-foreground">Loading sponsors…</p>}

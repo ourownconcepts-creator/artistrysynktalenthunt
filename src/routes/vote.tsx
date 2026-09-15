@@ -11,13 +11,13 @@ import { VOTE_MESSAGES, castVote, fetchCompetition, fetchPublicContestants } fro
 export const Route = createFileRoute("/vote")({
   head: () => ({
     meta: [
-      { title: "Vote — Zik's Got Talent" },
+      { title: "Vote | ZIK’S GOT TALENT 1.0" },
       {
         name: "description",
         content:
-          "Cast your public vote for Zik's Got Talent contestants. Votes are limited per person per day and protected against manipulation.",
+          "Support University of Ibadan student talent by voting in ZIK’S GOT TALENT 1.0 when public voting is open.",
       },
-      { property: "og:title", content: "Vote — Zik's Got Talent" },
+      { property: "og:title", content: "Vote | ZIK’S GOT TALENT 1.0" },
       {
         property: "og:description",
         content:
@@ -68,7 +68,7 @@ function VotePage() {
     <PublicShell>
       <PageHeader
         eyebrow="Public vote"
-        title="Vote for your favourite"
+        title="Celebrate the talent"
         intro={
           comp
             ? `${comp.judge_weight}% judges · ${comp.public_weight}% public vote. ${comp.votes_per_user_per_day} votes per person per day.`
@@ -83,8 +83,8 @@ function VotePage() {
             <span>Voting is open. Votes are tied to your account and rate limited.</span>
           ) : (
             <span className="text-warning">
-              Public voting opens when the live rounds begin — an admin sets the voting window in
-              the control centre.
+              Public voting opens during the live competition rounds. Check back for the announced
+              voting window.
             </span>
           )}
           {ready && !user && (
@@ -124,8 +124,7 @@ function VotePage() {
           </div>
         ) : (
           <p className="mt-10 text-sm text-muted-foreground">
-            No contestants are public yet. Approved entries appear here as soon as moderators clear
-            them.
+            Voting profiles will appear here after entries are reviewed and public voting opens.
           </p>
         )}
       </section>

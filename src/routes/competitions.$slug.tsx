@@ -19,13 +19,13 @@ import {
 export const Route = createFileRoute("/competitions/$slug")({
   head: ({ params }) => ({
     meta: [
-      { title: `${params.slug.replace(/-/g, " ")} — Zik's Got Talent` },
+      { title: `${params.slug.replace(/-/g, " ")} | ZIK’S GOT TALENT` },
       {
         name: "description",
         content:
-          "Dates, categories, rounds, judging weighting and rules for this Zik's Got Talent competition.",
+          "Explore dates, categories, rounds and entry information for this ZIK’S GOT TALENT competition at the University of Ibadan.",
       },
-      { property: "og:title", content: "Competition — Zik's Got Talent" },
+      { property: "og:title", content: "Competition | ZIK’S GOT TALENT" },
       {
         property: "og:description",
         content: "Dates, categories, rounds, judging weighting and rules for this competition.",

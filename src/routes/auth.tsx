@@ -16,13 +16,13 @@ import { sendAccountCreatedEmail } from "@/lib/email.functions";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Sign in — Zik's Got Talent" },
+      { title: "Sign in | ZIK’S GOT TALENT" },
       {
         name: "description",
         content:
-          "Sign in to your Zik's Got Talent contestant dashboard, to vote, or to create your account.",
+          "Sign in to your ZIK’S GOT TALENT contestant account to manage your entry, follow your progress or vote.",
       },
-      { property: "og:title", content: "Sign in — Zik's Got Talent" },
+      { property: "og:title", content: "Sign in | ZIK’S GOT TALENT" },
       {
         property: "og:description",
         content: "Access your contestant dashboard, vote, or create your account.",

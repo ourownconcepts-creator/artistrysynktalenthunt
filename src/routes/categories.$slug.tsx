@@ -10,12 +10,12 @@ import { REQUIREMENT_KIND_LABELS, fetchCategoryBySlug, fetchRequirements } from 
 export const Route = createFileRoute("/categories/$slug")({
   head: ({ params }) => ({
     meta: [
-      { title: `${params.slug.replace(/-/g, " ")} — Zik's Got Talent` },
+      { title: `${params.slug.replace(/-/g, " ")} | ZIK’S GOT TALENT` },
       {
         name: "description",
-        content: `What this Zik's Got Talent category is looking for and exactly what to submit.`,
+        content: `Explore this ZIK’S GOT TALENT category and see what to prepare for your University of Ibadan talent competition entry.`,
       },
-      { property: "og:title", content: `Zik's Got Talent category` },
+      { property: "og:title", content: `ZIK’S GOT TALENT category` },
       {
         property: "og:description",
         content: "What this category is looking for and exactly what to submit.",

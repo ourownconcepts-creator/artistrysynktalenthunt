@@ -6,13 +6,13 @@ import { useCompetition } from "@/hooks/useCompetition";
 export const Route = createFileRoute("/rules")({
   head: () => ({
     meta: [
-      { title: "Rules & Eligibility — Zik's Got Talent" },
+      { title: "Rules & Eligibility | ZIK’S GOT TALENT" },
       {
         name: "description",
         content:
-          "Official Zik's Got Talent rules, eligibility criteria and consent requirements for entrants.",
+          "Read the official rules, eligibility and consent requirements for ZIK’S GOT TALENT 1.0 entrants at the University of Ibadan.",
       },
-      { property: "og:title", content: "Rules & Eligibility — Zik's Got Talent" },
+      { property: "og:title", content: "Rules & Eligibility | ZIK’S GOT TALENT" },
       {
         property: "og:description",
         content: "Official rules, eligibility criteria and consent requirements.",
@@ -32,7 +32,7 @@ function Rules() {
       <PageHeader
         eyebrow={competition.data?.name ?? "Competition"}
         title="Rules & eligibility"
-        intro="Rules, eligibility and consent requirements are configured per competition and versioned with your application."
+        intro="Review the official participation requirements before submitting your ZIK’S GOT TALENT 1.0 entry."
       />
       <section className="mx-auto grid w-full max-w-5xl gap-5 px-4 py-16 sm:px-6 lg:grid-cols-3">
         <p className="lg:col-span-3 rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm text-warning">

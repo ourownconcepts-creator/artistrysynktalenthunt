@@ -11,7 +11,7 @@ const env = import.meta.env as unknown as Record<string, string | undefined>;
 export type ArtistrySynkProviderMode = "local" | "remote";
 
 export const APP_CONFIG = {
-  siteName: "Zik's Got Talent",
+  siteName: "ZIK’S GOT TALENT",
   /** Canonical public origin of this product. */
   siteUrl: (env["VITE_SITE_URL"] ?? "https://ziksgottalent.com").replace(/\/$/, ""),
   artistrysynk: {

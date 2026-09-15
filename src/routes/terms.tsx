@@ -5,13 +5,13 @@ import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 export const Route = createFileRoute("/terms")({
   head: () => ({
     meta: [
-      { title: "Terms of Entry — Zik's Got Talent" },
+      { title: "Terms of Entry | ZIK’S GOT TALENT" },
       {
         name: "description",
         content:
-          "Terms of entry for Zik's Got Talent competitions, covering ownership, media licensing, conduct and disqualification.",
+          "Terms of entry for ZIK’S GOT TALENT, covering ownership, media licensing, conduct and disqualification.",
       },
-      { property: "og:title", content: "Terms of Entry — Zik's Got Talent" },
+      { property: "og:title", content: "Terms of Entry | ZIK’S GOT TALENT" },
       {
         property: "og:description",
         content: "Terms of entry covering ownership, media licensing and conduct.",
@@ -36,14 +36,14 @@ function Terms() {
         </p>
         <Section title="Ownership of work">
           Contestants retain ownership of everything they submit. By entering, contestants grant
-          Zik&rsquo;s Got Talent a licence to feature approved media in competition and promotional
+          ZIK&rsquo;S GOT TALENT a licence to feature approved media in competition and promotional
           contexts.
         </Section>
         <Section title="Audition links">
           Auditions are submitted as links to video hosted elsewhere. Contestants are responsible for
           keeping that link reachable for judges and for the sharing permissions set on the hosting
           site; access and privacy of the video itself are governed by that provider, not by
-          Zik&rsquo;s Got Talent.
+          ZIK&rsquo;S GOT TALENT.
         </Section>
         <Section title="Conduct and integrity">
           Vote manipulation, plagiarism, impersonation and abuse result in disqualification.

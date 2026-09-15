@@ -6,16 +6,16 @@ import { useCategoryGroups, useCompetition } from "@/hooks/useCompetition";
 export const Route = createFileRoute("/categories/")({
   head: () => ({
     meta: [
-      { title: "Talent Categories — Zik's Got Talent" },
+      { title: "Talent Categories | ZIK’S GOT TALENT 1.0" },
       {
         name: "description",
         content:
-          "Every Zik's Got Talent category and what you need to submit — music, performance, visual, digital and beyond.",
+          "Explore ZIK’S GOT TALENT categories including singing, dancing, comedy, spoken word, rap, acting, instrumentals, cultural performance, fashion and more.",
       },
-      { property: "og:title", content: "Talent Categories — Zik's Got Talent" },
+      { property: "og:title", content: "Talent Categories | ZIK’S GOT TALENT 1.0" },
       {
         property: "og:description",
-        content: "Explore every Zik's Got Talent category and its submission brief.",
+        content: "Find the category that fits your talent and discover what to prepare for your entry.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -31,9 +31,9 @@ function Categories() {
   return (
     <PublicShell>
       <PageHeader
-        eyebrow={competition.data?.name ?? "Choose your lane"}
-        title="Talent categories"
-        intro="Categories, their briefs and what each one asks you to submit are configured by admins for every competition."
+        eyebrow="Discover your talent"
+        title="Showcase your gift"
+        intro="Choose from singing, dancing, comedy, spoken word, rap, acting, instrumentals, cultural performance, fashion and other creative talents."
       />
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
         {groups.isLoading ? (
@@ -62,7 +62,7 @@ function Categories() {
           </div>
         ) : (
           <p className="text-sm text-muted-foreground">
-            No categories are open yet. They appear here as soon as an admin activates them.
+            No categories are open yet. Check back for the official ZIK&rsquo;S GOT TALENT 1.0 entry categories.
           </p>
         )}
       </section>
