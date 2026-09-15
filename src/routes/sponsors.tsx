@@ -29,6 +29,13 @@ export const Route = createFileRoute("/sponsors")({
 function Sponsors() {
   const competition = useCompetition();
   const sponsors = useSponsors("SPONSOR_PAGE", competition.data?.id);
+  const featuredSupporter = (sponsors.data ?? []).find(
+    (sponsor) => sponsor.name.toUpperCase() === "NEW FLAVA RESTAURANT",
+  );
+  const mainSponsor = (sponsors.data ?? []).find((sponsor) => sponsor.tier === "MAJOR_SPONSOR");
+  const remainingSponsors = (sponsors.data ?? []).filter(
+    (sponsor) => sponsor.id !== mainSponsor?.id && sponsor.id !== featuredSupporter?.id,
+  );
 
   return (
     <PublicShell>
@@ -39,8 +46,18 @@ function Sponsors() {
       />
       <section className="mx-auto w-full max-w-7xl space-y-12 px-4 py-16 sm:px-6">
         {sponsors.isLoading && <p className="text-sm text-muted-foreground">Loading sponsors…</p>}
+        {(mainSponsor || featuredSupporter) && (
+          <div className="grid gap-8 md:grid-cols-2 md:items-stretch">
+            {mainSponsor && (
+              <FeaturedSponsor sponsor={mainSponsor} label="Main sponsor" />
+            )}
+            {featuredSupporter && (
+              <FeaturedSponsor sponsor={featuredSupporter} label="Proudly supported by" />
+            )}
+          </div>
+        )}
         {SPONSOR_TIERS.map((tier) => {
-          const tierSponsors = (sponsors.data ?? []).filter((s) => s.tier === tier);
+          const tierSponsors = remainingSponsors.filter((sponsor) => sponsor.tier === tier);
           if (tierSponsors.length === 0) return null;
           return (
             <div key={tier}>
@@ -49,9 +66,7 @@ function Sponsors() {
                 {tierSponsors.map((sponsor) => (
                   <article
                     key={sponsor.id}
-                    className={`card-stage card-stage-hover p-7 ${
-                      tier === "MAJOR_SPONSOR" ? "md:col-span-2" : ""
-                    }`}
+                    className="card-stage card-stage-hover p-7"
                   >
                     {sponsor.logo_url && (
                       <div className="mb-6 flex min-h-44 items-center justify-center overflow-hidden rounded-md bg-[var(--paper)] p-5 sm:min-h-52">
@@ -63,7 +78,7 @@ function Sponsors() {
                         />
                       </div>
                     )}
-                    <h2 className="text-3xl">{sponsor.name}</h2>
+                    <h2 className="text-3xl font-bold">{sponsor.name}</h2>
                     {sponsor.description && (
                       <p className="mt-3 text-sm text-muted-foreground">{sponsor.description}</p>
                     )}
@@ -85,5 +100,48 @@ function Sponsors() {
         })}
       </section>
     </PublicShell>
+  );
+}
+
+function FeaturedSponsor({
+  sponsor,
+  label,
+}: {
+  sponsor: {
+    id: string;
+    name: string;
+    logo_url: string | null;
+    description: string;
+    website: string;
+  };
+  label: string;
+}) {
+  return (
+    <article className="card-stage card-stage-hover flex h-full flex-col p-7">
+      <p className="eyebrow mb-4">{label}</p>
+      {sponsor.logo_url && (
+        <div className="mb-6 flex min-h-52 flex-1 items-center justify-center overflow-hidden rounded-md bg-[var(--paper)] p-5 sm:min-h-64">
+          <img
+            src={sponsor.logo_url}
+            alt={`${sponsor.name} logo`}
+            className="max-h-52 w-full object-contain sm:max-h-60"
+          />
+        </div>
+      )}
+      <h2 className="text-3xl font-bold sm:text-4xl">{sponsor.name}</h2>
+      {sponsor.description && (
+        <p className="mt-3 text-sm text-muted-foreground">{sponsor.description}</p>
+      )}
+      {sponsor.website && (
+        <a
+          href={sponsor.website}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="mt-5 inline-flex items-center gap-1 text-sm font-bold text-primary hover:underline"
+        >
+          Visit website <ExternalLink className="size-3.5" />
+        </a>
+      )}
+    </article>
   );
 }
