@@ -21,6 +21,7 @@ import { Route as JudgeRouteImport } from './routes/judge'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as RulesRouteImport } from './routes/rules'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SponsorsRouteImport } from './routes/sponsors'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TrackRouteImport } from './routes/track'
@@ -104,6 +105,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const RulesRoute = RulesRouteImport.update({
   id: '/rules',
   path: '/rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SponsorsRoute = SponsorsRouteImport.update({
@@ -240,6 +246,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/rules': typeof RulesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sponsors': typeof SponsorsRoute
   '/terms': typeof TermsRoute
   '/track': typeof TrackRoute
@@ -276,6 +283,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/rules': typeof RulesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sponsors': typeof SponsorsRoute
   '/terms': typeof TermsRoute
   '/track': typeof TrackRoute
@@ -315,6 +323,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/rules': typeof RulesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sponsors': typeof SponsorsRoute
   '/terms': typeof TermsRoute
   '/track': typeof TrackRoute
@@ -355,6 +364,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/register'
     | '/rules'
+    | '/sitemap.xml'
     | '/sponsors'
     | '/terms'
     | '/track'
@@ -391,6 +401,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/register'
     | '/rules'
+    | '/sitemap.xml'
     | '/sponsors'
     | '/terms'
     | '/track'
@@ -429,6 +440,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/register'
     | '/rules'
+    | '/sitemap.xml'
     | '/sponsors'
     | '/terms'
     | '/track'
@@ -468,6 +480,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   RegisterRoute: typeof RegisterRoute
   RulesRoute: typeof RulesRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SponsorsRoute: typeof SponsorsRoute
   TermsRoute: typeof TermsRoute
   TrackRoute: typeof TrackRoute
@@ -567,6 +580,13 @@ declare module '@tanstack/react-router' {
       path: '/rules'
       fullPath: '/rules'
       preLoaderRoute: typeof RulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sponsors': {
@@ -793,6 +813,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   RegisterRoute: RegisterRoute,
   RulesRoute: RulesRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SponsorsRoute: SponsorsRoute,
   TermsRoute: TermsRoute,
   TrackRoute: TrackRoute,
