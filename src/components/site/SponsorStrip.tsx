@@ -34,17 +34,7 @@ export function SponsorStrip({
           {majors.map((sponsor, index) => (
             <span key={sponsor.id} className="flex items-center gap-4">
               {index > 0 && <span className="font-display text-lg text-muted-foreground">×</span>}
-              <a
-                href={sponsor.website}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="flex items-center gap-2 font-display text-xl tracking-wide transition-colors hover:text-primary sm:text-2xl"
-              >
-                {sponsor.logo_url && (
-                  <img src={sponsor.logo_url} alt="" className="h-7 w-auto" loading="lazy" />
-                )}
-                {sponsor.name}
-              </a>
+              <SponsorName sponsor={sponsor} prominent />
             </span>
           ))}
         </div>
@@ -52,18 +42,52 @@ export function SponsorStrip({
       {others.length > 0 && (
         <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground">
           {others.map((sponsor) => (
-            <a
-              key={sponsor.id}
-              href={sponsor.website}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="transition-colors hover:text-foreground"
-            >
-              {sponsor.name}
-            </a>
+            <SponsorName key={sponsor.id} sponsor={sponsor} />
           ))}
         </div>
       )}
     </div>
+  );
+}
+
+function SponsorName({
+  sponsor,
+  prominent = false,
+}: {
+  sponsor: {
+    name: string;
+    website: string;
+    logo_url: string | null;
+  };
+  prominent?: boolean;
+}) {
+  const content = (
+    <>
+      {sponsor.logo_url && (
+        <span className={prominent ? "rounded-sm bg-[var(--paper)] p-1.5" : ""}>
+                {sponsor.logo_url && (
+            <img
+              src={sponsor.logo_url}
+              alt=""
+              className={prominent ? "h-10 max-w-36 object-contain" : "h-7 max-w-24 object-contain"}
+              loading="lazy"
+            />
+                )}
+        </span>
+      )}
+      {sponsor.name}
+    </>
+  );
+
+  const className = prominent
+    ? "flex items-center gap-2 font-display text-xl tracking-wide transition-colors hover:text-primary sm:text-2xl"
+    : "flex items-center gap-2 transition-colors hover:text-foreground";
+
+  return sponsor.website ? (
+    <a href={sponsor.website} target="_blank" rel="noreferrer noopener" className={className}>
+      {content}
+    </a>
+  ) : (
+    <span className={className}>{content}</span>
   );
 }

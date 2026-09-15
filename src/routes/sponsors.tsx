@@ -47,17 +47,26 @@ function Sponsors() {
               <p className="eyebrow">{SPONSOR_TIER_LABELS[tier]}</p>
               <div className="mt-4 grid gap-5 md:grid-cols-2">
                 {tierSponsors.map((sponsor) => (
-                  <article key={sponsor.id} className="card-stage card-stage-hover p-7">
+                  <article
+                    key={sponsor.id}
+                    className={`card-stage card-stage-hover p-7 ${
+                      tier === "MAJOR_SPONSOR" ? "md:col-span-2" : ""
+                    }`}
+                  >
                     {sponsor.logo_url && (
-                      <img
-                        src={sponsor.logo_url}
-                        alt={`${sponsor.name} logo`}
-                        className="mb-4 h-10 w-auto"
-                        loading="lazy"
-                      />
+                      <div className="mb-6 flex min-h-44 items-center justify-center overflow-hidden rounded-md bg-[var(--paper)] p-5 sm:min-h-52">
+                        <img
+                          src={sponsor.logo_url}
+                          alt={`${sponsor.name} logo`}
+                          className="max-h-40 w-full object-contain sm:max-h-48"
+                          loading="lazy"
+                        />
+                      </div>
                     )}
                     <h2 className="text-3xl">{sponsor.name}</h2>
-                    <p className="mt-3 text-sm text-muted-foreground">{sponsor.description}</p>
+                    {sponsor.description && (
+                      <p className="mt-3 text-sm text-muted-foreground">{sponsor.description}</p>
+                    )}
                     {sponsor.website && (
                       <a
                         href={sponsor.website}

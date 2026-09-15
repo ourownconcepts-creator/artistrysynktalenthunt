@@ -70,6 +70,8 @@
 - Homepage, About, participation journey, categories, sponsors, footer,
   ArtistrySynk partnership messaging, page titles and social descriptions
   rewritten without changing functionality or database content.
+- Sponsors page populated with the seven supplied logos and exact displayed
+  names; ArtistrySynk is the sole main sponsor, followed by six supporting sponsors.
 
 ## Open questions (user skipped)
 - "Connect Act" branding/entries: unclear whether it is a new competition, a

@@ -152,7 +152,7 @@ export const SPONSOR_TIERS = [
 ] as const;
 
 export const SPONSOR_TIER_LABELS: Record<string, string> = {
-  MAJOR_SPONSOR: "Major sponsor",
+  MAJOR_SPONSOR: "Main sponsor",
   SUPPORTING_SPONSOR: "Supporting sponsor",
   PARTNER: "Partner",
   MEDIA_PARTNER: "Media partner",
