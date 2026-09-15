@@ -13,7 +13,7 @@ export const ARTISTRYSYNK = {
   brand: "ArtistrySynk",
   site: APP_CONFIG.artistrysynk.siteUrl,
   promise:
-    "Your Zik's Got Talent registration can be connected to your ArtistrySynk creative identity. You don't need to create a separate creative profile.",
+    "ArtistrySynk supports contestant onboarding and creative identity, helping participating creatives connect with a wider creative community beyond the competition.",
   ecosystem:
-    "Zik's Got Talent is the competition. ArtistrySynk is the creative identity that lives beyond it.",
+    "ZIK’S GOT TALENT discovers the talent. ArtistrySynk connects the talent.",
 } as const;

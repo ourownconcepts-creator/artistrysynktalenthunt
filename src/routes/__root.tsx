@@ -78,23 +78,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Zik's Got Talent" },
+      { title: "ZIK’S GOT TALENT" },
       {
         name: "description",
         content:
-          "Zik's Got Talent — a national multi-category talent competition. Your talent deserves to be discovered.",
+          "ZIK’S GOT TALENT is a University of Ibadan campus-wide talent competition where talent meets opportunity.",
       },
-      { name: "author", content: "Zik's Got Talent" },
-      { property: "og:title", content: "Zik's Got Talent" },
+      { name: "author", content: "Zik Hall Royals" },
+      { property: "og:title", content: "ZIK’S GOT TALENT" },
       {
         property: "og:description",
         content:
-          "A national multi-category talent competition. Your talent deserves to be discovered.",
+          "A University of Ibadan campus-wide talent competition discovering, showcasing and celebrating student talent.",
       },
-      { property: "og:site_name", content: "Zik's Got Talent" },
+      { property: "og:site_name", content: "ZIK’S GOT TALENT" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@zikhallui" },
     ],
     links: [
       {

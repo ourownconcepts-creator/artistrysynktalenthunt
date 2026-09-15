@@ -63,6 +63,14 @@
 - Demo Connect Act (ZGT-DCEGF4DY) confirmed approved, judged and scored 48/60.
 - Published to ziksgottalent.com so the owner admin can sign in live.
 
+## 15 Sep 2026
+- Public-facing content aligned to the official ZIK’S GOT TALENT 1.0 identity:
+  University of Ibadan campus-wide competition, organized by Zik Hall Royals
+  with the Zik Hall Executive Council, under “Where Talent Meets Opportunity.”
+- Homepage, About, participation journey, categories, sponsors, footer,
+  ArtistrySynk partnership messaging, page titles and social descriptions
+  rewritten without changing functionality or database content.
+
 ## Open questions (user skipped)
 - "Connect Act" branding/entries: unclear whether it is a new competition, a
   rename, or just the demo entry's name. Real entries need real sign-ups.

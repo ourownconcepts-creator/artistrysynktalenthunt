@@ -12,15 +12,15 @@ import { VOTE_MESSAGES, castVote, fetchPublicContestant } from "@/lib/live-data"
 export const Route = createFileRoute("/contestants/$handle")({
   head: ({ params }) => ({
     meta: [
-      { title: `${params.handle} — Zik's Got Talent contestant` },
+      { title: `${params.handle} | ZIK’S GOT TALENT contestant` },
       {
         name: "description",
-        content: `Zik's Got Talent Season One contestant profile for ${params.handle}. Public profile, approved media and competition stage.`,
+        content: `Meet ${params.handle}, a student creative competing in ZIK’S GOT TALENT 1.0 at the University of Ibadan.`,
       },
-      { property: "og:title", content: `${params.handle} — Zik's Got Talent contestant` },
+      { property: "og:title", content: `${params.handle} | ZIK’S GOT TALENT contestant` },
       {
         property: "og:description",
-        content: `Season One contestant profile, competition stage and public vote.`,
+        content: `Discover this ZIK’S GOT TALENT 1.0 contestant, creative profile and competition journey.`,
       },
       { property: "og:type", content: "profile" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -95,7 +95,7 @@ function ContestantProfile() {
       >
         <div className="flex flex-wrap items-center gap-3">
           <span className="rounded-full border border-primary/50 bg-primary/15 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-primary">
-            Zik&rsquo;s Got Talent contestant
+            ZIK&rsquo;S GOT TALENT contestant
           </span>
           <span className="text-xs uppercase tracking-widest text-muted-foreground">
             {c.location}
@@ -131,7 +131,8 @@ function ContestantProfile() {
         <article className="card-stage p-6">
           <p className="eyebrow">Creative identity</p>
           <p className="mt-3 text-sm text-muted-foreground">
-            This contestant&rsquo;s permanent creative profile lives on {ARTISTRYSYNK.brand}.
+            {ARTISTRYSYNK.brand} connects this contestant&rsquo;s creative identity to a wider creative
+            community beyond the competition.
           </p>
           <a
             href={ARTISTRYSYNK.site}

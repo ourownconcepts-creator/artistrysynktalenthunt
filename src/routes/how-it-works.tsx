@@ -9,16 +9,16 @@ import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
     meta: [
-      { title: "How It Works — Zik's Got Talent" },
+      { title: "How ZIK’S GOT TALENT Works | University of Ibadan" },
       {
         name: "description",
         content:
-          "From entry to the final stage: how Zik's Got Talent works, round by round, and how judging and results are decided.",
+          "Follow the ZIK’S GOT TALENT 1.0 journey from creative identity and registration to showcasing, competing and stepping into opportunity.",
       },
-      { property: "og:title", content: "How It Works — Zik's Got Talent" },
+      { property: "og:title", content: "How ZIK’S GOT TALENT Works" },
       {
         property: "og:description",
-        content: "Your journey from free entry to the final stage, explained round by round.",
+        content: "Create your identity, choose your category, register, showcase your talent and step into your opportunity.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -29,25 +29,25 @@ export const Route = createFileRoute("/how-it-works")({
 
 const STEPS = [
   {
-    title: "Choose your talent",
-    body: "Pick the category that fits you best. Every category lists exactly what it asks you to submit.",
+    title: "Create your creative identity",
+    body: "Build or connect the creative identity that supports your journey beyond the competition.",
   },
-  { title: "Create or connect your identity", body: ARTISTRYSYNK.promise },
+  { title: "Choose your talent category", body: "Select the category that best represents your gift." },
   {
-    title: "Tell us about you",
-    body: "Your name, where you're based, and how we reach you. It takes about ten minutes in total.",
-  },
-  {
-    title: "Send your submission",
-    body: "Provide whatever your category requires. Nothing becomes public until it has been reviewed.",
+    title: "Register for ZIK’S GOT TALENT",
+    body: "Share your details and complete your entry for the current competition.",
   },
   {
-    title: "Review and consent",
-    body: "Check everything, accept the rules, then submit. Entry is free.",
+    title: "Audition and showcase",
+    body: "Submit the material requested for your category and put your talent forward for review.",
   },
   {
-    title: "Follow your journey",
-    body: "Your dashboard tracks your status, your stage and every announcement for your competition.",
+    title: "Compete",
+    body: "Take your place in a healthy, inspiring competition alongside talented UI students.",
+  },
+  {
+    title: "Step into your opportunity",
+    body: "Gain exposure, recognition and creative connections as your competition journey develops.",
   },
 ];
 
@@ -58,9 +58,9 @@ function HowItWorksPage() {
   return (
     <PublicShell>
       <PageHeader
-        eyebrow={competition.data?.name ?? "Zik's Got Talent"}
-        title="How it works"
-        intro="Six steps to get on stage, then a clear path through every round of the season."
+        eyebrow="ZIK’S GOT TALENT 1.0"
+        title="Your stage starts here"
+        intro="Six clear steps take you from creative identity to the opportunity to be seen, heard and celebrated."
       />
 
       <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6">

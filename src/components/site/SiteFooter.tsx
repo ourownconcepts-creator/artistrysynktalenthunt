@@ -13,7 +13,10 @@ export function SiteFooter() {
         <div className="grid gap-10 border-t border-border/60 pt-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Wordmark />
-            <p className="mt-4 max-w-xs text-sm text-muted-foreground">{ARTISTRYSYNK.ecosystem}</p>
+            <p className="mt-4 max-w-xs text-sm text-muted-foreground">
+              A University of Ibadan campus-wide talent competition organized by Zik Hall Royals in
+              collaboration with the Zik Hall Executive Council.
+            </p>
           </div>
 
           <FooterColumn
@@ -36,9 +39,9 @@ export function SiteFooter() {
             ]}
           />
           <div>
-            <p className="eyebrow">Creative identity</p>
+            <p className="eyebrow">From talent to opportunity</p>
             <p className="mt-4 text-sm text-muted-foreground">
-              Every contestant gets a free {ARTISTRYSYNK.brand} creative profile that outlives the
+              {ARTISTRYSYNK.ecosystem} Connect with the wider creative community beyond the
               competition.
             </p>
             <a
@@ -53,7 +56,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-10 flex flex-col gap-3 border-t border-border/60 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Zik&rsquo;s Got Talent. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} ZIK&rsquo;S GOT TALENT. University of Ibadan.</p>
           <div className="flex gap-5">
             <Link to="/terms" className="hover:text-foreground">
               Terms

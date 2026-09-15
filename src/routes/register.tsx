@@ -15,16 +15,16 @@ export const Route = createFileRoute("/register")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Register — Zik's Got Talent" },
+      { title: "Register for ZIK’S GOT TALENT 1.0" },
       {
         name: "description",
         content:
-          "Enter Zik's Got Talent in seven steps. Registration is free and creates or connects your ArtistrySynk creative profile.",
+          "Register for ZIK’S GOT TALENT 1.0, choose your talent category and showcase your ability in the University of Ibadan campus-wide competition.",
       },
-      { property: "og:title", content: "Register — Zik's Got Talent" },
+      { property: "og:title", content: "Register for ZIK’S GOT TALENT 1.0" },
       {
         property: "og:description",
-        content: "Free entry in seven steps, with a free ArtistrySynk creative profile included.",
+        content: "Your stage starts here. Choose your category and enter ZIK’S GOT TALENT 1.0.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -66,8 +66,8 @@ function RegisterPage() {
     <PublicShell>
       <PageHeader
         eyebrow={competition.data.name}
-        title="Register your talent"
-        intro="Seven steps, about ten minutes. Your registration creates or connects your permanent creative identity."
+        title="Your stage starts here"
+        intro="Choose your category, tell us about your talent and complete your entry for ZIK’S GOT TALENT 1.0."
       />
       <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6">
         {!open && (

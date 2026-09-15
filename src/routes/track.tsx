@@ -13,17 +13,17 @@ import { stageExplanation, trackApplication, type TrackedApplication } from "@/l
 export const Route = createFileRoute("/track")({
   head: () => ({
     meta: [
-      { title: "Contestant Portal — Track Your Entry | Zik's Got Talent" },
+      { title: "Track Your Entry | ZIK’S GOT TALENT 1.0" },
       {
         name: "description",
         content:
-          "The Zik's Got Talent contestant portal: browse talent categories, enter the competition and check where your entry stands with your entry code.",
+          "Track your ZIK’S GOT TALENT 1.0 entry and follow your progress in the University of Ibadan campus-wide talent competition.",
       },
-      { property: "og:title", content: "Contestant Portal — Zik's Got Talent" },
+      { property: "og:title", content: "Track Your Entry | ZIK’S GOT TALENT 1.0" },
       {
         property: "og:description",
         content:
-          "Browse categories, enter the competition and look up your entry code to see your current stage.",
+          "Use your entry code to follow your ZIK’S GOT TALENT 1.0 journey.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -73,11 +73,10 @@ function TrackPage() {
         <section className="mx-auto w-full max-w-4xl px-4 py-14 sm:px-6">
           <div className="paper-mast px-6 py-7 sm:px-8">
             <p className="eyebrow text-primary">Contestant portal</p>
-            <h1 className="mt-3 text-4xl sm:text-5xl">Enter, then follow your stage</h1>
+            <h1 className="mt-3 text-4xl sm:text-5xl">Follow your competition journey</h1>
             <p className="mt-4 max-w-2xl text-sm text-muted-foreground sm:text-base">
-              {competition.data?.name ?? "Zik's Got Talent"} — browse the categories, send your
-              audition, and check where your entry stands with the code from your confirmation
-              email.
+              Enter ZIK&rsquo;S GOT TALENT 1.0, showcase your ability and check your progress with the
+              code from your confirmation email.
             </p>
           </div>
 

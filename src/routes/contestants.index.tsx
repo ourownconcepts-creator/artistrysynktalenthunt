@@ -7,16 +7,16 @@ import { fetchPublicContestants } from "@/lib/live-data";
 export const Route = createFileRoute("/contestants/")({
   head: () => ({
     meta: [
-      { title: "Contestants — Zik's Got Talent" },
+      { title: "Contestants | ZIK’S GOT TALENT 1.0" },
       {
         name: "description",
         content:
-          "Meet the creatives competing in Zik's Got Talent Season One across music, performance, visual and digital categories.",
+          "Meet the University of Ibadan student creatives showcasing their talent in ZIK’S GOT TALENT 1.0.",
       },
-      { property: "og:title", content: "Contestants — Zik's Got Talent" },
+      { property: "og:title", content: "Contestants | ZIK’S GOT TALENT 1.0" },
       {
         property: "og:description",
-        content: "Meet the creatives competing in Zik's Got Talent Season One.",
+        content: "Meet the student talent stepping into the spotlight at ZIK’S GOT TALENT 1.0.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -35,8 +35,8 @@ function Contestants() {
     <PublicShell>
       <PageHeader
         eyebrow="The talent"
-        title="Contestants"
-        intro="Public profiles only ever show approved media and public competition status — application details stay private."
+        title="The talent is here"
+        intro="Meet the University of Ibadan student creatives sharing their gifts, telling their stories and competing for their opportunity."
       />
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
         {contestants.isLoading ? (
@@ -64,7 +64,7 @@ function Contestants() {
           </div>
         ) : (
           <p className="text-sm text-muted-foreground">
-            No contestants are public yet. Entries appear here once moderators approve them.
+            Contestant profiles will appear here after entries are reviewed and approved.
           </p>
         )}
       </section>

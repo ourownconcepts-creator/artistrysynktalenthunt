@@ -7,16 +7,16 @@ import { usePublicAnnouncements } from "@/hooks/useCompetition";
 export const Route = createFileRoute("/announcements")({
   head: () => ({
     meta: [
-      { title: "Announcements — Zik's Got Talent" },
+      { title: "News & Announcements | ZIK’S GOT TALENT" },
       {
         name: "description",
         content:
-          "Official Zik's Got Talent announcements: entry windows, audition briefs, sponsors, shortlists and results.",
+          "Official ZIK’S GOT TALENT 1.0 updates from the University of Ibadan talent competition, including entries, auditions, shortlists and results.",
       },
-      { property: "og:title", content: "Announcements — Zik's Got Talent" },
+      { property: "og:title", content: "News & Announcements | ZIK’S GOT TALENT" },
       {
         property: "og:description",
-        content: "Official Zik's Got Talent competition announcements and updates.",
+        content: "Follow official ZIK’S GOT TALENT 1.0 news, competition updates and results.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -33,7 +33,7 @@ function Announcements() {
       <PageHeader
         eyebrow="Official updates"
         title="Announcements"
-        intro="Every announcement is published by staff and targeted at the public, contestants or judges."
+        intro="Follow entry updates, audition news, competition highlights, shortlists and results from ZIK’S GOT TALENT 1.0."
       />
       <section className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6">
         {announcements.isLoading ? (

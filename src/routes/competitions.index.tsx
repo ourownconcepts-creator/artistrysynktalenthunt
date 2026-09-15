@@ -10,16 +10,16 @@ import { fetchPublicCompetitions, formatDateRange } from "@/lib/live-data";
 export const Route = createFileRoute("/competitions/")({
   head: () => ({
     meta: [
-      { title: "Competitions — Zik's Got Talent" },
+      { title: "ZIK’S GOT TALENT 1.0 Competition" },
       {
         name: "description",
         content:
-          "Discover open and upcoming Zik's Got Talent competitions, entry windows, rounds and prize pools.",
+          "Explore ZIK’S GOT TALENT 1.0, the University of Ibadan campus-wide talent competition where talent meets opportunity.",
       },
-      { property: "og:title", content: "Competitions — Zik's Got Talent" },
+      { property: "og:title", content: "ZIK’S GOT TALENT 1.0 Competition" },
       {
         property: "og:description",
-        content: "Open and upcoming Zik's Got Talent competitions, entry windows and rounds.",
+        content: "Discover the competition journey, categories and entry information for ZIK’S GOT TALENT 1.0.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -37,9 +37,9 @@ function Competitions() {
   return (
     <PublicShell>
       <PageHeader
-        eyebrow="Discover"
-        title="Competitions"
-        intro="Every season is configured independently — categories, rounds, judging and voting are set per competition."
+        eyebrow="Where talent meets opportunity"
+        title="Discover. Showcase. Celebrate."
+        intro="Explore the University of Ibadan campus-wide competition created to discover and celebrate exceptional student talent."
       />
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
         {competitions.isLoading ? (

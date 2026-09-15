@@ -21,16 +21,16 @@ import { PROGRESS_STATE_LABELS } from "@/lib/operations";
 export const Route = createFileRoute("/artistrysynk")({
   head: () => ({
     meta: [
-      { title: "Your competition portal — Zik's Got Talent" },
+      { title: "Creative Connection | ZIK’S GOT TALENT" },
       {
         name: "description",
         content:
-          "Connected ArtistrySynk creatives can see their Zik's Got Talent entry and round progress in one place.",
+          "Connected ArtistrySynk creatives can follow their ZIK’S GOT TALENT entry and competition progress in one place.",
       },
-      { property: "og:title", content: "Your competition portal — Zik's Got Talent" },
+      { property: "og:title", content: "Creative Connection | ZIK’S GOT TALENT" },
       {
         property: "og:description",
-        content: "See your Zik's Got Talent entry and round progress from your creative profile.",
+        content: "ZIK’S GOT TALENT discovers the talent. ArtistrySynk connects the talent.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -86,8 +86,8 @@ function ArtistrySynkPortalPage() {
     <PublicShell>
       <PageHeader
         eyebrow={`${ARTISTRYSYNK.brand} portal`}
-        title="Your competition, on your creative profile"
-        intro={`Arriving from ${ARTISTRYSYNK.brand}? This is where your Zik's Got Talent entry and stage progress live.`}
+        title="From talent to opportunity"
+        intro={`ZIK’S GOT TALENT discovers the talent. ${ARTISTRYSYNK.brand} connects the talent to a wider creative community.`}
       />
 
       <section className="mx-auto w-full max-w-5xl px-4 py-14 sm:px-6">
