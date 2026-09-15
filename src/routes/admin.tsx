@@ -15,6 +15,7 @@ const ADMIN_ROLES = ["SUPER_ADMIN", "ADMIN"];
 const LIVE_ADMIN_PAGES = ["competitions", "lifecycle", "applications", "submissions", "judging", "voting"];
 
 export const Route = createFileRoute("/admin")({
+  staticData: { sitemap: "exclude-subtree" },
   ssr: false,
   head: () => ({ meta: [{ name: "robots", content: "noindex" }] }),
   component: AdminGate,

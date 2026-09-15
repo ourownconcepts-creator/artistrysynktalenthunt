@@ -19,6 +19,7 @@ import {
 } from "@/lib/operations";
 
 export const Route = createFileRoute("/admin/voting")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Voting controls — Zik's Got Talent admin" },

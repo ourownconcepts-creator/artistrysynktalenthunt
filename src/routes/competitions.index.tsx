@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { fetchPublicCompetitions, formatDateRange } from "@/lib/live-data";
 
 export const Route = createFileRoute("/competitions/")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "ZIK’S GOT TALENT 1.0 Competition" },

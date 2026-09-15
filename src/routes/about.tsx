@@ -4,6 +4,7 @@ import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
 
 export const Route = createFileRoute("/about")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "About ZIK’S GOT TALENT | University of Ibadan" },

@@ -7,6 +7,7 @@ import { useCompetition, useRounds } from "@/hooks/useCompetition";
 import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
 
 export const Route = createFileRoute("/how-it-works")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "How ZIK’S GOT TALENT Works | University of Ibadan" },

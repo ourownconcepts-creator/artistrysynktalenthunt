@@ -10,6 +10,7 @@ import { useMyRoles, useSession } from "@/hooks/useSession";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/dashboard")({
+  staticData: { sitemap: "exclude-subtree" },
   ssr: false,
   component: DashboardGate,
 });

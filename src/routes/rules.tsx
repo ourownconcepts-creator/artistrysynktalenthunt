@@ -4,6 +4,7 @@ import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 import { useCompetition } from "@/hooks/useCompetition";
 
 export const Route = createFileRoute("/rules")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Rules & Eligibility | ZIK’S GOT TALENT" },

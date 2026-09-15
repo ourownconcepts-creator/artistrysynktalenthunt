@@ -14,6 +14,7 @@ import { lovable } from "@/integrations/lovable";
 import { sendAccountCreatedEmail } from "@/lib/email.functions";
 
 export const Route = createFileRoute("/auth")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Sign in | ZIK’S GOT TALENT" },

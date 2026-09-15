@@ -19,6 +19,7 @@ import { PROGRESS_STATE_LABELS } from "@/lib/operations";
  * back into ArtistrySynk.
  */
 export const Route = createFileRoute("/artistrysynk")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Creative Connection | ZIK’S GOT TALENT" },

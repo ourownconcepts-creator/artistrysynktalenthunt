@@ -9,6 +9,7 @@ import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
 import { fetchMyApplication } from "@/lib/live-data";
 
 export const Route = createFileRoute("/dashboard/")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "My dashboard — Zik's Got Talent" },

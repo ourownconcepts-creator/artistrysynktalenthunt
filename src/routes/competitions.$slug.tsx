@@ -16,24 +16,38 @@ import {
   isRegistrationOpen,
 } from "@/lib/live-data";
 
+function competitionTitleFromSlug(slug: string): string {
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 export const Route = createFileRoute("/competitions/$slug")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `${params.slug.replace(/-/g, " ")} | ZIK’S GOT TALENT` },
-      {
-        name: "description",
-        content:
-          "Explore dates, categories, rounds and entry information for this ZIK’S GOT TALENT competition at the University of Ibadan.",
-      },
-      { property: "og:title", content: "Competition | ZIK’S GOT TALENT" },
-      {
-        property: "og:description",
-        content: "Dates, categories, rounds, judging weighting and rules for this competition.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  staticData: { sitemap: true },
+  head: ({ params }) => {
+    const name = competitionTitleFromSlug(params.slug);
+    const url = `https://ziksgottalent.com/competitions/${params.slug}`;
+    return {
+      meta: [
+        { title: `${name} | ZIK’S GOT TALENT` },
+        {
+          name: "description",
+          content: `Dates, categories, rounds and entry information for ${name}, a ZIK’S GOT TALENT competition at the University of Ibadan.`,
+        },
+        { property: "og:title", content: `${name} — ZIK’S GOT TALENT` },
+        {
+          property: "og:description",
+          content: `Dates, categories, rounds and judging weighting for ${name}.`,
+        },
+        { property: "og:url", content: url },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
   component: CompetitionDetail,
 });
 

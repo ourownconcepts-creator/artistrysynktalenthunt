@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { fetchCompetition } from "@/lib/live-data";
 
 export const Route = createFileRoute("/admin/competitions")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Competition details — Zik's Got Talent admin" },

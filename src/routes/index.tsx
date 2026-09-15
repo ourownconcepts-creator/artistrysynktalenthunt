@@ -16,6 +16,7 @@ import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
 import { describeVotingModel, formatDateRange, isRegistrationOpen } from "@/lib/live-data";
 
 export const Route = createFileRoute("/")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "ZIK’S GOT TALENT 1.0 | University of Ibadan Talent Competition" },

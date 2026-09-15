@@ -5,6 +5,7 @@ import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 import { usePublicAnnouncements } from "@/hooks/useCompetition";
 
 export const Route = createFileRoute("/announcements")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "News & Announcements | ZIK’S GOT TALENT" },
