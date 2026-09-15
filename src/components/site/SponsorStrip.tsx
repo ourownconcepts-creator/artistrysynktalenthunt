@@ -1,5 +1,4 @@
 import { useSponsors } from "@/hooks/useCompetition";
-import { SPONSOR_TIER_LABELS } from "@/lib/live-data";
 import { cn } from "@/lib/utils";
 
 /**
@@ -84,7 +83,7 @@ function SponsorName({
   );
 
   const className = prominent
-    ? "flex items-center gap-3 font-display text-xl font-bold tracking-wide transition-colors hover:text-primary sm:text-2xl"
+    ? "flex items-center gap-3 font-display text-xl font-bold transition-colors hover:text-primary sm:text-2xl"
     : "flex items-center gap-2 font-bold transition-colors hover:text-foreground";
 
   return sponsor.website ? (
