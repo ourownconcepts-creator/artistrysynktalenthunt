@@ -20,27 +20,33 @@ export function SponsorStrip({
   if (sponsors.length === 0) return null;
 
   const majors = sponsors.filter((s) => s.tier === "MAJOR_SPONSOR");
-  const others = sponsors.filter((s) => s.tier !== "MAJOR_SPONSOR");
+  const featuredSupporter = sponsors.find(
+    (sponsor) => sponsor.name.toUpperCase() === "NEW FLAVA RESTAURANT",
+  );
+  const others = sponsors.filter(
+    (sponsor) => sponsor.tier !== "MAJOR_SPONSOR" && sponsor.id !== featuredSupporter?.id,
+  );
 
   return (
     <div className={cn("flex flex-col items-center gap-3 text-center", className)}>
-      <p className="eyebrow">
-        {majors.length > 1
-          ? "Major sponsors"
-          : (SPONSOR_TIER_LABELS[sponsors[0]!.tier] ?? "Sponsors")}
-      </p>
-      {majors.length > 0 && (
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-          {majors.map((sponsor, index) => (
-            <span key={sponsor.id} className="flex items-center gap-4">
-              {index > 0 && <span className="font-display text-lg text-muted-foreground">×</span>}
-              <SponsorName sponsor={sponsor} prominent />
-            </span>
-          ))}
-        </div>
-      )}
+      <div className="flex flex-col items-center justify-center gap-6 sm:flex-row sm:items-start sm:gap-10">
+        {majors.length > 0 && (
+          <div className="flex flex-col items-center gap-2">
+            <p className="eyebrow">Main sponsor</p>
+            {majors.map((sponsor) => (
+              <SponsorName key={sponsor.id} sponsor={sponsor} prominent />
+            ))}
+          </div>
+        )}
+        {featuredSupporter && (
+          <div className="flex flex-col items-center gap-2">
+            <p className="eyebrow">Proudly supported by</p>
+            <SponsorName sponsor={featuredSupporter} prominent />
+          </div>
+        )}
+      </div>
       {others.length > 0 && (
-        <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground">
+        <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
           {others.map((sponsor) => (
             <SponsorName key={sponsor.id} sponsor={sponsor} />
           ))}
@@ -64,15 +70,13 @@ function SponsorName({
   const content = (
     <>
       {sponsor.logo_url && (
-        <span className={prominent ? "rounded-sm bg-[var(--paper)] p-1.5" : ""}>
-                {sponsor.logo_url && (
-            <img
-              src={sponsor.logo_url}
-              alt=""
-              className={prominent ? "h-10 max-w-36 object-contain" : "h-7 max-w-24 object-contain"}
-              loading="lazy"
-            />
-                )}
+        <span className="rounded-sm bg-[var(--paper)] p-2">
+          <img
+            src={sponsor.logo_url}
+            alt={`${sponsor.name} logo`}
+            className={prominent ? "h-14 max-w-44 object-contain" : "h-9 max-w-28 object-contain"}
+            loading="lazy"
+          />
         </span>
       )}
       {sponsor.name}
@@ -80,8 +84,8 @@ function SponsorName({
   );
 
   const className = prominent
-    ? "flex items-center gap-2 font-display text-xl tracking-wide transition-colors hover:text-primary sm:text-2xl"
-    : "flex items-center gap-2 transition-colors hover:text-foreground";
+    ? "flex items-center gap-3 font-display text-xl font-bold tracking-wide transition-colors hover:text-primary sm:text-2xl"
+    : "flex items-center gap-2 font-bold transition-colors hover:text-foreground";
 
   return sponsor.website ? (
     <a href={sponsor.website} target="_blank" rel="noreferrer noopener" className={className}>

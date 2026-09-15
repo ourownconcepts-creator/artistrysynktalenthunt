@@ -72,6 +72,9 @@
   rewritten without changing functionality or database content.
 - Sponsors page populated with the seven supplied logos and exact displayed
   names; ArtistrySynk is the sole main sponsor, followed by six supporting sponsors.
+- Sponsor hierarchy refined: ArtistrySynk remains the main sponsor, NEW FLAVA
+  Restaurant is featured beside it under “Proudly supported by,” and MIAMI
+  MERCENARIES is corrected throughout.
 
 ## Open questions (user skipped)
 - "Connect Act" branding/entries: unclear whether it is a new competition, a
