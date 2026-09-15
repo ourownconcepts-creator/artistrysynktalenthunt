@@ -16,6 +16,8 @@ export const Route = createFileRoute("/privacy")({
         property: "og:description",
         content: "How contestant data, audition media and identity are handled.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Privacy,

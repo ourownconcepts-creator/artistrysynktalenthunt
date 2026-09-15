@@ -17,6 +17,8 @@ export const Route = createFileRoute("/about")({
         property: "og:description",
         content: "A platform for University of Ibadan students to discover, showcase and celebrate exceptional creative talent.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: About,

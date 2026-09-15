@@ -16,6 +16,8 @@ export const Route = createFileRoute("/terms")({
         property: "og:description",
         content: "Terms of entry covering ownership, media licensing and conduct.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Terms,
@@ -31,7 +33,7 @@ function Terms() {
       />
       <section className="mx-auto w-full max-w-3xl space-y-6 px-4 py-16 text-sm text-muted-foreground sm:px-6">
         <p className="rounded-lg border border-warning/40 bg-warning/10 p-4 text-warning">
-          Draft summary only. Final terms must be supplied by Zik&rsquo;s Got Talent&rsquo;s legal
+          Draft summary only. Final terms must be supplied by ZIK&rsquo;S GOT TALENT&rsquo;s legal
           counsel before entries open publicly.
         </p>
         <Section title="Ownership of work">

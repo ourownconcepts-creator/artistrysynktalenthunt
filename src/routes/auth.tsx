@@ -181,7 +181,7 @@ function AuthPage() {
           <p className="mt-6 text-sm text-muted-foreground">
             Entering the competition?{" "}
             <Link to="/register" className="font-semibold text-primary hover:underline">
-              Register for Season One
+              Register for ZIK&rsquo;S GOT TALENT 1.0
             </Link>
           </p>
         </div>
