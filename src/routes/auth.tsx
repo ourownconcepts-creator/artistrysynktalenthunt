@@ -18,6 +18,7 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Sign in | ZIK’S GOT TALENT" },
+      { name: "robots", content: "noindex" },
       {
         name: "description",
         content:
