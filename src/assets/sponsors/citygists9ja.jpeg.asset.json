@@ -1,11 +1,11 @@
 {
-  "version": 1,
   "asset_id": "493c85f5-594e-44e4-b11b-dbd11c96131e",
-  "project_id": "57a568da-433d-4f73-85aa-4a73b9e6aa83",
-  "url": "/__l5e/assets-v1/493c85f5-594e-44e4-b11b-dbd11c96131e/citygists9ja.jpeg",
-  "r2_key": "a/v1/57a568da-433d-4f73-85aa-4a73b9e6aa83/493c85f5-594e-44e4-b11b-dbd11c96131e/citygists9ja.jpeg",
-  "original_filename": "citygists9ja.jpeg",
-  "size": 55644,
   "content_type": "image/jpeg",
-  "created_at": "2026-09-15T02:44:06Z"
+  "created_at": "2026-09-15T02:44:06Z",
+  "original_filename": "citygists9ja.jpeg",
+  "project_id": "4b07f33c-4533-425f-a1fb-b39e641b0171",
+  "r2_key": "a/v1/4b07f33c-4533-425f-a1fb-b39e641b0171/493c85f5-594e-44e4-b11b-dbd11c96131e/citygists9ja.jpeg",
+  "size": 55644,
+  "url": "/__l5e/assets-v1/493c85f5-594e-44e4-b11b-dbd11c96131e/citygists9ja.jpeg",
+  "version": 1
 }

@@ -1,11 +1,11 @@
 {
-  "version": 1,
   "asset_id": "4cf39174-c7ab-4c29-bdbf-728279dd488e",
-  "project_id": "57a568da-433d-4f73-85aa-4a73b9e6aa83",
-  "url": "/__l5e/assets-v1/4cf39174-c7ab-4c29-bdbf-728279dd488e/lmd-fashion-brands.jpeg",
-  "r2_key": "a/v1/57a568da-433d-4f73-85aa-4a73b9e6aa83/4cf39174-c7ab-4c29-bdbf-728279dd488e/lmd-fashion-brands.jpeg",
-  "original_filename": "lmd-fashion-brands.jpeg",
-  "size": 35131,
   "content_type": "image/jpeg",
-  "created_at": "2026-09-15T02:43:43Z"
+  "created_at": "2026-09-15T02:43:43Z",
+  "original_filename": "lmd-fashion-brands.jpeg",
+  "project_id": "4b07f33c-4533-425f-a1fb-b39e641b0171",
+  "r2_key": "a/v1/4b07f33c-4533-425f-a1fb-b39e641b0171/4cf39174-c7ab-4c29-bdbf-728279dd488e/lmd-fashion-brands.jpeg",
+  "size": 35131,
+  "url": "/__l5e/assets-v1/4cf39174-c7ab-4c29-bdbf-728279dd488e/lmd-fashion-brands.jpeg",
+  "version": 1
 }
