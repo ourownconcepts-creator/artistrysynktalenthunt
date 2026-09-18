@@ -20,7 +20,7 @@ export const Route = createFileRoute("/register")({
       {
         name: "description",
         content:
-          "Register for ARTISTRYSYNK CREATIVES TALENT HUNT 1.0, choose your talent category and showcase your ability in the University of Ibadan campus-wide competition.",
+          "Register for ARTISTRYSYNK CREATIVES TALENT HUNT 1.0, choose your talent category and showcase your ability in the ArtistrySynk campus-wide competition.",
       },
       { property: "og:title", content: "Register for ARTISTRYSYNK CREATIVES TALENT HUNT 1.0" },
       {

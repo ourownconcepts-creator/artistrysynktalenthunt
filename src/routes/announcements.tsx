@@ -12,7 +12,7 @@ export const Route = createFileRoute("/announcements")({
       {
         name: "description",
         content:
-          "Official ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 updates from the University of Ibadan talent competition, including entries, auditions, shortlists and results.",
+          "Official ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 updates from the ArtistrySynk talent competition, including entries, auditions, shortlists and results.",
       },
       { property: "og:title", content: "News & Announcements | ARTISTRYSYNK CREATIVES TALENT HUNT" },
       {

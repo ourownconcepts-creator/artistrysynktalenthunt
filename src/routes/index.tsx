@@ -19,17 +19,17 @@ export const Route = createFileRoute("/")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 | University of Ibadan Talent Competition" },
+      { title: "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 | ArtistrySynk Talent Hunt" },
       {
         name: "description",
         content:
-          "ARTISTRYSYNK CREATIVES TALENT HUNT is a University of Ibadan campus-wide talent competition discovering, showcasing and celebrating student talent across music, dance, comedy, spoken word, rap, acting, fashion and more.",
+          "ARTISTRYSYNK CREATIVES TALENT HUNT is an ArtistrySynk talent hunt discovering, showcasing and celebrating student talent across music, dance, comedy, spoken word, rap, acting, fashion and more.",
       },
-      { property: "og:title", content: "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 — Where Talent Meets Opportunity" },
+      { property: "og:title", content: "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 — Where Creatives Meet Opportunity" },
       {
         property: "og:description",
         content:
-          "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 — Where Talent Meets Opportunity. A University of Ibadan campus-wide talent competition discovering, showcasing and celebrating exceptional student talent.",
+          "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 — Where Creatives Meet Opportunity. An ArtistrySynk talent hunt discovering, showcasing and celebrating exceptional student talent.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -88,13 +88,13 @@ function Landing() {
           <h1 className="relative mt-7 max-w-4xl lg:max-w-[42rem] text-5xl sm:text-7xl lg:text-8xl">
             ARTISTRYSYNK CREATIVES TALENT HUNT 1.0
             <br />
-            <span className="text-gold">Where Talent Meets</span>
+            <span className="text-gold">Where Creatives Meet</span>
             <br />
             <span className="text-heat">Opportunity.</span>
           </h1>
 
           <p className="mt-7 max-w-xl text-base text-muted-foreground sm:text-lg">
-            A University of Ibadan campus-wide talent competition created to discover, showcase and
+            An ArtistrySynk talent hunt created to discover, showcase and
             celebrate exceptional student talent.
           </p>
 

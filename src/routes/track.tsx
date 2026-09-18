@@ -18,7 +18,7 @@ export const Route = createFileRoute("/track")({
       {
         name: "description",
         content:
-          "Track your ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 entry and follow your progress in the University of Ibadan campus-wide talent competition.",
+          "Track your ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 entry and follow your progress in the ArtistrySynk talent hunt.",
       },
       { property: "og:title", content: "Track Your Entry | ARTISTRYSYNK CREATIVES TALENT HUNT 1.0" },
       {

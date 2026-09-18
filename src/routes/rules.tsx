@@ -11,7 +11,7 @@ export const Route = createFileRoute("/rules")({
       {
         name: "description",
         content:
-          "Read the official rules, eligibility and consent requirements for ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 entrants at the University of Ibadan.",
+          "Read the official rules, eligibility and consent requirements for ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 entrants with ArtistrySynk.",
       },
       { property: "og:title", content: "Rules & Eligibility | ARTISTRYSYNK CREATIVES TALENT HUNT" },
       {

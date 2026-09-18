@@ -7,16 +7,16 @@ export const Route = createFileRoute("/about")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "About ARTISTRYSYNK CREATIVES TALENT HUNT | University of Ibadan" },
+      { title: "About ARTISTRYSYNK CREATIVES TALENT HUNT | ArtistrySynk" },
       {
         name: "description",
         content:
-          "Meet ARTISTRYSYNK CREATIVES TALENT HUNT, the University of Ibadan campus-wide talent competition organized by ArtistrySynk.",
+          "Meet ARTISTRYSYNK CREATIVES TALENT HUNT, the ArtistrySynk talent hunt organized by ArtistrySynk.",
       },
       { property: "og:title", content: "About ARTISTRYSYNK CREATIVES TALENT HUNT" },
       {
         property: "og:description",
-        content: "A platform for University of Ibadan students to discover, showcase and celebrate exceptional creative talent.",
+        content: "A platform for ArtistrySynk students to discover, showcase and celebrate exceptional creative talent.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -31,11 +31,11 @@ function About() {
       <PageHeader
         eyebrow="Who we are"
         title="More than a competition"
-        intro="ARTISTRYSYNK CREATIVES TALENT HUNT is a University of Ibadan campus-wide talent competition organized by ArtistrySynk."
+        intro="ARTISTRYSYNK CREATIVES TALENT HUNT is an ArtistrySynk talent hunt organized by ArtistrySynk."
       />
       <section className="mx-auto grid w-full max-w-5xl gap-5 px-4 py-16 sm:px-6 lg:grid-cols-2">
         <article className="card-stage p-7">
-          <h2 className="text-2xl">Where talent meets opportunity</h2>
+          <h2 className="text-2xl">Where creatives meet opportunity</h2>
           <p className="mt-3 text-sm text-muted-foreground">
             The competition gives students a platform to express their creativity, showcase their
             abilities and compete in a healthy, inspiring environment. It celebrates talent across

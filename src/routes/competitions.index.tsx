@@ -15,7 +15,7 @@ export const Route = createFileRoute("/competitions/")({
       {
         name: "description",
         content:
-          "Explore ARTISTRYSYNK CREATIVES TALENT HUNT 1.0, the University of Ibadan campus-wide talent competition where talent meets opportunity.",
+          "Explore ARTISTRYSYNK CREATIVES TALENT HUNT 1.0, the ArtistrySynk talent hunt where talent meets opportunity.",
       },
       { property: "og:title", content: "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 Competition" },
       {
@@ -38,9 +38,9 @@ function Competitions() {
   return (
     <PublicShell>
       <PageHeader
-        eyebrow="Where talent meets opportunity"
+        eyebrow="Where creatives meet opportunity"
         title="Discover. Showcase. Celebrate."
-        intro="Explore the University of Ibadan campus-wide competition created to discover and celebrate exceptional student talent."
+        intro="Explore the ArtistrySynk campus-wide competition created to discover and celebrate exceptional student talent."
       />
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
         {competitions.isLoading ? (

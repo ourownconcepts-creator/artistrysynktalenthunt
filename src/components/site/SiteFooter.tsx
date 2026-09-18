@@ -14,7 +14,7 @@ export function SiteFooter() {
           <div>
             <Wordmark />
             <p className="mt-4 max-w-xs text-sm text-muted-foreground">
-              A University of Ibadan campus-wide talent competition organized by ArtistrySynk in
+              An ArtistrySynk talent hunt organized by ArtistrySynk in
               collaboration with the ArtistrySynk.
             </p>
           </div>
@@ -56,7 +56,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-10 flex flex-col gap-3 border-t border-border/60 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} ARTISTRYSYNK CREATIVES TALENT HUNT. University of Ibadan.</p>
+          <p>© {new Date().getFullYear()} ARTISTRYSYNK CREATIVES TALENT HUNT. ArtistrySynk.</p>
           <div className="flex gap-5">
             <Link to="/terms" className="hover:text-foreground">
               Terms

@@ -25,7 +25,7 @@ export const Route = createFileRoute("/categories/$slug")({
         { title: `${name} Category | ARTISTRYSYNK CREATIVES TALENT HUNT` },
         {
           name: "description",
-          content: `Explore the ${name} category at ARTISTRYSYNK CREATIVES TALENT HUNT and see what to prepare for your University of Ibadan talent competition entry.`,
+          content: `Explore the ${name} category at ARTISTRYSYNK CREATIVES TALENT HUNT and see what to prepare for your ArtistrySynk talent competition entry.`,
         },
         { property: "og:title", content: `${name} Category — ARTISTRYSYNK CREATIVES TALENT HUNT` },
         {

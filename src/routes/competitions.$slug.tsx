@@ -34,7 +34,7 @@ export const Route = createFileRoute("/competitions/$slug")({
         { title: `${name} | ARTISTRYSYNK CREATIVES TALENT HUNT` },
         {
           name: "description",
-          content: `Dates, categories, rounds and entry information for ${name}, a ARTISTRYSYNK CREATIVES TALENT HUNT competition at the University of Ibadan.`,
+          content: `Dates, categories, rounds and entry information for ${name}, a ARTISTRYSYNK CREATIVES TALENT HUNT competition with ArtistrySynk.`,
         },
         { property: "og:title", content: `${name} — ARTISTRYSYNK CREATIVES TALENT HUNT` },
         {

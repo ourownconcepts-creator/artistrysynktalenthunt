@@ -10,7 +10,7 @@ export const Route = createFileRoute("/how-it-works")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "How ARTISTRYSYNK CREATIVES TALENT HUNT Works | University of Ibadan" },
+      { title: "How ARTISTRYSYNK CREATIVES TALENT HUNT Works | ArtistrySynk" },
       {
         name: "description",
         content:
