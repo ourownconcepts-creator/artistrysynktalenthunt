@@ -103,7 +103,7 @@ function Landing() {
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Button asChild size="lg" className="bg-gold text-primary-foreground hover:opacity-90">
               <Link to="/register">
-                Enter ARTISTRYSYNK CREATIVES TALENT HUNT
+                Enter the Talent Hunt
                 <ArrowRight className="ml-1 size-4" />
               </Link>
             </Button>
@@ -119,7 +119,7 @@ function Landing() {
 
           <dl className="mt-14 grid grid-cols-2 gap-6 border-t border-border/60 pt-8 sm:grid-cols-4">
             <Stat label="Talent categories" value={String(categoryCount)} icon={Sparkles} />
-            <Stat label="Campus community" value="UI" icon={Users} />
+            <Stat label="Creative community" value="ArtistrySynk" icon={Users} />
             <Stat label="Prize pool" value={data?.prize_pool || "TBC"} icon={Trophy} />
             <Stat label="Rounds" value={String(activeRounds.length)} icon={BadgeCheck} />
           </dl>
