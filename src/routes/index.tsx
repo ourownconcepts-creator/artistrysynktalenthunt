@@ -119,7 +119,7 @@ function Landing() {
 
           <dl className="mt-14 grid grid-cols-2 gap-6 border-t border-border/60 pt-8 sm:grid-cols-4">
             <Stat label="Talent categories" value={String(categoryCount)} icon={Sparkles} />
-            <Stat label="Creative community" value="ArtistrySynk" icon={Users} />
+            <Stat label="Creative community" value="Open" icon={Users} />
             <Stat label="Prize pool" value={data?.prize_pool || "TBC"} icon={Trophy} />
             <Stat label="Rounds" value={String(activeRounds.length)} icon={BadgeCheck} />
           </dl>
