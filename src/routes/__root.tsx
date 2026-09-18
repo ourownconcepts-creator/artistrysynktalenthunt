@@ -79,18 +79,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ARTISTRYSYNK CREATIVES TALENT HUNT" },
+      { title: "ArtistrySynk Creatives Talent Hunt" },
       {
         name: "description",
         content:
-          "ARTISTRYSYNK CREATIVES TALENT HUNT is a University of Ibadan campus-wide talent competition where talent meets opportunity.",
+          "ArtistrySynk Creatives Talent Hunt — the ArtistrySynk talent search where creatives meet opportunity.",
       },
       { name: "author", content: "ArtistrySynk" },
-      { property: "og:title", content: "ARTISTRYSYNK CREATIVES TALENT HUNT" },
+      { property: "og:title", content: "ArtistrySynk Creatives Talent Hunt" },
       {
         property: "og:description",
         content:
-          "A University of Ibadan campus-wide talent competition discovering, showcasing and celebrating student talent.",
+          "ArtistrySynk's talent hunt discovering, showcasing and celebrating creatives across every discipline.",
       },
       { property: "og:site_name", content: "ARTISTRYSYNK CREATIVES TALENT HUNT" },
       { property: "og:type", content: "website" },
