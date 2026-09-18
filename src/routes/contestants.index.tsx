@@ -17,7 +17,7 @@ export const Route = createFileRoute("/contestants/")({
       { property: "og:title", content: "Contestants | ARTISTRYSYNK CREATIVES TALENT HUNT 1.0" },
       {
         property: "og:description",
-        content: "Meet the student talent stepping into the spotlight at ARTISTRYSYNK CREATIVES TALENT HUNT 1.0.",
+        content: "Meet the creative talent stepping into the spotlight at ARTISTRYSYNK CREATIVES TALENT HUNT 1.0.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

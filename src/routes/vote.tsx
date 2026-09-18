@@ -16,7 +16,7 @@ export const Route = createFileRoute("/vote")({
       {
         name: "description",
         content:
-          "Support ArtistrySynk student talent by voting in ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 when public voting is open.",
+          "Support creative talent by voting in ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 when public voting is open.",
       },
       { property: "og:title", content: "Vote | ARTISTRYSYNK CREATIVES TALENT HUNT 1.0" },
       {

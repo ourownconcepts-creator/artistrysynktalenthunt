@@ -40,7 +40,7 @@ function Competitions() {
       <PageHeader
         eyebrow="Where creatives meet opportunity"
         title="Discover. Showcase. Celebrate."
-        intro="Explore the ArtistrySynk campus-wide competition created to discover and celebrate exceptional student talent."
+        intro="Explore the ArtistrySynk Creatives Talent Hunt created to discover and celebrate exceptional creative talent."
       />
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
         {competitions.isLoading ? (

@@ -18,7 +18,7 @@ export const Route = createFileRoute("/sponsors")({
       { property: "og:title", content: "Sponsors & Partners | ARTISTRYSYNK CREATIVES TALENT HUNT" },
       {
         property: "og:description",
-        content: "Partners supporting emerging student talent and creativity with ArtistrySynk.",
+        content: "Partners supporting emerging creative talent and creativity with ArtistrySynk.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

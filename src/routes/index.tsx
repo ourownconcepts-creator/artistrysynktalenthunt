@@ -23,13 +23,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "ARTISTRYSYNK CREATIVES TALENT HUNT is an ArtistrySynk talent hunt discovering, showcasing and celebrating student talent across music, dance, comedy, spoken word, rap, acting, fashion and more.",
+          "ARTISTRYSYNK CREATIVES TALENT HUNT is an ArtistrySynk talent hunt discovering, showcasing and celebrating creative talent across music, dance, comedy, spoken word, rap, acting, fashion and more.",
       },
       { property: "og:title", content: "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 — Where Creatives Meet Opportunity" },
       {
         property: "og:description",
         content:
-          "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 — Where Creatives Meet Opportunity. An ArtistrySynk talent hunt discovering, showcasing and celebrating exceptional student talent.",
+          "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 — Where Creatives Meet Opportunity. An ArtistrySynk talent hunt discovering, showcasing and celebrating exceptional creative talent.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -95,7 +95,7 @@ function Landing() {
 
           <p className="mt-7 max-w-xl text-base text-muted-foreground sm:text-lg">
             An ArtistrySynk talent hunt created to discover, showcase and
-            celebrate exceptional student talent.
+            celebrate exceptional creative talent.
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-3">
