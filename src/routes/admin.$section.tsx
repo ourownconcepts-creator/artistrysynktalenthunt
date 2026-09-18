@@ -1788,8 +1788,8 @@ function SettingsPanel() {
           <li className="rounded-md border border-border/60 p-3">
             <p className="font-semibold">ArtistrySynk creative identity</p>
             <p className="text-xs text-muted-foreground">
-              Contestants connect their own ArtistrySynk account from their dashboard. Zik's Got
-              Talent never creates or stores a second identity — only a verified reference.
+              Contestants connect their own ArtistrySynk account from their dashboard. The Talent
+              Hunt never creates or stores a second identity — only a verified reference.
             </p>
           </li>
           <li className="rounded-md border border-border/60 p-3">
