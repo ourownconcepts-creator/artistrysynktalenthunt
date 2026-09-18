@@ -16,7 +16,7 @@ export const Route = createFileRoute("/about")({
       { property: "og:title", content: "About ARTISTRYSYNK CREATIVES TALENT HUNT" },
       {
         property: "og:description",
-        content: "A platform for ArtistrySynk students to discover, showcase and celebrate exceptional creative talent.",
+        content: "A platform for creatives to discover, showcase and celebrate exceptional creative talent.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -37,14 +37,14 @@ function About() {
         <article className="card-stage p-7">
           <h2 className="text-2xl">Where creatives meet opportunity</h2>
           <p className="mt-3 text-sm text-muted-foreground">
-            The competition gives students a platform to express their creativity, showcase their
+            The competition gives creatives a platform to express their creativity, showcase their
             abilities and compete in a healthy, inspiring environment. It celebrates talent across
             singing, dancing, comedy, spoken word, rap, acting, instrumentals, cultural performance,
             fashion and other creative disciplines.
           </p>
           <p className="mt-3 text-sm text-muted-foreground">
             Its purpose is to discover hidden talent, promote creativity, encourage healthy
-            competition, empower young creatives and strengthen unity among students.
+            competition, empower young creatives and strengthen unity among creatives.
           </p>
         </article>
         <article className="card-stage p-7">

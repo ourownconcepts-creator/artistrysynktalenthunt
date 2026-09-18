@@ -12,7 +12,7 @@ export const Route = createFileRoute("/contestants/")({
       {
         name: "description",
         content:
-          "Meet the ArtistrySynk student creatives showcasing their talent in ARTISTRYSYNK CREATIVES TALENT HUNT 1.0.",
+          "Meet the creatives showcasing their talent in ARTISTRYSYNK CREATIVES TALENT HUNT 1.0.",
       },
       { property: "og:title", content: "Contestants | ARTISTRYSYNK CREATIVES TALENT HUNT 1.0" },
       {
@@ -37,7 +37,7 @@ function Contestants() {
       <PageHeader
         eyebrow="The talent"
         title="The talent is here"
-        intro="Meet the ArtistrySynk student creatives sharing their gifts, telling their stories and competing for their opportunity."
+        intro="Meet the creatives sharing their gifts, telling their stories and competing for their opportunity."
       />
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
         {contestants.isLoading ? (

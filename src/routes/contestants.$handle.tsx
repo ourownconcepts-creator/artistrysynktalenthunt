@@ -16,7 +16,7 @@ export const Route = createFileRoute("/contestants/$handle")({
       { title: `${params.handle} | ARTISTRYSYNK CREATIVES TALENT HUNT contestant` },
       {
         name: "description",
-        content: `Meet ${params.handle}, a student creative competing in ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 with ArtistrySynk.`,
+        content: `Meet ${params.handle}, a creative competing in ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 with ArtistrySynk.`,
       },
       { property: "og:title", content: `${params.handle} | ARTISTRYSYNK CREATIVES TALENT HUNT contestant` },
       {

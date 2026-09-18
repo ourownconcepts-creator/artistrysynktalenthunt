@@ -44,7 +44,7 @@ const STEPS = [
   },
   {
     title: "Compete",
-    body: "Take your place in a healthy, inspiring competition alongside talented UI students.",
+    body: "Take your place in a healthy, inspiring competition alongside talented creatives.",
   },
   {
     title: "Step into your opportunity",
