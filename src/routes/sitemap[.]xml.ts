@@ -9,7 +9,7 @@ import {
   type SitemapEntry,
 } from "@/lib/sitemap";
 
-const BASE_URL = "https://ziksgottalent.com";
+const BASE_URL = "https://artistrysynk.app/talent-hunt";
 
 function publicSupabase() {
   const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;

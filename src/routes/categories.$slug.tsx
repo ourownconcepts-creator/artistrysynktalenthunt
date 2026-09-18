@@ -19,7 +19,7 @@ export const Route = createFileRoute("/categories/$slug")({
   staticData: { sitemap: true },
   head: ({ params }) => {
     const name = categoryTitleFromSlug(params.slug);
-    const url = `https://ziksgottalent.com/categories/${params.slug}`;
+    const url = `https://artistrysynk.app/talent-hunt/categories/${params.slug}`;
     return {
       meta: [
         { title: `${name} Category | ARTISTRYSYNK CREATIVES TALENT HUNT` },
