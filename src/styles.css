@@ -142,7 +142,7 @@
   --paper-ink: oklch(0.26 0.012 60);
   --paper-dim: oklch(0.56 0.015 70);
   --paper-line: oklch(0.26 0.012 60 / 14%);
-  --paper-accent: oklch(0.52 0.11 76);
+  --paper-accent: oklch(0.45 0.19 300);
 }
 
 /* Single visual identity: the dark stage theme is the theme. */
@@ -179,7 +179,7 @@
   }
 
   ::selection {
-    background: oklch(0.82 0.16 84 / 0.3);
+    background: oklch(0.67 0.19 300 / 0.35);
   }
 }
 
@@ -244,7 +244,7 @@
 @utility card-stage-hover {
   &:hover {
     transform: translateY(-4px);
-    border-color: oklch(0.82 0.16 84 / 0.4);
+    border-color: oklch(0.67 0.19 300 / 0.45);
     box-shadow: var(--shadow-glow);
   }
 }
