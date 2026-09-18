@@ -56,7 +56,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-10 flex flex-col gap-3 border-t border-border/60 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} ARTISTRYSYNK CREATIVES TALENT HUNT. ArtistrySynk.</p>
+          <p>© {new Date().getFullYear()} ArtistrySynk Creatives Talent Hunt. ArtistrySynk.</p>
           <div className="flex gap-5">
             <Link to="/terms" className="hover:text-foreground">
               Terms

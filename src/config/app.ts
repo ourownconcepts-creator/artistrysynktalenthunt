@@ -11,7 +11,7 @@ const env = import.meta.env as unknown as Record<string, string | undefined>;
 export type ArtistrySynkProviderMode = "local" | "remote";
 
 export const APP_CONFIG = {
-  siteName: "ARTISTRYSYNK CREATIVES TALENT HUNT",
+  siteName: "ArtistrySynk Creatives Talent Hunt",
   /** Canonical public origin of this product. */
   siteUrl: (env["VITE_SITE_URL"] ?? "https://artistrysynk.app/talent-hunt").replace(/\/$/, ""),
   artistrysynk: {

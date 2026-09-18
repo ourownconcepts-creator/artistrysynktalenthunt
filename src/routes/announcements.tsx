@@ -8,16 +8,16 @@ export const Route = createFileRoute("/announcements")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "News & Announcements | ARTISTRYSYNK CREATIVES TALENT HUNT" },
+      { title: "News & Announcements | ArtistrySynk Creatives Talent Hunt" },
       {
         name: "description",
         content:
-          "Official ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 updates from the ArtistrySynk talent competition, including entries, auditions, shortlists and results.",
+          "Official ArtistrySynk Creatives Talent Hunt 1.0 updates from the ArtistrySynk talent competition, including entries, auditions, shortlists and results.",
       },
-      { property: "og:title", content: "News & Announcements | ARTISTRYSYNK CREATIVES TALENT HUNT" },
+      { property: "og:title", content: "News & Announcements | ArtistrySynk Creatives Talent Hunt" },
       {
         property: "og:description",
-        content: "Follow official ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 news, competition updates and results.",
+        content: "Follow official ArtistrySynk Creatives Talent Hunt 1.0 news, competition updates and results.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -34,7 +34,7 @@ function Announcements() {
       <PageHeader
         eyebrow="Official updates"
         title="Announcements"
-        intro="Follow entry updates, audition news, competition highlights, shortlists and results from ARTISTRYSYNK CREATIVES TALENT HUNT 1.0."
+        intro="Follow entry updates, audition news, competition highlights, shortlists and results from ArtistrySynk Creatives Talent Hunt 1.0."
       />
       <section className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6">
         {announcements.isLoading ? (

@@ -7,13 +7,13 @@ export const Route = createFileRoute("/about")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "About ARTISTRYSYNK CREATIVES TALENT HUNT | ArtistrySynk" },
+      { title: "About ArtistrySynk Creatives Talent Hunt | ArtistrySynk" },
       {
         name: "description",
         content:
-          "Meet ARTISTRYSYNK CREATIVES TALENT HUNT, the ArtistrySynk talent hunt organized by ArtistrySynk.",
+          "Meet ArtistrySynk Creatives Talent Hunt, the ArtistrySynk talent hunt organized by ArtistrySynk.",
       },
-      { property: "og:title", content: "About ARTISTRYSYNK CREATIVES TALENT HUNT" },
+      { property: "og:title", content: "About ArtistrySynk Creatives Talent Hunt" },
       {
         property: "og:description",
         content: "A platform for creatives to discover, showcase and celebrate exceptional creative talent.",
@@ -31,7 +31,7 @@ function About() {
       <PageHeader
         eyebrow="Who we are"
         title="More than a competition"
-        intro="ARTISTRYSYNK CREATIVES TALENT HUNT is an ArtistrySynk talent hunt organized by ArtistrySynk."
+        intro="ArtistrySynk Creatives Talent Hunt is an ArtistrySynk talent hunt organized by ArtistrySynk."
       />
       <section className="mx-auto grid w-full max-w-5xl gap-5 px-4 py-16 sm:px-6 lg:grid-cols-2">
         <article className="card-stage p-7">
@@ -51,7 +51,7 @@ function About() {
           <h2 className="text-2xl">From discovery to connection</h2>
           <p className="mt-3 text-sm text-muted-foreground">{ARTISTRYSYNK.ecosystem}</p>
           <p className="mt-3 text-sm text-muted-foreground">
-            Through its partnership with ArtistrySynk, ARTISTRYSYNK CREATIVES TALENT HUNT extends the journey
+            Through its partnership with ArtistrySynk, ArtistrySynk Creatives Talent Hunt extends the journey
             beyond the competition by connecting participating creatives to a wider creative network
             and opportunities.
           </p>

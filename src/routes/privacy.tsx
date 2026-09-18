@@ -6,13 +6,13 @@ export const Route = createFileRoute("/privacy")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Privacy | ARTISTRYSYNK CREATIVES TALENT HUNT" },
+      { title: "Privacy | ArtistrySynk Creatives Talent Hunt" },
       {
         name: "description",
         content:
-          "How ARTISTRYSYNK CREATIVES TALENT HUNT handles contestant details, application information, audition media and connected creative identities.",
+          "How ArtistrySynk Creatives Talent Hunt handles contestant details, application information, audition media and connected creative identities.",
       },
-      { property: "og:title", content: "Privacy | ARTISTRYSYNK CREATIVES TALENT HUNT" },
+      { property: "og:title", content: "Privacy | ArtistrySynk Creatives Talent Hunt" },
       {
         property: "og:description",
         content: "How contestant data, audition media and identity are handled.",
@@ -43,7 +43,7 @@ function Privacy() {
         </Section>
         <Section title="Audition links">
           Auditions are entered as a link to video you host elsewhere &mdash; YouTube, Google Drive,
-          Vimeo or similar. ARTISTRYSYNK CREATIVES TALENT HUNT stores the link, not the file, and keeps the link
+          Vimeo or similar. ArtistrySynk Creatives Talent Hunt stores the link, not the file, and keeps the link
           itself out of public view unless you choose to make your audition public. Who else can open
           that video depends on the site hosting it and the sharing permissions you set there, which
           are outside our control. If your audition should stay private, keep it unlisted or
@@ -55,7 +55,7 @@ function Privacy() {
         </Section>
         <Section title="Identity">
           ArtistrySynk supports your creative identity and connection to the wider creative
-          community beyond ARTISTRYSYNK CREATIVES TALENT HUNT.
+          community beyond ArtistrySynk Creatives Talent Hunt.
         </Section>
         <Section title="Access controls">
           Access is enforced on the server and at the database row level. Every administrative and

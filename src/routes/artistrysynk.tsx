@@ -22,16 +22,16 @@ export const Route = createFileRoute("/artistrysynk")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Creative Connection | ARTISTRYSYNK CREATIVES TALENT HUNT" },
+      { title: "Creative Connection | ArtistrySynk Creatives Talent Hunt" },
       {
         name: "description",
         content:
-          "Connected ArtistrySynk creatives can follow their ARTISTRYSYNK CREATIVES TALENT HUNT entry and competition progress in one place.",
+          "Connected ArtistrySynk creatives can follow their ArtistrySynk Creatives Talent Hunt entry and competition progress in one place.",
       },
-      { property: "og:title", content: "Creative Connection | ARTISTRYSYNK CREATIVES TALENT HUNT" },
+      { property: "og:title", content: "Creative Connection | ArtistrySynk Creatives Talent Hunt" },
       {
         property: "og:description",
-        content: "ARTISTRYSYNK CREATIVES TALENT HUNT discovers the talent. ArtistrySynk connects the talent.",
+        content: "ArtistrySynk Creatives Talent Hunt discovers the talent. ArtistrySynk connects the talent.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -88,7 +88,7 @@ function ArtistrySynkPortalPage() {
       <PageHeader
         eyebrow={`${ARTISTRYSYNK.brand} portal`}
         title="From talent to opportunity"
-        intro={`ARTISTRYSYNK CREATIVES TALENT HUNT discovers the talent. ${ARTISTRYSYNK.brand} connects the talent to a wider creative community.`}
+        intro={`ArtistrySynk Creatives Talent Hunt discovers the talent. ${ARTISTRYSYNK.brand} connects the talent to a wider creative community.`}
       />
 
       <section className="mx-auto w-full max-w-5xl px-4 py-14 sm:px-6">

@@ -17,14 +17,14 @@ export const Route = createFileRoute("/auth")({
   staticData: { sitemap: false },
   head: () => ({
     meta: [
-      { title: "Sign in | ARTISTRYSYNK CREATIVES TALENT HUNT" },
+      { title: "Sign in | ArtistrySynk Creatives Talent Hunt" },
       { name: "robots", content: "noindex" },
       {
         name: "description",
         content:
-          "Sign in to your ARTISTRYSYNK CREATIVES TALENT HUNT contestant account to manage your entry, follow your progress or vote.",
+          "Sign in to your ArtistrySynk Creatives Talent Hunt contestant account to manage your entry, follow your progress or vote.",
       },
-      { property: "og:title", content: "Sign in | ARTISTRYSYNK CREATIVES TALENT HUNT" },
+      { property: "og:title", content: "Sign in | ArtistrySynk Creatives Talent Hunt" },
       {
         property: "og:description",
         content: "Access your contestant dashboard, vote, or create your account.",
@@ -183,7 +183,7 @@ function AuthPage() {
           <p className="mt-6 text-sm text-muted-foreground">
             Entering the competition?{" "}
             <Link to="/register" className="font-semibold text-primary hover:underline">
-              Register for ARTISTRYSYNK CREATIVES TALENT HUNT 1.0
+              Register for ArtistrySynk Creatives Talent Hunt 1.0
             </Link>
           </p>
         </div>

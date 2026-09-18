@@ -12,13 +12,13 @@ export const Route = createFileRoute("/vote")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Vote | ARTISTRYSYNK CREATIVES TALENT HUNT 1.0" },
+      { title: "Vote | ArtistrySynk Creatives Talent Hunt 1.0" },
       {
         name: "description",
         content:
-          "Support creative talent by voting in ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 when public voting is open.",
+          "Support creative talent by voting in ArtistrySynk Creatives Talent Hunt 1.0 when public voting is open.",
       },
-      { property: "og:title", content: "Vote | ARTISTRYSYNK CREATIVES TALENT HUNT 1.0" },
+      { property: "og:title", content: "Vote | ArtistrySynk Creatives Talent Hunt 1.0" },
       {
         property: "og:description",
         content:

@@ -19,17 +19,17 @@ export const Route = createFileRoute("/")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 | ArtistrySynk Talent Hunt" },
+      { title: "ArtistrySynk Creatives Talent Hunt 1.0 | ArtistrySynk Talent Hunt" },
       {
         name: "description",
         content:
-          "ARTISTRYSYNK CREATIVES TALENT HUNT is an ArtistrySynk talent hunt discovering, showcasing and celebrating creative talent across music, dance, comedy, spoken word, rap, acting, fashion and more.",
+          "ArtistrySynk Creatives Talent Hunt is an ArtistrySynk talent hunt discovering, showcasing and celebrating creative talent across music, dance, comedy, spoken word, rap, acting, fashion and more.",
       },
-      { property: "og:title", content: "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 — Where Creatives Meet Opportunity" },
+      { property: "og:title", content: "ArtistrySynk Creatives Talent Hunt 1.0 — Where Creatives Meet Opportunity" },
       {
         property: "og:description",
         content:
-          "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 — Where Creatives Meet Opportunity. An ArtistrySynk talent hunt discovering, showcasing and celebrating exceptional creative talent.",
+          "ArtistrySynk Creatives Talent Hunt 1.0 — Where Creatives Meet Opportunity. An ArtistrySynk talent hunt discovering, showcasing and celebrating exceptional creative talent.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -147,7 +147,7 @@ function Landing() {
           </div>
           <ol className="card-stage divide-y divide-border/60 p-2">
             {[
-              "Register for ARTISTRYSYNK CREATIVES TALENT HUNT",
+              "Register for ArtistrySynk Creatives Talent Hunt",
               "Your ArtistrySynk identity is created or connected",
               "Showcase your talent in your chosen category",
               "Connect with a wider creative community",

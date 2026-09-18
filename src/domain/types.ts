@@ -1,5 +1,5 @@
 /**
- * ARTISTRYSYNK CREATIVES TALENT HUNT — competition domain types.
+ * ArtistrySynk Creatives Talent Hunt — competition domain types.
  *
  * These describe ArtistrySynk Creatives Talent Hunt's OWN entities. Contestant identity is NOT
  * modelled here: applications reference an ArtistrySynk identity through an

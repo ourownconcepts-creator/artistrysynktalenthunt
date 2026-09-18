@@ -8,16 +8,16 @@ export const Route = createFileRoute("/contestants/")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Contestants | ARTISTRYSYNK CREATIVES TALENT HUNT 1.0" },
+      { title: "Contestants | ArtistrySynk Creatives Talent Hunt 1.0" },
       {
         name: "description",
         content:
-          "Meet the creatives showcasing their talent in ARTISTRYSYNK CREATIVES TALENT HUNT 1.0.",
+          "Meet the creatives showcasing their talent in ArtistrySynk Creatives Talent Hunt 1.0.",
       },
-      { property: "og:title", content: "Contestants | ARTISTRYSYNK CREATIVES TALENT HUNT 1.0" },
+      { property: "og:title", content: "Contestants | ArtistrySynk Creatives Talent Hunt 1.0" },
       {
         property: "og:description",
-        content: "Meet the creative talent stepping into the spotlight at ARTISTRYSYNK CREATIVES TALENT HUNT 1.0.",
+        content: "Meet the creative talent stepping into the spotlight at ArtistrySynk Creatives Talent Hunt 1.0.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

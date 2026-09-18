@@ -14,17 +14,17 @@ export const Route = createFileRoute("/track")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Track Your Entry | ARTISTRYSYNK CREATIVES TALENT HUNT 1.0" },
+      { title: "Track Your Entry | ArtistrySynk Creatives Talent Hunt 1.0" },
       {
         name: "description",
         content:
-          "Track your ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 entry and follow your progress in the ArtistrySynk talent hunt.",
+          "Track your ArtistrySynk Creatives Talent Hunt 1.0 entry and follow your progress in the ArtistrySynk talent hunt.",
       },
-      { property: "og:title", content: "Track Your Entry | ARTISTRYSYNK CREATIVES TALENT HUNT 1.0" },
+      { property: "og:title", content: "Track Your Entry | ArtistrySynk Creatives Talent Hunt 1.0" },
       {
         property: "og:description",
         content:
-          "Use your entry code to follow your ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 journey.",
+          "Use your entry code to follow your ArtistrySynk Creatives Talent Hunt 1.0 journey.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -76,7 +76,7 @@ function TrackPage() {
             <p className="eyebrow text-primary">Contestant portal</p>
             <h1 className="mt-3 text-4xl sm:text-5xl">Follow your competition journey</h1>
             <p className="mt-4 max-w-2xl text-sm text-muted-foreground sm:text-base">
-              Enter ARTISTRYSYNK CREATIVES TALENT HUNT 1.0, showcase your ability and check your progress with the
+              Enter ArtistrySynk Creatives Talent Hunt 1.0, showcase your ability and check your progress with the
               code from your confirmation email.
             </p>
           </div>

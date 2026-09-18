@@ -92,7 +92,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "ArtistrySynk's talent hunt discovering, showcasing and celebrating creatives across every discipline.",
       },
-      { property: "og:site_name", content: "ARTISTRYSYNK CREATIVES TALENT HUNT" },
+      { property: "og:site_name", content: "ArtistrySynk Creatives Talent Hunt" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@artistrysynk" },

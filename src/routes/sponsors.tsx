@@ -9,13 +9,13 @@ export const Route = createFileRoute("/sponsors")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Sponsors & Partners | ARTISTRYSYNK CREATIVES TALENT HUNT" },
+      { title: "Sponsors & Partners | ArtistrySynk Creatives Talent Hunt" },
       {
         name: "description",
         content:
           "Meet the partners supporting talent discovery, youth development and creative opportunity through the ArtistrySynk Creatives Talent Hunt.",
       },
-      { property: "og:title", content: "Sponsors & Partners | ARTISTRYSYNK CREATIVES TALENT HUNT" },
+      { property: "og:title", content: "Sponsors & Partners | ArtistrySynk Creatives Talent Hunt" },
       {
         property: "og:description",
         content: "Partners supporting emerging creative talent and creativity with ArtistrySynk.",
