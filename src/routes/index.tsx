@@ -85,12 +85,14 @@ function Landing() {
             </span>
           </div>
 
-          <h1 className="relative mt-7 max-w-4xl lg:max-w-[42rem] text-5xl sm:text-7xl lg:text-8xl">
-            ARTISTRYSYNK CREATIVES TALENT HUNT 1.0
+          <p className="mt-7 font-sans text-xs font-extrabold uppercase tracking-[0.3em] text-muted-foreground sm:text-sm">
+            ArtistrySynk Creatives Talent Hunt 1.0
+          </p>
+
+          <h1 className="relative mt-4 max-w-4xl lg:max-w-[42rem] text-5xl sm:text-7xl lg:text-8xl">
+            <span className="text-gold">Where Creatives</span>
             <br />
-            <span className="text-gold">Where Creatives Meet</span>
-            <br />
-            <span className="text-heat">Opportunity.</span>
+            <span className="text-heat">Meet Opportunity.</span>
           </h1>
 
           <p className="mt-7 max-w-xl text-base text-muted-foreground sm:text-lg">
