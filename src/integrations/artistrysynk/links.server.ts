@@ -1,6 +1,6 @@
 /**
  * Server-only storage for ArtistrySynk link records and one-time authorization
- * intents. Zik's Got Talent stores an opaque identity reference plus the small
+ * intents. ArtistrySynk Creatives Talent Hunt stores an opaque identity reference plus the small
  * approved profile projection needed for display — never credentials, never a
  * copy of the ArtistrySynk account.
  */
@@ -242,7 +242,7 @@ export async function getLink(userId: string): Promise<LinkRecord | null> {
   return (data as LinkRecord | null) ?? null;
 }
 
-/** Another Zik's Got Talent account already holding this identity, if any. */
+/** Another ArtistrySynk Creatives Talent Hunt account already holding this identity, if any. */
 export async function findConflictingLink(
   identityId: string,
   userId: string,

@@ -10,13 +10,13 @@ export const Route = createFileRoute("/how-it-works")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "How ZIK’S GOT TALENT Works | University of Ibadan" },
+      { title: "How ARTISTRYSYNK CREATIVES TALENT HUNT Works | University of Ibadan" },
       {
         name: "description",
         content:
-          "Follow the ZIK’S GOT TALENT 1.0 journey from creative identity and registration to showcasing, competing and stepping into opportunity.",
+          "Follow the ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 journey from creative identity and registration to showcasing, competing and stepping into opportunity.",
       },
-      { property: "og:title", content: "How ZIK’S GOT TALENT Works" },
+      { property: "og:title", content: "How ARTISTRYSYNK CREATIVES TALENT HUNT Works" },
       {
         property: "og:description",
         content: "Create your identity, choose your category, register, showcase your talent and step into your opportunity.",
@@ -35,7 +35,7 @@ const STEPS = [
   },
   { title: "Choose your talent category", body: "Select the category that best represents your gift." },
   {
-    title: "Register for ZIK’S GOT TALENT",
+    title: "Register for ARTISTRYSYNK CREATIVES TALENT HUNT",
     body: "Share your details and complete your entry for the current competition.",
   },
   {
@@ -59,7 +59,7 @@ function HowItWorksPage() {
   return (
     <PublicShell>
       <PageHeader
-        eyebrow="ZIK’S GOT TALENT 1.0"
+        eyebrow="ARTISTRYSYNK CREATIVES TALENT HUNT 1.0"
         title="Your stage starts here"
         intro="Six clear steps take you from creative identity to the opportunity to be seen, heard and celebrated."
       />

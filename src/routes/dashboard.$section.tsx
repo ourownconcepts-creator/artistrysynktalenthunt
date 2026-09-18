@@ -27,10 +27,10 @@ export const Route = createFileRoute("/dashboard/$section")({
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: loaderData ? `${loaderData.section.label} — Zik's Got Talent` : "Unavailable" },
+      { title: loaderData ? `${loaderData.section.label} — ArtistrySynk Creatives Talent Hunt` : "Unavailable" },
       { name: "robots", content: "noindex" },
       { name: "description", content: loaderData?.section.summary ?? "Contestant dashboard" },
-      { property: "og:title", content: loaderData?.section.label ?? "Zik's Got Talent" },
+      { property: "og:title", content: loaderData?.section.label ?? "ArtistrySynk Creatives Talent Hunt" },
       {
         property: "og:description",
         content: loaderData?.section.summary ?? "Contestant dashboard",

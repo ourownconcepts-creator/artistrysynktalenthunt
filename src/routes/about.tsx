@@ -7,13 +7,13 @@ export const Route = createFileRoute("/about")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "About ZIK’S GOT TALENT | University of Ibadan" },
+      { title: "About ARTISTRYSYNK CREATIVES TALENT HUNT | University of Ibadan" },
       {
         name: "description",
         content:
-          "Meet ZIK’S GOT TALENT, the University of Ibadan campus-wide talent competition organized by Zik Hall Royals with the Zik Hall Executive Council.",
+          "Meet ARTISTRYSYNK CREATIVES TALENT HUNT, the University of Ibadan campus-wide talent competition organized by ArtistrySynk.",
       },
-      { property: "og:title", content: "About ZIK’S GOT TALENT" },
+      { property: "og:title", content: "About ARTISTRYSYNK CREATIVES TALENT HUNT" },
       {
         property: "og:description",
         content: "A platform for University of Ibadan students to discover, showcase and celebrate exceptional creative talent.",
@@ -31,7 +31,7 @@ function About() {
       <PageHeader
         eyebrow="Who we are"
         title="More than a competition"
-        intro="ZIK’S GOT TALENT is a University of Ibadan campus-wide talent competition organized by Zik Hall Royals in collaboration with the Zik Hall Executive Council."
+        intro="ARTISTRYSYNK CREATIVES TALENT HUNT is a University of Ibadan campus-wide talent competition organized by ArtistrySynk."
       />
       <section className="mx-auto grid w-full max-w-5xl gap-5 px-4 py-16 sm:px-6 lg:grid-cols-2">
         <article className="card-stage p-7">
@@ -51,7 +51,7 @@ function About() {
           <h2 className="text-2xl">From discovery to connection</h2>
           <p className="mt-3 text-sm text-muted-foreground">{ARTISTRYSYNK.ecosystem}</p>
           <p className="mt-3 text-sm text-muted-foreground">
-            Through its partnership with ArtistrySynk, ZIK&rsquo;S GOT TALENT extends the journey
+            Through its partnership with ArtistrySynk, ARTISTRYSYNK CREATIVES TALENT HUNT extends the journey
             beyond the competition by connecting participating creatives to a wider creative network
             and opportunities.
           </p>

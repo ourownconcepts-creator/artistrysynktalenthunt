@@ -14,7 +14,7 @@ export const Route = createFileRoute("/oauth/artistrysynk/return")({
   staticData: { sitemap: false },
   head: () => ({
     meta: [
-      { title: "Finishing your ArtistrySynk connection — Zik's Got Talent" },
+      { title: "Finishing your ArtistrySynk connection — ArtistrySynk Creatives Talent Hunt" },
       {
         name: "description",
         content: "Completing the secure ArtistrySynk creative identity connection.",

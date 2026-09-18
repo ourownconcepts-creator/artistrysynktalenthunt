@@ -24,14 +24,14 @@ export const Route = createFileRoute("/admin/applications")({
   staticData: { sitemap: false },
   head: () => ({
     meta: [
-      { title: "Application review — Zik's Got Talent admin" },
+      { title: "Application review — ArtistrySynk Creatives Talent Hunt admin" },
       {
         name: "description",
         content:
           "Review submitted entries, approve, reject or request a correction, and record the decision reason.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Application review — Zik's Got Talent admin" },
+      { property: "og:title", content: "Application review — ArtistrySynk Creatives Talent Hunt admin" },
       { property: "og:description", content: "Approve, reject or return entries for correction." },
     ],
   }),

@@ -97,7 +97,7 @@ export function ConnectArtistrySynk({
 
   /**
    * New creative identity: ArtistrySynk prepares it, the contestant claims it on
-   * ArtistrySynk. No ArtistrySynk password is ever entered on Zik's Got Talent.
+   * ArtistrySynk. No ArtistrySynk password is ever entered on ArtistrySynk Creatives Talent Hunt.
    */
   async function createIdentity() {
     setFailure(null);
@@ -258,7 +258,7 @@ export function ConnectArtistrySynk({
           <p className="mt-2 max-w-prose text-sm text-muted-foreground">
             {isConnected
               ? ARTISTRYSYNK.promise
-              : `We'll prepare your ${ARTISTRYSYNK.brand} identity and take you to ${ARTISTRYSYNK.brand} to claim it. You won't enter an ${ARTISTRYSYNK.brand} password on Zik's Got Talent.`}
+              : `We'll prepare your ${ARTISTRYSYNK.brand} identity and take you to ${ARTISTRYSYNK.brand} to claim it. You won't enter an ${ARTISTRYSYNK.brand} password on ArtistrySynk Creatives Talent Hunt.`}
           </p>
         </div>
         {isConnected && (
@@ -386,7 +386,7 @@ export function ConnectArtistrySynk({
 
       {!enabled && (
         <p className="mt-3 text-xs text-muted-foreground">
-          Create your Zik&rsquo;s Got Talent account first, then connect.
+          Create your ArtistrySynk Creatives Talent Hunt account first, then connect.
         </p>
       )}
     </div>

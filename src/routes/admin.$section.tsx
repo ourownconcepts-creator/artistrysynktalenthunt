@@ -1620,7 +1620,7 @@ function AccountsPanel() {
   return (
     <Panel
       title="Registered accounts"
-      description="Every account created on Zik's Got Talent, whether or not it has an entry: confirmation status, roles, the entry it owns and its creative identity."
+      description="Every account created on ArtistrySynk Creatives Talent Hunt, whether or not it has an entry: confirmation status, roles, the entry it owns and its creative identity."
     >
       <Field label="Search email, name or entry code" value={search} onChange={setSearch} />
 
@@ -1732,7 +1732,7 @@ function SettingsPanel() {
             onChange={setEmail}
             type="email"
             placeholder="name@example.com"
-            hint="The person must already have a Zik's Got Talent account."
+            hint="The person must already have a ArtistrySynk Creatives Talent Hunt account."
           />
           <SelectField
             label="Role"

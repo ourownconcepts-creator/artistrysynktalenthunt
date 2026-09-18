@@ -79,23 +79,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ZIK’S GOT TALENT" },
+      { title: "ARTISTRYSYNK CREATIVES TALENT HUNT" },
       {
         name: "description",
         content:
-          "ZIK’S GOT TALENT is a University of Ibadan campus-wide talent competition where talent meets opportunity.",
+          "ARTISTRYSYNK CREATIVES TALENT HUNT is a University of Ibadan campus-wide talent competition where talent meets opportunity.",
       },
-      { name: "author", content: "Zik Hall Royals" },
-      { property: "og:title", content: "ZIK’S GOT TALENT" },
+      { name: "author", content: "ArtistrySynk" },
+      { property: "og:title", content: "ARTISTRYSYNK CREATIVES TALENT HUNT" },
       {
         property: "og:description",
         content:
           "A University of Ibadan campus-wide talent competition discovering, showcasing and celebrating student talent.",
       },
-      { property: "og:site_name", content: "ZIK’S GOT TALENT" },
+      { property: "og:site_name", content: "ARTISTRYSYNK CREATIVES TALENT HUNT" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@zikhallui" },
+      { name: "twitter:site", content: "@artistrysynk" },
     ],
     links: [
       {

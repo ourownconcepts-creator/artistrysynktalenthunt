@@ -22,15 +22,15 @@ export const Route = createFileRoute("/categories/$slug")({
     const url = `https://ziksgottalent.com/categories/${params.slug}`;
     return {
       meta: [
-        { title: `${name} Category | ZIK’S GOT TALENT` },
+        { title: `${name} Category | ARTISTRYSYNK CREATIVES TALENT HUNT` },
         {
           name: "description",
-          content: `Explore the ${name} category at ZIK’S GOT TALENT and see what to prepare for your University of Ibadan talent competition entry.`,
+          content: `Explore the ${name} category at ARTISTRYSYNK CREATIVES TALENT HUNT and see what to prepare for your University of Ibadan talent competition entry.`,
         },
-        { property: "og:title", content: `${name} Category — ZIK’S GOT TALENT` },
+        { property: "og:title", content: `${name} Category — ARTISTRYSYNK CREATIVES TALENT HUNT` },
         {
           property: "og:description",
-          content: `What the ${name} category is looking for and exactly what to submit for ZIK’S GOT TALENT 1.0.`,
+          content: `What the ${name} category is looking for and exactly what to submit for ARTISTRYSYNK CREATIVES TALENT HUNT 1.0.`,
         },
         { property: "og:url", content: url },
         { property: "og:type", content: "website" },

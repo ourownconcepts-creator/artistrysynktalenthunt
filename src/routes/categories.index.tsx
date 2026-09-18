@@ -7,13 +7,13 @@ export const Route = createFileRoute("/categories/")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Talent Categories | ZIK’S GOT TALENT 1.0" },
+      { title: "Talent Categories | ARTISTRYSYNK CREATIVES TALENT HUNT 1.0" },
       {
         name: "description",
         content:
-          "Explore ZIK’S GOT TALENT categories including singing, dancing, comedy, spoken word, rap, acting, instrumentals, cultural performance, fashion and more.",
+          "Explore ARTISTRYSYNK CREATIVES TALENT HUNT categories including singing, dancing, comedy, spoken word, rap, acting, instrumentals, cultural performance, fashion and more.",
       },
-      { property: "og:title", content: "Talent Categories | ZIK’S GOT TALENT 1.0" },
+      { property: "og:title", content: "Talent Categories | ARTISTRYSYNK CREATIVES TALENT HUNT 1.0" },
       {
         property: "og:description",
         content: "Find the category that fits your talent and discover what to prepare for your entry.",
@@ -63,7 +63,7 @@ function Categories() {
           </div>
         ) : (
           <p className="text-sm text-muted-foreground">
-            No categories are open yet. Check back for the official ZIK&rsquo;S GOT TALENT 1.0 entry categories.
+            No categories are open yet. Check back for the official ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 entry categories.
           </p>
         )}
       </section>

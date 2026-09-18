@@ -32,14 +32,14 @@ export const Route = createFileRoute("/admin/lifecycle")({
   staticData: { sitemap: false },
   head: () => ({
     meta: [
-      { title: "Competition operations — Zik's Got Talent admin" },
+      { title: "Competition operations — ArtistrySynk Creatives Talent Hunt admin" },
       {
         name: "description",
         content:
           "Move the competition and its rounds through their lifecycle, review results and advance or eliminate contestants.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Competition operations — Zik's Got Talent admin" },
+      { property: "og:title", content: "Competition operations — ArtistrySynk Creatives Talent Hunt admin" },
       {
         property: "og:description",
         content: "Lifecycle, round completion, advancement and results.",

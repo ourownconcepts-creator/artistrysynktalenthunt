@@ -22,14 +22,14 @@ export const Route = createFileRoute("/admin/voting")({
   staticData: { sitemap: false },
   head: () => ({
     meta: [
-      { title: "Voting controls — Zik's Got Talent admin" },
+      { title: "Voting controls — ArtistrySynk Creatives Talent Hunt admin" },
       {
         name: "description",
         content:
           "Configure the voting model, judge and public weighting, voting window and limits.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Voting controls — Zik's Got Talent admin" },
+      { property: "og:title", content: "Voting controls — ArtistrySynk Creatives Talent Hunt admin" },
       { property: "og:description", content: "Voting model, weighting, window and fraud limits." },
     ],
   }),

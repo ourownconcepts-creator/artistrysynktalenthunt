@@ -8,16 +8,16 @@ export const Route = createFileRoute("/announcements")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "News & Announcements | ZIK’S GOT TALENT" },
+      { title: "News & Announcements | ARTISTRYSYNK CREATIVES TALENT HUNT" },
       {
         name: "description",
         content:
-          "Official ZIK’S GOT TALENT 1.0 updates from the University of Ibadan talent competition, including entries, auditions, shortlists and results.",
+          "Official ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 updates from the University of Ibadan talent competition, including entries, auditions, shortlists and results.",
       },
-      { property: "og:title", content: "News & Announcements | ZIK’S GOT TALENT" },
+      { property: "og:title", content: "News & Announcements | ARTISTRYSYNK CREATIVES TALENT HUNT" },
       {
         property: "og:description",
-        content: "Follow official ZIK’S GOT TALENT 1.0 news, competition updates and results.",
+        content: "Follow official ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 news, competition updates and results.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -34,7 +34,7 @@ function Announcements() {
       <PageHeader
         eyebrow="Official updates"
         title="Announcements"
-        intro="Follow entry updates, audition news, competition highlights, shortlists and results from ZIK’S GOT TALENT 1.0."
+        intro="Follow entry updates, audition news, competition highlights, shortlists and results from ARTISTRYSYNK CREATIVES TALENT HUNT 1.0."
       />
       <section className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6">
         {announcements.isLoading ? (

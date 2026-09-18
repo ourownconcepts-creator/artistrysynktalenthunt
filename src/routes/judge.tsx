@@ -12,14 +12,14 @@ export const Route = createFileRoute("/judge")({
   staticData: { sitemap: false },
   head: () => ({
     meta: [
-      { title: "Judge dashboard — Zik's Got Talent" },
+      { title: "Judge dashboard — ArtistrySynk Creatives Talent Hunt" },
       {
         name: "description",
         content:
-          "Your judging assignment for Zik's Got Talent: contestants assigned to you, scored, pending and your scoring deadline.",
+          "Your judging assignment for ArtistrySynk Creatives Talent Hunt: contestants assigned to you, scored, pending and your scoring deadline.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Judge dashboard — Zik's Got Talent" },
+      { property: "og:title", content: "Judge dashboard — ArtistrySynk Creatives Talent Hunt" },
       {
         property: "og:description",
         content: "Assigned contestants, scoring progress and deadlines for judges.",

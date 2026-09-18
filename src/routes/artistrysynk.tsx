@@ -15,23 +15,23 @@ import { PROGRESS_STATE_LABELS } from "@/lib/operations";
 /**
  * The ArtistrySynk portal: the page a connected creative lands on from their
  * ArtistrySynk profile. It shows only their own competition record — the
- * competition data stays here, on Zik's Got Talent, and nothing is written
+ * competition data stays here, on ArtistrySynk Creatives Talent Hunt, and nothing is written
  * back into ArtistrySynk.
  */
 export const Route = createFileRoute("/artistrysynk")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Creative Connection | ZIK’S GOT TALENT" },
+      { title: "Creative Connection | ARTISTRYSYNK CREATIVES TALENT HUNT" },
       {
         name: "description",
         content:
-          "Connected ArtistrySynk creatives can follow their ZIK’S GOT TALENT entry and competition progress in one place.",
+          "Connected ArtistrySynk creatives can follow their ARTISTRYSYNK CREATIVES TALENT HUNT entry and competition progress in one place.",
       },
-      { property: "og:title", content: "Creative Connection | ZIK’S GOT TALENT" },
+      { property: "og:title", content: "Creative Connection | ARTISTRYSYNK CREATIVES TALENT HUNT" },
       {
         property: "og:description",
-        content: "ZIK’S GOT TALENT discovers the talent. ArtistrySynk connects the talent.",
+        content: "ARTISTRYSYNK CREATIVES TALENT HUNT discovers the talent. ArtistrySynk connects the talent.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -88,7 +88,7 @@ function ArtistrySynkPortalPage() {
       <PageHeader
         eyebrow={`${ARTISTRYSYNK.brand} portal`}
         title="From talent to opportunity"
-        intro={`ZIK’S GOT TALENT discovers the talent. ${ARTISTRYSYNK.brand} connects the talent to a wider creative community.`}
+        intro={`ARTISTRYSYNK CREATIVES TALENT HUNT discovers the talent. ${ARTISTRYSYNK.brand} connects the talent to a wider creative community.`}
       />
 
       <section className="mx-auto w-full max-w-5xl px-4 py-14 sm:px-6">

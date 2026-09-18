@@ -18,7 +18,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "Zik's Got Talent"
+const SITE_NAME = "ArtistrySynk Creatives Talent Hunt"
 const ROOT_DOMAIN = "ziksgottalent.com"
 
 // Sample data for preview mode ONLY (not used in actual email sending).

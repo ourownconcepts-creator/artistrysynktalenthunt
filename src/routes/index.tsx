@@ -19,17 +19,17 @@ export const Route = createFileRoute("/")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "ZIK’S GOT TALENT 1.0 | University of Ibadan Talent Competition" },
+      { title: "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 | University of Ibadan Talent Competition" },
       {
         name: "description",
         content:
-          "ZIK’S GOT TALENT is a University of Ibadan campus-wide talent competition discovering, showcasing and celebrating student talent across music, dance, comedy, spoken word, rap, acting, fashion and more.",
+          "ARTISTRYSYNK CREATIVES TALENT HUNT is a University of Ibadan campus-wide talent competition discovering, showcasing and celebrating student talent across music, dance, comedy, spoken word, rap, acting, fashion and more.",
       },
-      { property: "og:title", content: "ZIK’S GOT TALENT 1.0 — Where Talent Meets Opportunity" },
+      { property: "og:title", content: "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 — Where Talent Meets Opportunity" },
       {
         property: "og:description",
         content:
-          "ZIK’S GOT TALENT 1.0 — Where Talent Meets Opportunity. A University of Ibadan campus-wide talent competition discovering, showcasing and celebrating exceptional student talent.",
+          "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 — Where Talent Meets Opportunity. A University of Ibadan campus-wide talent competition discovering, showcasing and celebrating exceptional student talent.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -86,7 +86,7 @@ function Landing() {
           </div>
 
           <h1 className="relative mt-7 max-w-4xl lg:max-w-[42rem] text-5xl sm:text-7xl lg:text-8xl">
-            ZIK&rsquo;S GOT TALENT 1.0
+            ARTISTRYSYNK CREATIVES TALENT HUNT 1.0
             <br />
             <span className="text-gold">Where Talent Meets</span>
             <br />
@@ -101,7 +101,7 @@ function Landing() {
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Button asChild size="lg" className="bg-gold text-primary-foreground hover:opacity-90">
               <Link to="/register">
-                Enter ZIK&rsquo;S GOT TALENT
+                Enter ARTISTRYSYNK CREATIVES TALENT HUNT
                 <ArrowRight className="ml-1 size-4" />
               </Link>
             </Button>
@@ -145,7 +145,7 @@ function Landing() {
           </div>
           <ol className="card-stage divide-y divide-border/60 p-2">
             {[
-              "Register for ZIK’S GOT TALENT",
+              "Register for ARTISTRYSYNK CREATIVES TALENT HUNT",
               "Your ArtistrySynk identity is created or connected",
               "Showcase your talent in your chosen category",
               "Connect with a wider creative community",

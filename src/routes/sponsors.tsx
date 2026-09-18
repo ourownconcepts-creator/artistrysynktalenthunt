@@ -9,13 +9,13 @@ export const Route = createFileRoute("/sponsors")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Sponsors & Partners | ZIK’S GOT TALENT" },
+      { title: "Sponsors & Partners | ARTISTRYSYNK CREATIVES TALENT HUNT" },
       {
         name: "description",
         content:
-          "Meet the partners supporting talent discovery, youth development and creative opportunity through ZIK’S GOT TALENT at the University of Ibadan.",
+          "Meet the partners supporting talent discovery, youth development and creative opportunity through ARTISTRYSYNK CREATIVES TALENT HUNT at the University of Ibadan.",
       },
-      { property: "og:title", content: "Sponsors & Partners | ZIK’S GOT TALENT" },
+      { property: "og:title", content: "Sponsors & Partners | ARTISTRYSYNK CREATIVES TALENT HUNT" },
       {
         property: "og:description",
         content: "Partners supporting emerging student talent and creativity at the University of Ibadan.",
@@ -43,7 +43,7 @@ function Sponsors() {
       <PageHeader
         eyebrow="Building opportunity together"
         title="Partners in talent discovery"
-        intro="Partnering with ZIK’S GOT TALENT means supporting emerging student talent while connecting with a vibrant University of Ibadan community."
+        intro="Partnering with ARTISTRYSYNK CREATIVES TALENT HUNT means supporting emerging student talent while connecting with a vibrant University of Ibadan community."
       />
       <section className="mx-auto w-full max-w-7xl space-y-12 px-4 py-16 sm:px-6">
         {sponsors.isLoading && <p className="text-sm text-muted-foreground">Loading sponsors…</p>}

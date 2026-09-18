@@ -1,6 +1,6 @@
 # ArtistrySynk integration — v1 (real API)
 
-Zik's Got Talent owns competitions. ArtistrySynk owns creative identity. This
+ArtistrySynk Creatives Talent Hunt owns competitions. ArtistrySynk owns creative identity. This
 folder is the only place that talks to ArtistrySynk, and every call is
 server-side.
 

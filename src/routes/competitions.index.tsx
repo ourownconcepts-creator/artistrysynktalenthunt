@@ -11,16 +11,16 @@ export const Route = createFileRoute("/competitions/")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "ZIK’S GOT TALENT 1.0 Competition" },
+      { title: "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 Competition" },
       {
         name: "description",
         content:
-          "Explore ZIK’S GOT TALENT 1.0, the University of Ibadan campus-wide talent competition where talent meets opportunity.",
+          "Explore ARTISTRYSYNK CREATIVES TALENT HUNT 1.0, the University of Ibadan campus-wide talent competition where talent meets opportunity.",
       },
-      { property: "og:title", content: "ZIK’S GOT TALENT 1.0 Competition" },
+      { property: "og:title", content: "ARTISTRYSYNK CREATIVES TALENT HUNT 1.0 Competition" },
       {
         property: "og:description",
-        content: "Discover the competition journey, categories and entry information for ZIK’S GOT TALENT 1.0.",
+        content: "Discover the competition journey, categories and entry information for ARTISTRYSYNK CREATIVES TALENT HUNT 1.0.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

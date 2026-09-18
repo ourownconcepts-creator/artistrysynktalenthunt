@@ -37,7 +37,7 @@ export function emailConfig() {
   return {
     apiKey: env("QUEENSMTP_API_KEY"),
     from: env("ZGT_EMAIL_FROM") ?? "noreply@ziksgottalent.com",
-    fromName: env("ZGT_EMAIL_FROM_NAME") ?? "Zik's Got Talent",
+    fromName: env("ZGT_EMAIL_FROM_NAME") ?? "ArtistrySynk Creatives Talent Hunt",
     replyTo: env("ZGT_EMAIL_REPLY_TO"),
     adminRecipient: env("ZGT_ADMIN_EMAIL"),
   };

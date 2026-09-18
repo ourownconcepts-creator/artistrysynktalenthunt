@@ -15,5 +15,5 @@ export const ARTISTRYSYNK = {
   promise:
     "ArtistrySynk supports contestant onboarding and creative identity, helping participating creatives connect with a wider creative community beyond the competition.",
   ecosystem:
-    "ZIK’S GOT TALENT discovers the talent. ArtistrySynk connects the talent.",
+    "ARTISTRYSYNK CREATIVES TALENT HUNT discovers the talent. ArtistrySynk connects the talent.",
 } as const;
