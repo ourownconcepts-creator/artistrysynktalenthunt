@@ -1,9 +1,9 @@
 /**
- * Email bodies for Zik's Got Talent. Plain inline-styled HTML so every mail
+ * Email bodies for ArtistrySynk Creatives Talent Hunt. Plain inline-styled HTML so every mail
  * client renders it, with a matching plain-text version for each message.
  */
 
-const SITE_NAME = "Zik's Got Talent";
+const SITE_NAME = "ArtistrySynk Creatives Talent Hunt";
 
 function siteUrl(): string {
   const raw = process.env["ZGT_SITE_URL"] ?? "https://ziksgottalent.com";

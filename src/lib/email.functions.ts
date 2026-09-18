@@ -79,7 +79,7 @@ export const sendEntryEmails = createServerFn({ method: "POST" })
 
     const base = {
       displayName: row.display_name,
-      competitionName: row.competitions?.name ?? "Zik's Got Talent",
+      competitionName: row.competitions?.name ?? "ArtistrySynk Creatives Talent Hunt",
       categoryName: row.categories?.name ?? "your category",
       handle: row.handle,
       referenceCode: row.reference_code,
@@ -145,7 +145,7 @@ export const sendApplicationStatusEmail = createServerFn({ method: "POST" })
 
     const message = applicationStatusEmail({
       displayName: application.display_name,
-      competitionName: application.competitions?.name ?? "Zik's Got Talent",
+      competitionName: application.competitions?.name ?? "ArtistrySynk Creatives Talent Hunt",
       status: data.status ?? application.status,
       roundName: application.competition_rounds?.name ?? null,
       note: data.note ?? null,

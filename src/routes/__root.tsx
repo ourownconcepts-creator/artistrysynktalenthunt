@@ -79,35 +79,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ZIK’S GOT TALENT" },
+      { title: "ArtistrySynk Creatives Talent Hunt" },
       {
         name: "description",
         content:
-          "ZIK’S GOT TALENT is a University of Ibadan campus-wide talent competition where talent meets opportunity.",
+          "ArtistrySynk Creatives Talent Hunt — the ArtistrySynk talent search where creatives meet opportunity.",
       },
-      { name: "author", content: "Zik Hall Royals" },
-      { property: "og:title", content: "ZIK’S GOT TALENT" },
+      { name: "author", content: "ArtistrySynk" },
+      { property: "og:title", content: "ArtistrySynk Creatives Talent Hunt" },
       {
         property: "og:description",
         content:
-          "A University of Ibadan campus-wide talent competition discovering, showcasing and celebrating student talent.",
+          "ArtistrySynk's talent hunt discovering, showcasing and celebrating creatives across every discipline.",
       },
-      { property: "og:site_name", content: "ZIK’S GOT TALENT" },
+      { property: "og:site_name", content: "ArtistrySynk Creatives Talent Hunt" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@zikhallui" },
+      { name: "twitter:site", content: "@artistrysynk" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hind:wght@400;500;600;700&display=swap",
       },
     ],
   }),

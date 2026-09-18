@@ -16,14 +16,14 @@ export const Route = createFileRoute("/admin/competitions")({
   staticData: { sitemap: false },
   head: () => ({
     meta: [
-      { title: "Competition details — Zik's Got Talent admin" },
+      { title: "Competition details — ArtistrySynk Creatives Talent Hunt admin" },
       {
         name: "description",
         content:
-          "Set the competition name, tagline, prize pool, entry window and season dates for Zik's Got Talent.",
+          "Set the competition name, tagline, prize pool, entry window and season dates for ArtistrySynk Creatives Talent Hunt.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Competition details — Zik's Got Talent admin" },
+      { property: "og:title", content: "Competition details — ArtistrySynk Creatives Talent Hunt admin" },
       { property: "og:description", content: "Name, prize pool, entry window and season dates." },
     ],
   }),

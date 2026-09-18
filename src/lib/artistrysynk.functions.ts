@@ -1,7 +1,7 @@
 /**
  * Server functions for the ArtistrySynk integration. Every call that needs the
  * confidential credential happens here, on the server, for the signed-in
- * Zik's Got Talent account only. No token, secret or credential is ever
+ * ArtistrySynk Creatives Talent Hunt account only. No token, secret or credential is ever
  * returned to the browser.
  */
 

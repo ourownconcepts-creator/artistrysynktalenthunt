@@ -22,14 +22,14 @@ export const Route = createFileRoute("/admin/submissions")({
   staticData: { sitemap: false },
   head: () => ({
     meta: [
-      { title: "Audition review — Zik's Got Talent admin" },
+      { title: "Audition review — ArtistrySynk Creatives Talent Hunt admin" },
       {
         name: "description",
         content:
           "Moderate audition submissions, request revisions and decide what is approved for publication.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Audition review — Zik's Got Talent admin" },
+      { property: "og:title", content: "Audition review — ArtistrySynk Creatives Talent Hunt admin" },
       {
         property: "og:description",
         content: "Moderate audition media before anything becomes public.",

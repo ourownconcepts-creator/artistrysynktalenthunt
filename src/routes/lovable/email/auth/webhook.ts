@@ -9,7 +9,7 @@ import { EmailChangeEmail } from '@/lib/email-templates/email-change'
 import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 
 // Configuration
-const SITE_NAME = "Zik's Got Talent"
+const SITE_NAME = "ArtistrySynk Creatives Talent Hunt"
 const SENDER_DOMAIN = "notify.ziksgottalent.com"
 const ROOT_DOMAIN = "ziksgottalent.com"
 const FROM_DOMAIN = "notify.ziksgottalent.com"

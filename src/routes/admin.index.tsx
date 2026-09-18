@@ -13,13 +13,13 @@ export const Route = createFileRoute("/admin/")({
   staticData: { sitemap: false },
   head: () => ({
     meta: [
-      { title: "Admin — Zik's Got Talent control centre" },
+      { title: "Admin — ArtistrySynk Creatives Talent Hunt control centre" },
       { name: "robots", content: "noindex" },
       {
         name: "description",
-        content: "Operational control centre for Zik's Got Talent competitions.",
+        content: "Operational control centre for ArtistrySynk Creatives Talent Hunt competitions.",
       },
-      { property: "og:title", content: "Admin — Zik's Got Talent" },
+      { property: "og:title", content: "Admin — ArtistrySynk Creatives Talent Hunt" },
       { property: "og:description", content: "Operational control centre for competitions." },
     ],
   }),

@@ -13,15 +13,15 @@ export const Route = createFileRoute("/contestants/$handle")({
   staticData: { sitemap: false },
   head: ({ params }) => ({
     meta: [
-      { title: `${params.handle} | ZIK’S GOT TALENT contestant` },
+      { title: `${params.handle} | ArtistrySynk Creatives Talent Hunt contestant` },
       {
         name: "description",
-        content: `Meet ${params.handle}, a student creative competing in ZIK’S GOT TALENT 1.0 at the University of Ibadan.`,
+        content: `Meet ${params.handle}, a creative competing in ArtistrySynk Creatives Talent Hunt 1.0 with ArtistrySynk.`,
       },
-      { property: "og:title", content: `${params.handle} | ZIK’S GOT TALENT contestant` },
+      { property: "og:title", content: `${params.handle} | ArtistrySynk Creatives Talent Hunt contestant` },
       {
         property: "og:description",
-        content: `Discover this ZIK’S GOT TALENT 1.0 contestant, creative profile and competition journey.`,
+        content: `Discover this ArtistrySynk Creatives Talent Hunt 1.0 contestant, creative profile and competition journey.`,
       },
       { property: "og:type", content: "profile" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -96,7 +96,7 @@ function ContestantProfile() {
       >
         <div className="flex flex-wrap items-center gap-3">
           <span className="rounded-full border border-primary/50 bg-primary/15 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-primary">
-            ZIK&rsquo;S GOT TALENT contestant
+            ArtistrySynk Creatives Talent Hunt contestant
           </span>
           <span className="text-xs uppercase tracking-widest text-muted-foreground">
             {c.location}

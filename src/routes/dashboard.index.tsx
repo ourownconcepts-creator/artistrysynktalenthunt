@@ -12,16 +12,16 @@ export const Route = createFileRoute("/dashboard/")({
   staticData: { sitemap: false },
   head: () => ({
     meta: [
-      { title: "My dashboard — Zik's Got Talent" },
+      { title: "My dashboard — ArtistrySynk Creatives Talent Hunt" },
       {
         name: "description",
-        content: "Track your Zik's Got Talent entry, audition, stage and announcements.",
+        content: "Track your ArtistrySynk Creatives Talent Hunt entry, audition, stage and announcements.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "My dashboard — Zik's Got Talent" },
+      { property: "og:title", content: "My dashboard — ArtistrySynk Creatives Talent Hunt" },
       {
         property: "og:description",
-        content: "Track your Zik's Got Talent entry and competition stage.",
+        content: "Track your ArtistrySynk Creatives Talent Hunt entry and competition stage.",
       },
     ],
   }),

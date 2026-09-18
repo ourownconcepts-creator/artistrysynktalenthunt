@@ -1,7 +1,7 @@
 /**
- * ZIK'S GOT TALENT — competition domain types.
+ * ArtistrySynk Creatives Talent Hunt — competition domain types.
  *
- * These describe Zik's Got Talent's OWN entities. Contestant identity is NOT
+ * These describe ArtistrySynk Creatives Talent Hunt's OWN entities. Contestant identity is NOT
  * modelled here: applications reference an ArtistrySynk identity through an
  * opaque `identityRef` (see src/integrations/artistrysynk).
  */

@@ -28,15 +28,15 @@ export const Route = createFileRoute("/competitions/$slug")({
   staticData: { sitemap: true },
   head: ({ params }) => {
     const name = competitionTitleFromSlug(params.slug);
-    const url = `https://ziksgottalent.com/competitions/${params.slug}`;
+    const url = `https://artistrysynk.app/talent-hunt/competitions/${params.slug}`;
     return {
       meta: [
-        { title: `${name} | ZIK’S GOT TALENT` },
+        { title: `${name} | ArtistrySynk Creatives Talent Hunt` },
         {
           name: "description",
-          content: `Dates, categories, rounds and entry information for ${name}, a ZIK’S GOT TALENT competition at the University of Ibadan.`,
+          content: `Dates, categories, rounds and entry information for ${name}, a ArtistrySynk Creatives Talent Hunt competition with ArtistrySynk.`,
         },
-        { property: "og:title", content: `${name} — ZIK’S GOT TALENT` },
+        { property: "og:title", content: `${name} — ArtistrySynk Creatives Talent Hunt` },
         {
           property: "og:description",
           content: `Dates, categories, rounds and judging weighting for ${name}.`,

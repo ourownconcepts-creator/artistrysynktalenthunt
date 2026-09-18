@@ -178,7 +178,7 @@ export class RemoteArtistrySynkProvider implements ArtistrySynkIdentityProvider 
         outcome: "FAILED",
         reason: "DUPLICATE_IDENTITY",
         message:
-          "That ArtistrySynk identity is already connected to another Zik's Got Talent account.",
+          "That ArtistrySynk identity is already connected to another ArtistrySynk Creatives Talent Hunt account.",
       };
     }
     let projection: ArtistrySynkProfileProjection | null = record.profile ?? null;
@@ -536,7 +536,7 @@ export class RemoteArtistrySynkProvider implements ArtistrySynkIdentityProvider 
           outcome: "FAILED",
           reason: "DUPLICATE_IDENTITY",
           message:
-            "That ArtistrySynk identity is already connected to another Zik's Got Talent account.",
+            "That ArtistrySynk identity is already connected to another ArtistrySynk Creatives Talent Hunt account.",
         };
       }
 

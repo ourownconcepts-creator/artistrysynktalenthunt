@@ -31,7 +31,7 @@ export function SponsorStrip({
       <div className="flex flex-col items-center justify-center gap-6 sm:flex-row sm:items-start sm:gap-10">
         {majors.length > 0 && (
           <div className="flex flex-col items-center gap-2">
-            <p className="eyebrow">Main sponsor</p>
+            <p className="eyebrow">Presented by</p>
             {majors.map((sponsor) => (
               <SponsorName key={sponsor.id} sponsor={sponsor} prominent />
             ))}

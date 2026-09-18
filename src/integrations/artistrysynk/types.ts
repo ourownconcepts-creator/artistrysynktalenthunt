@@ -2,7 +2,7 @@
  * Contracts for the ArtistrySynk integration.
  *
  * ArtistrySynk (artistrysynk.app) owns creative identity: username, profile,
- * portfolio, connections. Zik's Got Talent owns the competition. Competition
+ * portfolio, connections. ArtistrySynk Creatives Talent Hunt owns the competition. Competition
  * entities store only the opaque `identityRef` returned by the Integration API,
  * plus the small approved profile projection needed to render a connection.
  */

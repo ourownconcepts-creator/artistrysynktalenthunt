@@ -33,13 +33,13 @@ export const Route = createFileRoute("/admin/judging")({
   staticData: { sitemap: false },
   head: () => ({
     meta: [
-      { title: "Judging panel — Zik's Got Talent admin" },
+      { title: "Judging panel — ArtistrySynk Creatives Talent Hunt admin" },
       {
         name: "description",
         content: "Score contestants and move them through competition rounds.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Judging panel — Zik's Got Talent admin" },
+      { property: "og:title", content: "Judging panel — ArtistrySynk Creatives Talent Hunt admin" },
       { property: "og:description", content: "Score contestants and manage round progression." },
     ],
   }),

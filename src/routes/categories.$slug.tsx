@@ -19,18 +19,18 @@ export const Route = createFileRoute("/categories/$slug")({
   staticData: { sitemap: true },
   head: ({ params }) => {
     const name = categoryTitleFromSlug(params.slug);
-    const url = `https://ziksgottalent.com/categories/${params.slug}`;
+    const url = `https://artistrysynk.app/talent-hunt/categories/${params.slug}`;
     return {
       meta: [
-        { title: `${name} Category | ZIK’S GOT TALENT` },
+        { title: `${name} Category | ArtistrySynk Creatives Talent Hunt` },
         {
           name: "description",
-          content: `Explore the ${name} category at ZIK’S GOT TALENT and see what to prepare for your University of Ibadan talent competition entry.`,
+          content: `Explore the ${name} category at ArtistrySynk Creatives Talent Hunt and see what to prepare for your ArtistrySynk talent competition entry.`,
         },
-        { property: "og:title", content: `${name} Category — ZIK’S GOT TALENT` },
+        { property: "og:title", content: `${name} Category — ArtistrySynk Creatives Talent Hunt` },
         {
           property: "og:description",
-          content: `What the ${name} category is looking for and exactly what to submit for ZIK’S GOT TALENT 1.0.`,
+          content: `What the ${name} category is looking for and exactly what to submit for ArtistrySynk Creatives Talent Hunt 1.0.`,
         },
         { property: "og:url", content: url },
         { property: "og:type", content: "website" },

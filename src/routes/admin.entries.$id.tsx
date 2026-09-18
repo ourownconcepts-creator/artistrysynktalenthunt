@@ -10,13 +10,13 @@ export const Route = createFileRoute("/admin/entries/$id")({
   staticData: { sitemap: false },
   head: () => ({
     meta: [
-      { title: "Entry details — Zik's Got Talent admin" },
+      { title: "Entry details — ArtistrySynk Creatives Talent Hunt admin" },
       { name: "robots", content: "noindex" },
       {
         name: "description",
         content: "Full submission record: profile, creative identity, marks and status.",
       },
-      { property: "og:title", content: "Entry details — Zik's Got Talent admin" },
+      { property: "og:title", content: "Entry details — ArtistrySynk Creatives Talent Hunt admin" },
       { property: "og:description", content: "Review a submission before scoring." },
     ],
   }),

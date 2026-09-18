@@ -57,8 +57,8 @@ function AdminGate() {
           <h1 className="mt-4 text-2xl">Admin access only</h1>
           <p className="mt-3 text-sm text-muted-foreground">
             {user
-              ? "This account is not an administrator. Sign in with the Zik's Got Talent admin account to open the control centre."
-              : "Sign in with the Zik's Got Talent admin account to open the control centre."}
+              ? "This account is not an administrator. Sign in with the ArtistrySynk Creatives Talent Hunt admin account to open the control centre."
+              : "Sign in with the ArtistrySynk Creatives Talent Hunt admin account to open the control centre."}
           </p>
           <div className="mt-6 flex flex-col gap-2">
             {user ? (
@@ -96,7 +96,7 @@ function AdminLayout({
     <div className="flex min-h-screen bg-background">
       <aside className="hidden w-64 shrink-0 border-r border-sidebar-border bg-sidebar lg:block">
         <div className="flex h-16 items-center border-b border-sidebar-border px-5">
-          <Link to="/" aria-label="Zik's Got Talent home">
+          <Link to="/" aria-label="ArtistrySynk Creatives Talent Hunt home">
             <Wordmark size="sm" />
           </Link>
         </div>

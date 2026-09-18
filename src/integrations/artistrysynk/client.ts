@@ -3,7 +3,7 @@ import type { ArtistrySynkConnectResult, ArtistrySynkConnection } from "./types"
 /**
  * THE INTEGRATION BOUNDARY.
  *
- * Every part of Zik's Got Talent that touches creative identity goes through
+ * Every part of ArtistrySynk Creatives Talent Hunt that touches creative identity goes through
  * this interface — nothing else. The implementation lives in
  * `provider.server.ts` and talks only to the published ArtistrySynk
  * Integration API v1.
@@ -46,7 +46,7 @@ export interface ArtistrySynkIdentityProvider {
     input: { code: string; state: string },
   ): Promise<ArtistrySynkConnectResult>;
 
-  /** Current connection state for a Zik's Got Talent account. */
+  /** Current connection state for a ArtistrySynk Creatives Talent Hunt account. */
   getConnection(userId: string): Promise<ArtistrySynkConnection>;
 
   isIdentityLinked(userId: string): Promise<boolean>;

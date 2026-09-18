@@ -19,17 +19,17 @@ export const Route = createFileRoute("/")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "ZIK’S GOT TALENT 1.0 | University of Ibadan Talent Competition" },
+      { title: "ArtistrySynk Creatives Talent Hunt 1.0 | ArtistrySynk Talent Hunt" },
       {
         name: "description",
         content:
-          "ZIK’S GOT TALENT is a University of Ibadan campus-wide talent competition discovering, showcasing and celebrating student talent across music, dance, comedy, spoken word, rap, acting, fashion and more.",
+          "ArtistrySynk Creatives Talent Hunt is an ArtistrySynk talent hunt discovering, showcasing and celebrating creative talent across music, dance, comedy, spoken word, rap, acting, fashion and more.",
       },
-      { property: "og:title", content: "ZIK’S GOT TALENT 1.0 — Where Talent Meets Opportunity" },
+      { property: "og:title", content: "ArtistrySynk Creatives Talent Hunt 1.0 — Where Creatives Meet Opportunity" },
       {
         property: "og:description",
         content:
-          "ZIK’S GOT TALENT 1.0 — Where Talent Meets Opportunity. A University of Ibadan campus-wide talent competition discovering, showcasing and celebrating exceptional student talent.",
+          "ArtistrySynk Creatives Talent Hunt 1.0 — Where Creatives Meet Opportunity. An ArtistrySynk talent hunt discovering, showcasing and celebrating exceptional creative talent.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -85,23 +85,25 @@ function Landing() {
             </span>
           </div>
 
-          <h1 className="relative mt-7 max-w-4xl lg:max-w-[42rem] text-5xl sm:text-7xl lg:text-8xl">
-            ZIK&rsquo;S GOT TALENT 1.0
+          <p className="mt-7 font-sans text-xs font-extrabold uppercase tracking-[0.3em] text-muted-foreground sm:text-sm">
+            ArtistrySynk Creatives Talent Hunt 1.0
+          </p>
+
+          <h1 className="relative mt-4 max-w-4xl lg:max-w-[42rem] text-5xl sm:text-7xl lg:text-8xl">
+            <span className="text-gold">Where Creatives</span>
             <br />
-            <span className="text-gold">Where Talent Meets</span>
-            <br />
-            <span className="text-heat">Opportunity.</span>
+            <span className="text-heat">Meet Opportunity.</span>
           </h1>
 
           <p className="mt-7 max-w-xl text-base text-muted-foreground sm:text-lg">
-            A University of Ibadan campus-wide talent competition created to discover, showcase and
-            celebrate exceptional student talent.
+            An ArtistrySynk talent hunt created to discover, showcase and
+            celebrate exceptional creative talent.
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Button asChild size="lg" className="bg-gold text-primary-foreground hover:opacity-90">
               <Link to="/register">
-                Enter ZIK&rsquo;S GOT TALENT
+                Enter the Talent Hunt
                 <ArrowRight className="ml-1 size-4" />
               </Link>
             </Button>
@@ -117,7 +119,7 @@ function Landing() {
 
           <dl className="mt-14 grid grid-cols-2 gap-6 border-t border-border/60 pt-8 sm:grid-cols-4">
             <Stat label="Talent categories" value={String(categoryCount)} icon={Sparkles} />
-            <Stat label="Campus community" value="UI" icon={Users} />
+            <Stat label="Creative community" value="Open" icon={Users} />
             <Stat label="Prize pool" value={data?.prize_pool || "TBC"} icon={Trophy} />
             <Stat label="Rounds" value={String(activeRounds.length)} icon={BadgeCheck} />
           </dl>
@@ -145,7 +147,7 @@ function Landing() {
           </div>
           <ol className="card-stage divide-y divide-border/60 p-2">
             {[
-              "Register for ZIK’S GOT TALENT",
+              "Register for ArtistrySynk Creatives Talent Hunt",
               "Your ArtistrySynk identity is created or connected",
               "Showcase your talent in your chosen category",
               "Connect with a wider creative community",

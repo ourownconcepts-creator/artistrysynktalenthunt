@@ -7,13 +7,13 @@ export const Route = createFileRoute("/rules")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Rules & Eligibility | ZIK’S GOT TALENT" },
+      { title: "Rules & Eligibility | ArtistrySynk Creatives Talent Hunt" },
       {
         name: "description",
         content:
-          "Read the official rules, eligibility and consent requirements for ZIK’S GOT TALENT 1.0 entrants at the University of Ibadan.",
+          "Read the official rules, eligibility and consent requirements for ArtistrySynk Creatives Talent Hunt 1.0 entrants with ArtistrySynk.",
       },
-      { property: "og:title", content: "Rules & Eligibility | ZIK’S GOT TALENT" },
+      { property: "og:title", content: "Rules & Eligibility | ArtistrySynk Creatives Talent Hunt" },
       {
         property: "og:description",
         content: "Official rules, eligibility criteria and consent requirements.",
@@ -33,7 +33,7 @@ function Rules() {
       <PageHeader
         eyebrow={competition.data?.name ?? "Competition"}
         title="Rules & eligibility"
-        intro="Review the official participation requirements before submitting your ZIK’S GOT TALENT 1.0 entry."
+        intro="Review the official participation requirements before submitting your ArtistrySynk Creatives Talent Hunt 1.0 entry."
       />
       <section className="mx-auto grid w-full max-w-5xl gap-5 px-4 py-16 sm:px-6 lg:grid-cols-3">
         <p className="lg:col-span-3 rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm text-warning">

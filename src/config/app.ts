@@ -2,8 +2,8 @@
  * External domains and integration settings.
  *
  * Nothing in the app may hard-code its own host or ArtistrySynk's host. Every
- * outward-facing URL is resolved here so Zik's Got Talent can be deployed
- * independently on ziksgottalent.com without code changes.
+ * outward-facing URL is resolved here so ArtistrySynk Creatives Talent Hunt can be deployed
+ * as the Talent Hunt directory on artistrysynk.app without code changes.
  */
 
 const env = import.meta.env as unknown as Record<string, string | undefined>;
@@ -11,9 +11,9 @@ const env = import.meta.env as unknown as Record<string, string | undefined>;
 export type ArtistrySynkProviderMode = "local" | "remote";
 
 export const APP_CONFIG = {
-  siteName: "ZIK’S GOT TALENT",
+  siteName: "ArtistrySynk Creatives Talent Hunt",
   /** Canonical public origin of this product. */
-  siteUrl: (env["VITE_SITE_URL"] ?? "https://ziksgottalent.com").replace(/\/$/, ""),
+  siteUrl: (env["VITE_SITE_URL"] ?? "https://artistrysynk.app/talent-hunt").replace(/\/$/, ""),
   artistrysynk: {
     brand: "ArtistrySynk",
     siteUrl: (env["VITE_ARTISTRYSYNK_SITE_URL"] ?? "https://artistrysynk.app").replace(/\/$/, ""),

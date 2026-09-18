@@ -8,16 +8,16 @@ export const Route = createFileRoute("/contestants/")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Contestants | ZIK’S GOT TALENT 1.0" },
+      { title: "Contestants | ArtistrySynk Creatives Talent Hunt 1.0" },
       {
         name: "description",
         content:
-          "Meet the University of Ibadan student creatives showcasing their talent in ZIK’S GOT TALENT 1.0.",
+          "Meet the creatives showcasing their talent in ArtistrySynk Creatives Talent Hunt 1.0.",
       },
-      { property: "og:title", content: "Contestants | ZIK’S GOT TALENT 1.0" },
+      { property: "og:title", content: "Contestants | ArtistrySynk Creatives Talent Hunt 1.0" },
       {
         property: "og:description",
-        content: "Meet the student talent stepping into the spotlight at ZIK’S GOT TALENT 1.0.",
+        content: "Meet the creative talent stepping into the spotlight at ArtistrySynk Creatives Talent Hunt 1.0.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -37,7 +37,7 @@ function Contestants() {
       <PageHeader
         eyebrow="The talent"
         title="The talent is here"
-        intro="Meet the University of Ibadan student creatives sharing their gifts, telling their stories and competing for their opportunity."
+        intro="Meet the creatives sharing their gifts, telling their stories and competing for their opportunity."
       />
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
         {contestants.isLoading ? (

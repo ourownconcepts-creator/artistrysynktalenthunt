@@ -23,7 +23,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-xl">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Link to="/" className="shrink-0" aria-label="ZIK’S GOT TALENT home">
+        <Link to="/" className="shrink-0" aria-label="ArtistrySynk Creatives Talent Hunt home">
           <Wordmark />
         </Link>
 
