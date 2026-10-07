@@ -746,8 +746,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEntriesIdRouteImport
       parentRoute: typeof AdminRoute
     }
-      parentRoute: typeof rootRouteImport
-    }
     '/lovable/email/auth/preview': {
       id: '/lovable/email/auth/preview'
       path: '/lovable/email/auth/preview'
