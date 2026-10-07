@@ -618,6 +618,9 @@ export type Database = {
       competitions: {
         Row: {
           cities: number
+          domain: string
+          participant_type: string
+          type: string
           consent_requirements: string[]
           created_at: string
           current_round_id: string | null
@@ -647,6 +650,9 @@ export type Database = {
         }
         Insert: {
           cities?: number
+          domain?: string
+          participant_type?: string
+          type?: string
           consent_requirements?: string[]
           created_at?: string
           current_round_id?: string | null
@@ -676,6 +682,9 @@ export type Database = {
         }
         Update: {
           cities?: number
+          domain?: string
+          participant_type?: string
+          type?: string
           consent_requirements?: string[]
           created_at?: string
           current_round_id?: string | null
