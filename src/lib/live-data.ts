@@ -13,9 +13,16 @@ import { supabase } from "@/integrations/supabase/client";
  * (public voting, judging queue, round progression, role grants, audit reads).
  */
 
+export type CompetitionDomain = "CREATIVE" | "SPORT";
+export type CompetitionType = "TALENT_HUNT" | "TOURNAMENT" | "CHALLENGE" | "TRIAL";
+export type ParticipantType = "INDIVIDUAL" | "TEAM";
+
 export interface LiveCompetition {
   id: string;
   slug: string;
+  domain: CompetitionDomain;
+  type: CompetitionType;
+  participant_type: ParticipantType;
   name: string;
   tagline: string;
   description: string;
