@@ -1,27 +1,26 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ExternalLink, Heart, Loader2, Share2 } from "lucide-react";
+import { Heart, Loader2, Share2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/useSession";
-import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
 import { VOTE_MESSAGES, castVote, fetchPublicContestant } from "@/lib/live-data";
 
 export const Route = createFileRoute("/contestants/$handle")({
   staticData: { sitemap: false },
   head: ({ params }) => ({
     meta: [
-      { title: `${params.handle} | ArtistrySynk Creatives Talent Hunt contestant` },
+      { title: `${params.handle} | ArtistrySynk Talent Directory` },
       {
         name: "description",
-        content: `Meet ${params.handle}, a creative competing in ArtistrySynk Creatives Talent Hunt 1.0 with ArtistrySynk.`,
+        content: `Meet ${params.handle}, a creative discovered through ArtistrySynk competitions and activations.`,
       },
-      { property: "og:title", content: `${params.handle} | ArtistrySynk Creatives Talent Hunt contestant` },
+      { property: "og:title", content: `${params.handle} | ArtistrySynk Talent` },
       {
         property: "og:description",
-        content: `Discover this ArtistrySynk Creatives Talent Hunt 1.0 contestant, creative profile and competition journey.`,
+        content: `Explore this ArtistrySynk talent profile and competition journey.`,
       },
       { property: "og:type", content: "profile" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -96,7 +95,7 @@ function ContestantProfile() {
       >
         <div className="flex flex-wrap items-center gap-3">
           <span className="rounded-full border border-primary/50 bg-primary/15 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-primary">
-            ArtistrySynk Creatives Talent Hunt contestant
+            ArtistrySynk Talent Directory
           </span>
           <span className="text-xs uppercase tracking-widest text-muted-foreground">
             {c.location}
@@ -130,19 +129,12 @@ function ContestantProfile() {
           <p className="mt-3 font-display text-2xl">{c.vote_count}</p>
         </article>
         <article className="card-stage p-6">
-          <p className="eyebrow">Creative identity</p>
+          <p className="eyebrow">Talent journey</p>
           <p className="mt-3 text-sm text-muted-foreground">
-            {ARTISTRYSYNK.brand} connects this contestant&rsquo;s creative identity to a wider creative
-            community beyond the competition.
+            This profile is part of the ArtistrySynk Talent Directory. Competition history is the
+            first layer of a permanent creative profile that can grow with skills, portfolio work,
+            achievements and collaboration opportunities.
           </p>
-          <a
-            href={ARTISTRYSYNK.site}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-primary hover:underline"
-          >
-            View on {ARTISTRYSYNK.brand} <ExternalLink className="size-3.5" />
-          </a>
         </article>
 
         <article className="card-stage p-6 lg:col-span-3">

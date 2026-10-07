@@ -8,16 +8,16 @@ export const Route = createFileRoute("/contestants/")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Contestants | ArtistrySynk Creatives Talent Hunt 1.0" },
+      { title: "Talent Directory | ArtistrySynk" },
       {
         name: "description",
         content:
-          "Meet the creatives showcasing their talent in ArtistrySynk Creatives Talent Hunt 1.0.",
+          "Discover creative talent on ArtistrySynk by category, location and competition journey.",
       },
-      { property: "og:title", content: "Contestants | ArtistrySynk Creatives Talent Hunt 1.0" },
+      { property: "og:title", content: "Talent Directory | ArtistrySynk" },
       {
         property: "og:description",
-        content: "Meet the creative talent stepping into the spotlight at ArtistrySynk Creatives Talent Hunt 1.0.",
+        content: "Meet talent discovered through ArtistrySynk competitions and activations.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -37,11 +37,11 @@ function Contestants() {
       <PageHeader
         eyebrow="The talent"
         title="The talent is here"
-        intro="Meet the creatives sharing their gifts, telling their stories and competing for their opportunity."
+        intro="Discover creatives whose work, competition journey and approved media make them discoverable beyond a single competition."
       />
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
         {contestants.isLoading ? (
-          <p className="text-sm text-muted-foreground">Loading contestants…</p>
+          <p className="text-sm text-muted-foreground">Loading talent…</p>
         ) : contestants.data?.length ? (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {contestants.data.map((contestant) => (

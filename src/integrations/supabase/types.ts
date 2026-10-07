@@ -618,6 +618,9 @@ export type Database = {
       competitions: {
         Row: {
           cities: number
+          domain: string
+          participant_type: string
+          type: string
           consent_requirements: string[]
           created_at: string
           current_round_id: string | null
@@ -647,6 +650,9 @@ export type Database = {
         }
         Insert: {
           cities?: number
+          domain?: string
+          participant_type?: string
+          type?: string
           consent_requirements?: string[]
           created_at?: string
           current_round_id?: string | null
@@ -676,6 +682,9 @@ export type Database = {
         }
         Update: {
           cities?: number
+          domain?: string
+          participant_type?: string
+          type?: string
           consent_requirements?: string[]
           created_at?: string
           current_round_id?: string | null
@@ -754,8 +763,6 @@ export type Database = {
       }
       profiles: {
         Row: {
-          artistrysynk_identity_ref: string | null
-          artistrysynk_provider: string
           avatar_url: string | null
           bio: string
           created_at: string
@@ -769,8 +776,6 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          artistrysynk_identity_ref?: string | null
-          artistrysynk_provider?: string
           avatar_url?: string | null
           bio?: string
           created_at?: string
@@ -784,8 +789,6 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          artistrysynk_identity_ref?: string | null
-          artistrysynk_provider?: string
           avatar_url?: string | null
           bio?: string
           created_at?: string
