@@ -15,12 +15,12 @@ export const Route = createFileRoute("/contestants/$handle")({
       { title: `${params.handle} | ArtistrySynk Talent Directory` },
       {
         name: "description",
-        content: `Meet ${params.handle}, a creative competing in ArtistrySynk Creatives Talent Hunt 1.0 with ArtistrySynk.`,
+        content: `Meet ${params.handle}, a creative discovered through ArtistrySynk competitions and activations.`,
       },
-      { property: "og:title", content: `${params.handle} | ArtistrySynk Creatives Talent Hunt contestant` },
+      { property: "og:title", content: `${params.handle} | ArtistrySynk Talent` },
       {
         property: "og:description",
-        content: `Discover this ArtistrySynk Creatives Talent Hunt 1.0 contestant, creative profile and competition journey.`,
+        content: `Explore this ArtistrySynk talent profile and competition journey.`,
       },
       { property: "og:type", content: "profile" },
       { name: "twitter:card", content: "summary_large_image" },
