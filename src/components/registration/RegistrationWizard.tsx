@@ -381,7 +381,7 @@ export function RegistrationWizard({
         )}
 
         {step === 1 && (
-          <StepBody title="Create or connect your identity" hint={ARTISTRYSYNK.promise}>
+          <StepBody title="Create your account" hint={ARTISTRYSYNK.promise}>
             <Field label="Email address" error={errors["email"]}>
               <Input
                 type="email"
