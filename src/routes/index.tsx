@@ -24,11 +24,11 @@ export const Route = createFileRoute("/")({
         content:
           "ArtistrySynk Creatives Talent Hunt is an ArtistrySynk talent hunt discovering, showcasing and celebrating creative talent across music, dance, comedy, spoken word, rap, acting, fashion and more.",
       },
-      { property: "og:title", content: "ArtistrySynk Talent Hunt — Where Creatives Meet Opportunity" },
+      { property: "og:title", content: "ArtistrySynk Talent Hunt — Discover. Showcase. Create Opportunity." },
       {
         property: "og:description",
         content:
-          "ArtistrySynk Creatives Talent Hunt 1.0 — Where Creatives Meet Opportunity. An ArtistrySynk talent hunt discovering, showcasing and celebrating exceptional creative talent.",
+          "ArtistrySynk Talent Hunt — Where Creatives Meet Opportunity. An ArtistrySynk talent hunt discovering, showcasing and celebrating exceptional creative talent.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
