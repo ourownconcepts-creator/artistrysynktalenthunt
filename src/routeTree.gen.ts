@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AnnouncementsRouteImport } from './routes/announcements'
-import { Route as ArtistrysynkRouteImport } from './routes/artistrysynk'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
@@ -43,7 +42,6 @@ import { Route as ContestantsHandleRouteImport } from './routes/contestants.$han
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardSectionRouteImport } from './routes/dashboard.$section'
 import { Route as AdminEntriesIdRouteImport } from './routes/admin.entries.$id'
-import { Route as OauthArtistrysynkReturnRouteImport } from './routes/oauth.artistrysynk.return'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 
@@ -65,11 +63,6 @@ const AdminRoute = AdminRouteImport.update({
 const AnnouncementsRoute = AnnouncementsRouteImport.update({
   id: '/announcements',
   path: '/announcements',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ArtistrysynkRoute = ArtistrysynkRouteImport.update({
-  id: '/artistrysynk',
-  path: '/artistrysynk',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -217,11 +210,6 @@ const AdminEntriesIdRoute = AdminEntriesIdRouteImport.update({
   path: '/entries/$id',
   getParentRoute: () => AdminRoute,
 } as any)
-const OauthArtistrysynkReturnRoute = OauthArtistrysynkReturnRouteImport.update({
-  id: '/oauth/artistrysynk/return',
-  path: '/oauth/artistrysynk/return',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
   id: '/lovable/email/auth/preview',
   path: '/lovable/email/auth/preview',
@@ -238,7 +226,6 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/announcements': typeof AnnouncementsRoute
-  '/artistrysynk': typeof ArtistrysynkRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/how-it-works': typeof HowItWorksRoute
@@ -268,7 +255,6 @@ export interface FileRoutesByFullPath {
   '/contestants/': typeof ContestantsIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/admin/entries/$id': typeof AdminEntriesIdRoute
-  '/oauth/artistrysynk/return': typeof OauthArtistrysynkReturnRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
 }
@@ -305,7 +291,6 @@ export interface FileRoutesByTo {
   '/contestants': typeof ContestantsIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/admin/entries/$id': typeof AdminEntriesIdRoute
-  '/oauth/artistrysynk/return': typeof OauthArtistrysynkReturnRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
 }
@@ -345,7 +330,6 @@ export interface FileRoutesById {
   '/contestants/': typeof ContestantsIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/admin/entries/$id': typeof AdminEntriesIdRoute
-  '/oauth/artistrysynk/return': typeof OauthArtistrysynkReturnRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
 }
