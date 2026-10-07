@@ -12,20 +12,19 @@ import {
   usePublicAnnouncements,
   useRounds,
 } from "@/hooks/useCompetition";
-import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
 import { describeVotingModel, formatDateRange, isRegistrationOpen } from "@/lib/live-data";
 
 export const Route = createFileRoute("/")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "ArtistrySynk Creatives Talent Hunt 1.0 | ArtistrySynk Talent Hunt" },
+      { title: "ArtistrySynk Talent Hunt | Discover. Showcase. Create Opportunity." },
       {
         name: "description",
         content:
           "ArtistrySynk Creatives Talent Hunt is an ArtistrySynk talent hunt discovering, showcasing and celebrating creative talent across music, dance, comedy, spoken word, rap, acting, fashion and more.",
       },
-      { property: "og:title", content: "ArtistrySynk Creatives Talent Hunt 1.0 — Where Creatives Meet Opportunity" },
+      { property: "og:title", content: "ArtistrySynk Talent Hunt — Where Creatives Meet Opportunity" },
       {
         property: "og:description",
         content:
@@ -96,8 +95,7 @@ function Landing() {
           </h1>
 
           <p className="mt-7 max-w-xl text-base text-muted-foreground sm:text-lg">
-            An ArtistrySynk talent hunt created to discover, showcase and
-            celebrate exceptional creative talent.
+            The competition and talent-discovery directory inside ArtistrySynk. Find exceptional creatives, showcase your ability and build a public record of your creative journey.
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-3">
@@ -118,7 +116,7 @@ function Landing() {
           </div>
 
           <dl className="mt-14 grid grid-cols-2 gap-6 border-t border-border/60 pt-8 sm:grid-cols-4">
-            <Stat label="Talent categories" value={String(categoryCount)} icon={Sparkles} />
+            <Stat label="Talent directory" value={String(categoryCount)} icon={Sparkles} />
             <Stat label="Creative community" value="Open" icon={Users} />
             <Stat label="Prize pool" value={data?.prize_pool || "TBC"} icon={Trophy} />
             <Stat label="Rounds" value={String(activeRounds.length)} icon={BadgeCheck} />
@@ -128,34 +126,17 @@ function Landing() {
         </div>
       </section>
 
-      {/* Ecosystem promise */}
       <section className="border-y border-border/70 bg-surface/50">
         <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:items-center">
           <div>
-            <p className="eyebrow">From talent discovery to creative connection</p>
-            <h2 className="mt-4 text-3xl sm:text-4xl">{ARTISTRYSYNK.ecosystem}</h2>
-            <p className="mt-5 max-w-xl text-muted-foreground">{ARTISTRYSYNK.promise}</p>
-            <a
-              href={ARTISTRYSYNK.site}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="mt-5 inline-flex items-center gap-1 text-sm font-bold text-primary hover:underline"
-            >
-              Learn about ArtistrySynk
-              <ArrowRight className="size-4" />
-            </a>
+            <p className="eyebrow">The ArtistrySynk talent layer</p>
+            <h2 className="mt-4 text-3xl sm:text-4xl">One platform. Many kinds of talent.</h2>
+            <p className="mt-5 max-w-xl text-muted-foreground">Talent Hunt is not a separate identity system. ArtistrySynk is the platform, identity and discovery layer; competitions are activations that help talent get seen.</p>
           </div>
           <ol className="card-stage divide-y divide-border/60 p-2">
-            {[
-              "Register for ArtistrySynk Creatives Talent Hunt",
-              "Your ArtistrySynk identity is created or connected",
-              "Showcase your talent in your chosen category",
-              "Connect with a wider creative community",
-            ].map((step, index) => (
+            {["Create or use your ArtistrySynk profile","Enter a competition or talent activation","Showcase your work and competition journey","Get discovered by audiences, collaborators and opportunity"].map((step, index) => (
               <li key={step} className="flex items-center gap-4 px-4 py-4">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/15 font-display text-sm text-primary">
-                  {index + 1}
-                </span>
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/15 font-display text-sm text-primary">{index + 1}</span>
                 <span className="text-sm font-semibold">{step}</span>
               </li>
             ))}
@@ -168,10 +149,10 @@ function Landing() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Talent categories</p>
-            <h2 className="mt-3 text-3xl sm:text-4xl">Showcase your gift</h2>
+            <h2 className="mt-3 text-3xl sm:text-4xl">Meet the talent</h2>
           </div>
           <Button asChild variant="outline">
-            <Link to="/categories">All categories</Link>
+            <Link to="/contestants">Browse the directory</Link>
           </Button>
         </div>
         <div className="mt-9 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -197,28 +178,18 @@ function Landing() {
         </div>
       </section>
 
-      {/* Rounds */}
       <section className="border-y border-border/70 bg-surface/50">
         <div className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6">
-          <p className="eyebrow">The road to the final</p>
-          <h2 className="mt-3 text-3xl sm:text-4xl">From talent to opportunity</h2>
-          {data && (
-            <p className="mt-4 max-w-2xl text-muted-foreground">
-              Judging is weighted {describeVotingModel(data).toLowerCase()} once public voting
-              opens.
-            </p>
-          )}
-          <ol className="mt-9 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {activeRounds.map((round) => (
-              <li key={round.id} className="card-stage card-stage-hover p-5">
-                <span className="font-display text-3xl text-primary/40">
-                  {String(round.sequence).padStart(2, "0")}
-                </span>
-                <h3 className="mt-2 text-xl">{round.name}</h3>
-                <p className="mt-1.5 text-sm text-muted-foreground">{round.description}</p>
-              </li>
-            ))}
-          </ol>
+          <p className="eyebrow">Built for what comes next</p>
+          <h2 className="mt-3 text-3xl sm:text-4xl">Creatives today. Sport and talent tomorrow.</h2>
+          <p className="mt-4 max-w-2xl text-muted-foreground">The competition engine is domain-aware so ArtistrySynk can expand beyond creative contests without rebuilding its foundation. Football is planned as a first-class sports domain with players, teams, trials, matches, statistics and scouting.</p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            {[
+              ["CREATIVE","Music, film, dance, photography, fashion and more."],
+              ["SPORT","Football and future sports competitions."],
+              ["DISCOVERY","Profiles, highlights, rankings and opportunity."],
+            ].map(([title, body]) => <article key={title} className="card-stage p-5"><p className="eyebrow">{title}</p><p className="mt-2 text-sm text-muted-foreground">{body}</p></article>)}
+          </div>
         </div>
       </section>
 
