@@ -669,7 +669,6 @@ export interface AdminAccountRow {
   entry_category: string | null;
   entry_progress_state: string | null;
   entry_submission_state: string | null;
-  artistrysynk_status: string | null;
 }
 
 /** Every registered account. Server-side admin-only. */
