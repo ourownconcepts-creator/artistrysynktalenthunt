@@ -1,19 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ExternalLink, Heart, Loader2, Share2 } from "lucide-react";
+import { Heart, Loader2, Share2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/useSession";
-import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
 import { VOTE_MESSAGES, castVote, fetchPublicContestant } from "@/lib/live-data";
 
 export const Route = createFileRoute("/contestants/$handle")({
   staticData: { sitemap: false },
   head: ({ params }) => ({
     meta: [
-      { title: `${params.handle} | ArtistrySynk Creatives Talent Hunt contestant` },
+      { title: `${params.handle} | ArtistrySynk Talent Directory` },
       {
         name: "description",
         content: `Meet ${params.handle}, a creative competing in ArtistrySynk Creatives Talent Hunt 1.0 with ArtistrySynk.`,
@@ -130,7 +129,7 @@ function ContestantProfile() {
           <p className="mt-3 font-display text-2xl">{c.vote_count}</p>
         </article>
         <article className="card-stage p-6">
-          <p className="eyebrow">Creative identity</p>
+          <p className="eyebrow">Talent journey</p>
           <p className="mt-3 text-sm text-muted-foreground">
             {ARTISTRYSYNK.brand} connects this contestant&rsquo;s creative identity to a wider creative
             community beyond the competition.
