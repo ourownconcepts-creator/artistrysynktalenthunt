@@ -28,7 +28,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "ArtistrySynk Talent Hunt — Where Creatives Meet Opportunity. An ArtistrySynk talent hunt discovering, showcasing and celebrating exceptional creative talent.",
+          "ArtistrySynk Talent Hunt — Discover. Showcase. Create Opportunity.. An ArtistrySynk talent hunt discovering, showcasing and celebrating exceptional creative talent.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -85,7 +85,7 @@ function Landing() {
           </div>
 
           <p className="mt-7 font-sans text-xs font-extrabold uppercase tracking-[0.3em] text-muted-foreground sm:text-sm">
-            ArtistrySynk Creatives Talent Hunt 1.0
+            ArtistrySynk Talent Hunt
           </p>
 
           <h1 className="relative mt-4 max-w-4xl lg:max-w-[42rem] text-5xl sm:text-7xl lg:text-8xl">
