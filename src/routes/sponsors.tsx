@@ -73,7 +73,7 @@ function Sponsors() {
                     {(sponsor.logo_url || sponsor.name.toLowerCase().includes("artistrysynk")) && (
                       <div className="mb-6 flex min-h-44 items-center justify-center overflow-hidden rounded-md bg-[var(--paper)] p-5 sm:min-h-52">
                         {sponsor.name.toLowerCase().includes("artistrysynk") ? <BrandLogo surface="light" className="w-full max-w-md" /> : <img
-                          src={sponsor.logo_url}
+                          src={sponsor.logo_url ?? undefined}
                           alt={`${sponsor.name} logo`}
                           className="max-h-40 w-full object-contain sm:max-h-48"
                           loading="lazy"
@@ -124,7 +124,7 @@ function FeaturedSponsor({
       {(sponsor.logo_url || sponsor.name.toLowerCase().includes("artistrysynk")) && (
         <div className="mb-6 flex min-h-52 flex-1 items-center justify-center overflow-hidden rounded-md bg-[var(--paper)] p-5 sm:min-h-64">
           {sponsor.name.toLowerCase().includes("artistrysynk") ? <BrandLogo surface="light" className="w-full max-w-md" /> : <img
-            src={sponsor.logo_url}
+            src={sponsor.logo_url ?? undefined}
             alt={`${sponsor.name} logo`}
             className="max-h-52 w-full object-contain sm:max-h-60"
           />}
