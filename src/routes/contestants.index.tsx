@@ -14,7 +14,7 @@ export const Route = createFileRoute("/contestants/")({
         content:
           "Discover creative talent on ArtistrySynk by category, location and competition journey.",
       },
-      { property: "og:title", content: "Contestants | ArtistrySynk Creatives Talent Hunt 1.0" },
+      { property: "og:title", content: "Talent Directory | ArtistrySynk" },
       {
         property: "og:description",
         content: "Meet talent discovered through ArtistrySynk competitions and activations.",
