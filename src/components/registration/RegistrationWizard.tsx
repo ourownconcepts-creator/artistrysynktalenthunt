@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ConnectArtistrySynk } from "@/components/artistrysynk/ConnectArtistrySynk";
-import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
+import { ARTISTRYSYNK } from "@/config/brand";
 import type { ArtistrySynkConnection } from "@/integrations/artistrysynk/types";
 import { supabase } from "@/integrations/supabase/client";
 import type { GroupedCategories, LiveCompetition, RequirementRow } from "@/lib/live-data";

@@ -12,7 +12,7 @@ import {
   usePublicAnnouncements,
   useRounds,
 } from "@/hooks/useCompetition";
-import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
+import { ARTISTRYSYNK } from "@/config/brand";
 import { describeVotingModel, formatDateRange, isRegistrationOpen } from "@/lib/live-data";
 
 export const Route = createFileRoute("/")({

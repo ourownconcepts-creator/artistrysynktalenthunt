@@ -3,7 +3,7 @@
  *
  * These describe ArtistrySynk Creatives Talent Hunt's OWN entities. Contestant identity is NOT
  * modelled here: applications reference an ArtistrySynk identity through an
- * opaque `identityRef` (see src/integrations/artistrysynk).
+ * permanent ArtistrySynk talent profile (public.profiles).
  */
 
 export type CompetitionStatus =

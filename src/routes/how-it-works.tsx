@@ -4,7 +4,7 @@ import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCompetition, useRounds } from "@/hooks/useCompetition";
-import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
+import { ARTISTRYSYNK } from "@/config/brand";
 
 export const Route = createFileRoute("/how-it-works")({
   staticData: { sitemap: true },
