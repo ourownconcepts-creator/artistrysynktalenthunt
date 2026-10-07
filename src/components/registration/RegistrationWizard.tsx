@@ -10,9 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ConnectArtistrySynk } from "@/components/artistrysynk/ConnectArtistrySynk";
 import { ARTISTRYSYNK } from "@/config/brand";
-import type { ArtistrySynkConnection } from "@/integrations/artistrysynk/types";
 import { supabase } from "@/integrations/supabase/client";
 import type { GroupedCategories, LiveCompetition, RequirementRow } from "@/lib/live-data";
 import { fetchRequirements, submitEntry } from "@/lib/live-data";
@@ -158,7 +156,6 @@ export function RegistrationWizard({
   const [step, setStep] = useState(initialCategory ? 1 : 0);
   const [form, setForm] = useState<FormState>({ ...EMPTY, categorySlug: initialCategory });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [connection, setConnection] = useState<ArtistrySynkConnection | null>(null);
   const [accountReady, setAccountReady] = useState(false);
   const [busy, setBusy] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -249,7 +246,6 @@ export function RegistrationWizard({
     }
     setBusy(true);
     try {
-      const linked = connection?.status === "CONNECTED" ? connection.identity : null;
       await submitEntry({
         competitionSlug: competition.slug,
         categorySlug: form.categorySlug,
@@ -264,8 +260,6 @@ export function RegistrationWizard({
         auditionUrl: primaryLink,
         auditionNotes: form.auditionNotes,
         submissionAnswers: form.answers,
-        identityRef: linked?.identityRef ?? null,
-        identityProvider: linked ? "artistrysynk" : "unlinked",
       });
       // Confirmation email + organiser alert. A mail failure must never lose an entry.
       try {
@@ -290,9 +284,7 @@ export function RegistrationWizard({
         <h2 className="mt-6 text-3xl">Entry submitted</h2>
         <p className="mt-3 text-muted-foreground">
           Your {category?.name} entry for {competition.name} is saved and queued for review.
-          {connection?.status === "CONNECTED"
-            ? ` Your ${ARTISTRYSYNK.brand} creative identity is connected.`
-            : ` You can connect your ${ARTISTRYSYNK.brand} creative identity any time from your dashboard.`}
+          {` Your permanent ${ARTISTRYSYNK.brand} talent profile is ready — add skills, photo and portfolio links from your dashboard.`}
         </p>
         <div className="mt-7 flex flex-wrap justify-center gap-3">
           <Button asChild className="bg-gold text-primary-foreground hover:opacity-90">
@@ -419,7 +411,6 @@ export function RegistrationWizard({
               Already entered before? Use the same email and password and we&rsquo;ll connect you to
               your existing account instead of creating a second one.
             </p>
-            <ConnectArtistrySynk enabled={accountReady} onChange={setConnection} />
           </StepBody>
         )}
 
@@ -450,7 +441,7 @@ export function RegistrationWizard({
         {step === 3 && (
           <StepBody
             title="Creative information"
-            hint="This becomes your public contestant profile and your ArtistrySynk creative profile."
+            hint="This becomes your public contestant profile and your permanent ArtistrySynk talent profile."
           >
             <Field label="Short bio" error={errors["bio"]}>
               <Textarea
@@ -517,14 +508,6 @@ export function RegistrationWizard({
               <Row label="Category" value={`${group?.name ?? ""} · ${category?.name ?? ""}`} />
               <Row label="Creative name" value={form.displayName} />
               <Row label="Email" value={form.email} />
-              <Row
-                label="ArtistrySynk"
-                value={
-                  connection?.status === "CONNECTED"
-                    ? `Connected${connection.identity?.username ? ` · @${connection.identity.username}` : ""}`
-                    : "Not connected (optional)"
-                }
-              />
               <Row label="Full name" value={form.fullName} />
               <Row label="Location" value={form.location} />
               <Row label="Experience" value={form.experience} />

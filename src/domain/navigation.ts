@@ -133,15 +133,7 @@ export const ADMIN_SECTIONS: SurfaceSection[] = [
     slug: "accounts",
     label: "Accounts",
     summary:
-      "Every registered account: sign-up date, email confirmation, roles, linked entry and creative identity.",
-    permission: "settings:manage",
-    phase: "PHASE_1",
-  },
-  {
-    slug: "artistrysynk",
-    label: "Creative identities",
-    summary:
-      "ArtistrySynk connection status for every entrant, pending claim expiry and the linked identity.",
+      "Every registered account: sign-up date, email confirmation, roles and linked entry.",
     permission: "settings:manage",
     phase: "PHASE_1",
   },

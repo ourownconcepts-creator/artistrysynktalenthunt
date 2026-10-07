@@ -66,7 +66,6 @@ function EntryDetailPage() {
   }
 
   const e = data.entry;
-  const link = data.artistrysynk;
   const criteria = data.criteria ?? [];
   const totalAverage = criteria.reduce((sum, c) => sum + Number(c.average ?? 0), 0);
   const totalMax = criteria.reduce((sum, c) => sum + Number(c.max_score ?? 0), 0);
@@ -104,18 +103,7 @@ function EntryDetailPage() {
           <Row label="Last change" value={when(e.updated_at)} />
         </Panel>
 
-        <Panel title="Creative identity" description="ArtistrySynk connection for this account.">
-          <Row
-            label="Connection"
-            value={link?.status === "CONNECTED" ? "Connected" : "Not connected"}
-          />
-          {link?.status === "CONNECTED" && (
-            <>
-              <Row label="Act" value={`@${link.external_subject}`} />
-              <Row label="Connected on" value={when(link.linked_at)} />
-              <Row label="Shared details" value={(link.scopes ?? []).join(", ")} />
-            </>
-          )}
+        <Panel title="Talent profile" description="This account's permanent ArtistrySynk talent profile.">
           <Row label="Profile name" value={data.profile?.display_name} />
           <Row label="Discipline" value={data.profile?.primary_discipline} />
           <Row label="Location" value={data.profile?.location || e.location} />

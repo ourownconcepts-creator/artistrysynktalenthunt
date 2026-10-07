@@ -340,14 +340,6 @@ export interface EntryDetail {
     avatar_url: string | null;
     is_public: boolean;
   } | null;
-  artistrysynk?: {
-    status: string;
-    external_subject?: string;
-    identity_id?: string;
-    scopes?: string[];
-    linked_at?: string | null;
-    snapshot_at?: string | null;
-  };
   criteria?: {
     id: string;
     name: string;
