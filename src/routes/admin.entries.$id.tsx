@@ -87,10 +87,7 @@ function EntryDetailPage() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Panel title="Status" description="Where this entry stands right now.">
-          <Row
-            label="Stage"
-            value={PROGRESS_STATE_LABELS[e.progress_state] ?? e.progress_state}
-          />
+          <Row label="Stage" value={PROGRESS_STATE_LABELS[e.progress_state] ?? e.progress_state} />
           <Row
             label="Media review"
             value={SUBMISSION_STATE_LABELS[e.submission_state] ?? e.submission_state}
@@ -103,7 +100,10 @@ function EntryDetailPage() {
           <Row label="Last change" value={when(e.updated_at)} />
         </Panel>
 
-        <Panel title="Talent profile" description="This account's permanent ArtistrySynk talent profile.">
+        <Panel
+          title="Talent profile"
+          description="This account's permanent ArtistrySynk talent profile."
+        >
           <Row label="Profile name" value={data.profile?.display_name} />
           <Row label="Discipline" value={data.profile?.primary_discipline} />
           <Row label="Location" value={data.profile?.location || e.location} />
@@ -148,10 +148,7 @@ function EntryDetailPage() {
           </div>
         </Panel>
 
-        <Panel
-          title="Marks"
-          description="Average of every judge mark recorded against this entry."
-        >
+        <Panel title="Marks" description="Average of every judge mark recorded against this entry.">
           <Row label="Judges who scored" value={String(data.judges_scored ?? 0)} />
           <Row label="Public votes" value={String(data.valid_votes ?? 0)} />
           <Row

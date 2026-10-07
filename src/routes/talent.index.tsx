@@ -57,7 +57,11 @@ export const Route = createFileRoute("/talent/")({
   }),
   errorComponent: () => (
     <PublicShell>
-      <PageHeader eyebrow="Talent Directory" title="The directory is unavailable" intro="Please try again in a moment." />
+      <PageHeader
+        eyebrow="Talent Directory"
+        title="The directory is unavailable"
+        intro="Please try again in a moment."
+      />
     </PublicShell>
   ),
   notFoundComponent: () => (
@@ -250,8 +254,8 @@ function TalentDirectory() {
             <p className="eyebrow">Coming soon</p>
             <p className="mt-2 font-display text-xl">Find collaborators</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Match by discipline, skills, location, verification and achievements. Connect.
-              Create. Collaborate.
+              Match by discipline, skills, location, verification and achievements. Connect. Create.
+              Collaborate.
             </p>
           </div>
           <Button asChild variant="outline">

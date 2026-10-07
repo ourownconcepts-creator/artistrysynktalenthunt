@@ -164,7 +164,11 @@ export function TalentProfileEditor({ userId }: { userId: string }) {
   return (
     <form onSubmit={submit} className="space-y-6 text-sm">
       <div className="flex flex-wrap items-center gap-4">
-        <TalentAvatar src={preview} name={form.display_name || "You"} className="size-20 text-2xl" />
+        <TalentAvatar
+          src={preview}
+          name={form.display_name || "You"}
+          className="size-20 text-2xl"
+        />
         <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-border px-3 py-2 font-semibold hover:bg-muted">
           {uploading ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
           Upload photo
@@ -187,7 +191,9 @@ export function TalentProfileEditor({ userId }: { userId: string }) {
         </Labelled>
         <Labelled
           label="Handle"
-          hint={existingHandle ? "Changing it changes your profile link." : "Suggested from your name."}
+          hint={
+            existingHandle ? "Changing it changes your profile link." : "Suggested from your name."
+          }
         >
           <Input
             value={form.handle}
@@ -218,13 +224,19 @@ export function TalentProfileEditor({ userId }: { userId: string }) {
       </Labelled>
       <div className="grid gap-4 sm:grid-cols-2">
         <Labelled label="Portfolio link">
-          <Input value={form.portfolio_url} onChange={(e) => set("portfolio_url", e.target.value)} />
+          <Input
+            value={form.portfolio_url}
+            onChange={(e) => set("portfolio_url", e.target.value)}
+          />
         </Labelled>
         <Labelled label="Website">
           <Input value={form.website_url} onChange={(e) => set("website_url", e.target.value)} />
         </Labelled>
         <Labelled label="Instagram">
-          <Input value={form.instagram_url} onChange={(e) => set("instagram_url", e.target.value)} />
+          <Input
+            value={form.instagram_url}
+            onChange={(e) => set("instagram_url", e.target.value)}
+          />
         </Labelled>
         <Labelled label="YouTube">
           <Input value={form.youtube_url} onChange={(e) => set("youtube_url", e.target.value)} />
@@ -240,11 +252,19 @@ export function TalentProfileEditor({ userId }: { userId: string }) {
         <Switch checked={form.is_public} onCheckedChange={(v) => set("is_public", v)} />
       </label>
       <div className="flex flex-wrap items-center gap-4">
-        <Button type="submit" disabled={save.isPending} className="bg-gold text-primary-foreground hover:opacity-90">
+        <Button
+          type="submit"
+          disabled={save.isPending}
+          className="bg-gold text-primary-foreground hover:opacity-90"
+        >
           {save.isPending ? "Saving…" : "Save profile"}
         </Button>
         {existingHandle && form.is_public && (
-          <Link to="/talent/$handle" params={{ handle: existingHandle }} className="font-bold text-primary hover:underline">
+          <Link
+            to="/talent/$handle"
+            params={{ handle: existingHandle }}
+            className="font-bold text-primary hover:underline"
+          >
             View public profile
           </Link>
         )}
@@ -253,7 +273,15 @@ export function TalentProfileEditor({ userId }: { userId: string }) {
   );
 }
 
-function Labelled({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+function Labelled({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
   return (
     <label className="block space-y-1.5">
       <span className="font-semibold text-foreground">{label}</span>

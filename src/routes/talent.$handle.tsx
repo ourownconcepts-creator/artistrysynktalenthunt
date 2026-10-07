@@ -22,7 +22,10 @@ export const Route = createFileRoute("/talent/$handle")({
   head: ({ loaderData, params }) => {
     const title = loaderData ? `${loaderData.name} | ArtistrySynk Talent` : "Talent | ArtistrySynk";
     const description = loaderData
-      ? (loaderData.bio || `${loaderData.name} — ${loaderData.discipline} on ArtistrySynk.`).slice(0, 155)
+      ? (loaderData.bio || `${loaderData.name} — ${loaderData.discipline} on ArtistrySynk.`).slice(
+          0,
+          155,
+        )
       : "A creative on the ArtistrySynk Talent Directory.";
     return {
       meta: [
@@ -40,12 +43,20 @@ export const Route = createFileRoute("/talent/$handle")({
   },
   errorComponent: () => (
     <PublicShell>
-      <PageHeader eyebrow="Talent" title="This profile could not load" intro="Please try again shortly." />
+      <PageHeader
+        eyebrow="Talent"
+        title="This profile could not load"
+        intro="Please try again shortly."
+      />
     </PublicShell>
   ),
   notFoundComponent: () => (
     <PublicShell>
-      <PageHeader eyebrow="Talent" title="Profile not found" intro="This profile does not exist or is not public.">
+      <PageHeader
+        eyebrow="Talent"
+        title="Profile not found"
+        intro="This profile does not exist or is not public."
+      >
         <Button asChild className="mt-6 bg-gold text-primary-foreground hover:opacity-90">
           <Link to="/talent">Browse the Talent Directory</Link>
         </Button>
@@ -91,7 +102,9 @@ function TalentProfilePage() {
                 </span>
               )}
             </div>
-            {p.bio && <p className="mt-4 max-w-2xl whitespace-pre-line text-muted-foreground">{p.bio}</p>}
+            {p.bio && (
+              <p className="mt-4 max-w-2xl whitespace-pre-line text-muted-foreground">{p.bio}</p>
+            )}
           </div>
         </div>
       </section>
@@ -141,9 +154,16 @@ function TalentProfilePage() {
           {data.competitions.length ? (
             <ul className="mt-4 divide-y divide-border/60">
               {data.competitions.map((c) => (
-                <li key={c.application_handle + c.competition_slug} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm">
+                <li
+                  key={c.application_handle + c.competition_slug}
+                  className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm"
+                >
                   <div>
-                    <Link to="/competitions/$slug" params={{ slug: c.competition_slug }} className="font-semibold hover:underline">
+                    <Link
+                      to="/competitions/$slug"
+                      params={{ slug: c.competition_slug }}
+                      className="font-semibold hover:underline"
+                    >
                       {c.competition_name}
                     </Link>
                     <p className="text-muted-foreground">
@@ -152,11 +172,16 @@ function TalentProfilePage() {
                   </div>
                   <div className="text-right">
                     <p className="font-semibold">
-                      {PROGRESS_STATE_LABELS[c.progress_state] ?? STATUS_LABELS[c.status] ?? c.status}
+                      {PROGRESS_STATE_LABELS[c.progress_state] ??
+                        STATUS_LABELS[c.status] ??
+                        c.status}
                     </p>
                     {c.participated_at && (
                       <p className="text-xs text-muted-foreground">
-                        {new Date(c.participated_at).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}
+                        {new Date(c.participated_at).toLocaleDateString("en-GB", {
+                          month: "short",
+                          year: "numeric",
+                        })}
                       </p>
                     )}
                   </div>
@@ -173,14 +198,19 @@ function TalentProfilePage() {
           {data.achievements.length ? (
             <ul className="mt-4 grid gap-3 sm:grid-cols-2">
               {data.achievements.map((a) => (
-                <li key={a.slug + a.awarded_at} className="flex gap-3 rounded-md border border-border/60 p-3">
+                <li
+                  key={a.slug + a.awarded_at}
+                  className="flex gap-3 rounded-md border border-border/60 p-3"
+                >
                   <Award className="mt-0.5 size-5 shrink-0 text-accent" aria-hidden />
                   <div>
                     <p className="font-semibold">{a.name}</p>
                     <p className="text-xs text-muted-foreground">
                       {a.competition_name} · {new Date(a.awarded_at).toLocaleDateString("en-GB")}
                     </p>
-                    {a.description && <p className="mt-1 text-sm text-muted-foreground">{a.description}</p>}
+                    {a.description && (
+                      <p className="mt-1 text-sm text-muted-foreground">{a.description}</p>
+                    )}
                   </div>
                 </li>
               ))}

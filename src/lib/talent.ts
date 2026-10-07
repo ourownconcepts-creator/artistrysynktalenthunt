@@ -104,12 +104,10 @@ export async function resolveAvatarUrls(values: (string | null)[]): Promise<Map<
   const paths = values.filter((v): v is string => !!v && v.startsWith(AVATAR_PREFIX));
   for (const v of values) if (v && !v.startsWith(AVATAR_PREFIX)) out.set(v, v);
   if (paths.length) {
-    const { data } = await supabase.storage
-      .from("avatars")
-      .createSignedUrls(
-        paths.map((p) => p.slice(AVATAR_PREFIX.length)),
-        60 * 60 * 24,
-      );
+    const { data } = await supabase.storage.from("avatars").createSignedUrls(
+      paths.map((p) => p.slice(AVATAR_PREFIX.length)),
+      60 * 60 * 24,
+    );
     (data ?? []).forEach((row, i) => {
       const key = paths[i];
       if (key && row.signedUrl) out.set(key, row.signedUrl);
@@ -254,7 +252,10 @@ export async function saveMyTalentProfile(input: TalentProfileInput): Promise<vo
   if (!auth.user) throw new Error("Sign in to edit your profile.");
   const { error } = await supabase
     .from("profiles")
-    .upsert({ id: auth.user.id, ...input, updated_at: new Date().toISOString() }, { onConflict: "id" });
+    .upsert(
+      { id: auth.user.id, ...input, updated_at: new Date().toISOString() },
+      { onConflict: "id" },
+    );
   if (error) {
     if (error.message.includes("profiles_handle_unique_idx")) {
       throw new Error("That handle is already taken. Try another.");

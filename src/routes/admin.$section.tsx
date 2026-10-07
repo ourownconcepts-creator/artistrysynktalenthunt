@@ -1659,12 +1659,16 @@ function AccountsPanel() {
             </div>
             <p className="mt-1 text-xs text-muted-foreground">
               Joined {formatDate(row.created_at)} · Last sign-in {formatDate(row.last_sign_in_at)} ·
-              Roles {row.roles.length ? row.roles.map((r) => ROLE_LABELS[r as never] ?? r).join(", ") : "None"}
+              Roles{" "}
+              {row.roles.length
+                ? row.roles.map((r) => ROLE_LABELS[r as never] ?? r).join(", ")
+                : "None"}
             </p>
             <p className="mt-1 text-xs text-muted-foreground">
               {row.entry_reference
                 ? `Entry ${row.entry_reference} — ${row.entry_name ?? ""} · ${row.entry_category ?? ""} · ${
-                    PROGRESS_STATE_LABELS[row.entry_progress_state ?? ""] ?? row.entry_progress_state
+                    PROGRESS_STATE_LABELS[row.entry_progress_state ?? ""] ??
+                    row.entry_progress_state
                   } · media ${
                     SUBMISSION_STATE_LABELS[row.entry_submission_state ?? ""] ??
                     row.entry_submission_state
