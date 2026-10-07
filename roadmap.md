@@ -1,82 +1,63 @@
-# Zik's Got Talent — roadmap
+# ArtistrySynk Talent Hunt — roadmap
 
-## Done
-- Twelve real contestant entries seeded across categories with judge marks and
-  public votes, so Contestants, Shortlists and Moderation show live records.
-- Contestant portal shows the stage, progress state, decision note and time of
-  the last admin change, refreshing on its own.
-- Admin panel complete: contestant records, round shortlists, moderation
-  (flagged voting, media queue, score corrections) and settings (team roles,
-  integrations) now live alongside the existing admin sections.
-- ArtistrySynk portal at `/artistrysynk`: a connected creative sees their entry,
-  entry code, status and round progress, with links to the fuller dashboard
-  views. Linked from the dashboard profile page.
-- Production return address wired for ArtistrySynk connections.
-- Public entry tracking at `/track` with per-entry reference codes.
-- Stage-change and entry alert emails sent through QueenSMTP.
+## Product direction
 
-- Public contestant portal at `/track` in the gold-on-white look of the entry
-  alerts: category browsing, entry route and code-based stage tracking.
-- Admin "Creative identities" panel: ArtistrySynk status per entrant, pending
-  claim expiry, linked identity, and a one-off invitation sender.
-- Connection invitation emailed to ourownconcepts@gmail.com.
+ArtistrySynk Talent Hunt is a directory and competition surface inside ArtistrySynk.
 
-## Open (blocked)
-- Sending from notify.ziksgottalent.com is refused by the email service until
-  that exact subdomain is verified there; entry alerts and the invitation go out
-  from ziksgottalent.com meanwhile.
-- Branded sign-in emails from notify.ziksgottalent.com are built and styled;
-  they start sending as soon as the domain's DNS check finishes.
-- Fresh ArtistrySynk connection test running: old demo account fully deleted; a
-  new confirmed sign-in (zgt.connect.demo@artistrysynk.app) with entry
-  ZGT-DCEGF4DY now has a live claim link awaiting a real person to claim it on
-  ArtistrySynk. Entry stays unapproved until the identity is verified.
+It is not a standalone competition brand and does not maintain a second identity ecosystem.
 
-## Release Gate 1 (security) — 12 Sep 2026
-- Fixed: artistrysynk_apply_link was executable by any signed-in user with an arbitrary target user (identity hijack). EXECUTE revoked to service_role only.
-- Added profiles_guard_identity trigger: Data API callers cannot write artistrysynk_identity_ref/provider.
-- Unique indexes: one ArtistrySynk identity per ZGT profile; one CONNECTED link per identity.
-- Least privilege: anon is read-only on all tables; writes to user_roles, votes, audit_log, score_corrections, round_results and applications review columns only via guarded routines; artistrysynk_links/intents are service-role only.
-- Launch requirements: enable email confirmation in production auth; verify notify.ziksgottalent.com DNS; no storage buckets exist (audition media is external URLs).
+## Foundation
 
-## Release Gate 2 (production configuration) — 12 Sep 2026
-- Email confirmation is now REQUIRED in production: Cloud auth setting
-  auto_confirm_email = false (also: signups open, anonymous sign-in off,
-  leaked-password check on). Verified: signup returns no session,
-  login before confirmation -> email_not_confirmed, login after -> works,
-  expired/invalid link -> /auth explains it, resend rate-limited to 1/min.
-- notify.ziksgottalent.com is VERIFIED with the email provider and auth emails
-  are enabled from it (NS-delegated to Lovable). Delivery test sent + accepted.
-  QueenSMTP cannot send from this subdomain while it is delegated, so entry
-  alerts continue from noreply@ziksgottalent.com.
-- Legal copy: Terms and Privacy now state plainly that auditions are external
-  links and that video access depends on the hosting site's permissions.
-- Cleanup: removed a stand-in identity reference and a revoked test connection.
-- Still open before production: real-person ArtistrySynk claim (fresh sign-up) and
-  existing-account PKCE consent (NOT LIVE-VERIFIED); final legal copy;
-  backup/restore procedure confirmation from the platform.
+- Public talent-hunt landing page
+- Competition discovery
+- Configurable categories
+- Configurable competition rounds
+- Contestant registration
+- Application tracking
+- Contestant dashboard
+- Public contestant profiles
+- Judging and scoring foundations
+- Voting foundations
+- Sponsor management
+- Announcements
+- Badges
+- Admin control centre
+- Audit logging
+- Email notifications
 
-## 14 Sep 2026
-- Entry review sheet at /admin/entries/{id}: profile, ArtistrySynk connection,
-  audition, per-criterion averages, judge comments, votes and round outcomes.
-  Reachable from "View entry" on each contestant row. Judges and staff only.
-- Demo Connect Act (ZGT-DCEGF4DY) confirmed approved, judged and scored 48/60.
-- Published to ziksgottalent.com so the owner admin can sign in live.
+## Current priority
 
-## 15 Sep 2026
-- Public-facing content aligned to the official ZIK’S GOT TALENT 1.0 identity:
-  University of Ibadan campus-wide competition, organized by Zik Hall Royals
-  with the Zik Hall Executive Council, under “Where Talent Meets Opportunity.”
-- Homepage, About, participation journey, categories, sponsors, footer,
-  ArtistrySynk partnership messaging, page titles and social descriptions
-  rewritten without changing functionality or database content.
-- Sponsors page populated with the seven supplied logos and exact displayed
-  names; ArtistrySynk is the sole main sponsor, followed by six supporting sponsors.
-- Sponsor hierarchy refined: ArtistrySynk remains the main sponsor, NEW FLAVA
-  Restaurant is featured beside it under “Proudly supported by,” and MIAMI
-  MERCENARIES is corrected throughout.
+### 1. Directory-first architecture
+- Keep ArtistrySynk as the platform, brand and identity layer.
+- Run Talent Hunt under an ArtistrySynk route such as `/talent-hunt`.
+- Remove all standalone-brand assumptions.
+- Remove all external identity-linking flows.
+- Use the authenticated ArtistrySynk user identity directly.
 
-## Open questions (user skipped)
-- "Connect Act" branding/entries: unclear whether it is a new competition, a
-  rename, or just the demo entry's name. Real entries need real sign-ups.
-- Entry forms already exist at /register; unclear what is missing.
+### 2. Competition infrastructure
+- Support multiple competitions and editions.
+- Keep categories and rounds configurable.
+- Preserve contestant records between competition stages.
+- Keep judging, voting and moderation operationally separate.
+
+### 3. Public discovery
+- Make contestants discoverable through approved public profiles.
+- Provide category and competition browsing.
+- Provide shareable contestant pages.
+- Build toward richer talent-directory discovery.
+
+### 4. Future expansion
+- Talent discovery and search
+- Creative profile enrichment
+- Featured talent
+- Competition history
+- Media/highlight galleries
+- Talent opportunities
+- Advanced analytics
+- Additional competition types, including sports and football-specific competitions
+
+## Product principle
+
+**Discover talent. Showcase talent. Create opportunity.**
+
+ArtistrySynk is the home. Talent Hunt is the competition and discovery infrastructure.
