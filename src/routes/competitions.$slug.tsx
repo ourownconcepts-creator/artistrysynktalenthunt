@@ -97,6 +97,7 @@ function CompetitionDetail() {
       <PageHeader eyebrow={data.tagline} title={data.name} intro={data.description}>
         <div className="flex flex-wrap items-center gap-3">
           <StatusPill status={data.status} />
+          <span className="rounded-full border border-border px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest">{data.domain} · {data.type.replaceAll("_", " ")}</span>
           <span className="text-xs uppercase tracking-widest text-muted-foreground">
             {formatDateRange(data.starts_at, data.ends_at)}
           </span>
