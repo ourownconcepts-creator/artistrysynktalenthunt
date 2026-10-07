@@ -1,12 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
-import { ConnectArtistrySynk } from "@/components/artistrysynk/ConnectArtistrySynk";
 import { JourneyTracker } from "@/components/competition/JourneyTracker";
 import { Button } from "@/components/ui/button";
 import { DASHBOARD_SECTIONS } from "@/domain/navigation";
 import { useSession } from "@/hooks/useSession";
-import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
 import {
   REQUIREMENT_KIND_LABELS,
   buildJourney,
@@ -237,20 +235,7 @@ function DashboardSectionPage() {
                   />
                 </dl>
               )}
-              <ConnectArtistrySynk enabled={Boolean(user)} />
-              <div className="flex flex-wrap items-center gap-4">
-                <Link to="/artistrysynk" className="font-bold text-primary hover:underline">
-                  Open your {ARTISTRYSYNK.brand} portal
-                </Link>
-                <a
-                  href={ARTISTRYSYNK.site}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="font-bold text-primary hover:underline"
-                >
-                  Open {ARTISTRYSYNK.brand}
-                </a>
-              </div>
+
             </div>
           )}
 
