@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { PageHeader, PublicShell } from "@/components/site/PublicShell";
-import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
+import { ARTISTRYSYNK } from "@/config/brand";
 
 export const Route = createFileRoute("/about")({
   staticData: { sitemap: true },

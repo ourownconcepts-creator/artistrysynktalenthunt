@@ -6,7 +6,7 @@
 const SITE_NAME = "ArtistrySynk Creatives Talent Hunt";
 
 function siteUrl(): string {
-  const raw = process.env["ZGT_SITE_URL"] ?? "https://ziksgottalent.com";
+  const raw = process.env["TALENT_SITE_URL"] ?? "https://artistrysynk.app/talent-hunt";
   return raw.replace(/\/$/, "");
 }
 
@@ -224,22 +224,5 @@ export function announcementEmail(data: {
       cta: { label: "See all announcements", href: `${siteUrl()}/announcements` },
     }),
     text: `${data.title}\n\n${data.body}\n\nAll announcements: ${siteUrl()}/announcements`,
-  };
-}
-
-/** Invitation to connect a permanent ArtistrySynk creative identity. */
-export function artistrySynkInviteEmail(data: { displayName: string }) {
-  const connect = `${siteUrl()}/dashboard/profile`;
-  return {
-    subject: "Connect your ArtistrySynk creative identity",
-    html: shell({
-      kicker: "Creative identity",
-      heading: "Connect your creative identity",
-      content: paragraphs(
-        `Hi ${data.displayName},\n\nYour ${SITE_NAME} entry can carry your permanent ArtistrySynk creative profile — the same profile that follows your work beyond this competition.\n\nOpen your dashboard and press Connect. If you're new to ArtistrySynk we'll prepare your identity and you simply claim it there; you never type an ArtistrySynk password on ${SITE_NAME}. Connecting is optional and your entry is unaffected either way.`,
-      ),
-      cta: { label: "Connect my creative identity", href: connect },
-    }),
-    text: `Hi ${data.displayName},\n\nYour ${SITE_NAME} entry can carry your permanent ArtistrySynk creative profile. Open your dashboard and press Connect: ${connect}\n\nIf you're new to ArtistrySynk we prepare your identity and you claim it there. Connecting is optional — your entry is unaffected either way.`,
   };
 }

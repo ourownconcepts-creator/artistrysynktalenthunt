@@ -1,19 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
-import { ConnectArtistrySynk } from "@/components/artistrysynk/ConnectArtistrySynk";
+import { TalentProfileEditor } from "@/components/talent/TalentProfileEditor";
 import { JourneyTracker } from "@/components/competition/JourneyTracker";
 import { Button } from "@/components/ui/button";
 import { DASHBOARD_SECTIONS } from "@/domain/navigation";
 import { useSession } from "@/hooks/useSession";
-import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
 import {
   REQUIREMENT_KIND_LABELS,
   buildJourney,
   describeVotingModel,
   fetchAnnouncements,
   fetchMyApplication,
-  fetchMyProfile,
   fetchRequirements,
   fetchRounds,
 } from "@/lib/live-data";
@@ -27,10 +25,17 @@ export const Route = createFileRoute("/dashboard/$section")({
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: loaderData ? `${loaderData.section.label} — ArtistrySynk Creatives Talent Hunt` : "Unavailable" },
+      {
+        title: loaderData
+          ? `${loaderData.section.label} — ArtistrySynk Creatives Talent Hunt`
+          : "Unavailable",
+      },
       { name: "robots", content: "noindex" },
       { name: "description", content: loaderData?.section.summary ?? "Contestant dashboard" },
-      { property: "og:title", content: loaderData?.section.label ?? "ArtistrySynk Creatives Talent Hunt" },
+      {
+        property: "og:title",
+        content: loaderData?.section.label ?? "ArtistrySynk Creatives Talent Hunt",
+      },
       {
         property: "og:description",
         content: loaderData?.section.summary ?? "Contestant dashboard",
@@ -77,11 +82,6 @@ function DashboardSectionPage() {
     queryKey: ["my-announcements", competition?.id],
     queryFn: () =>
       fetchAnnouncements({ audience: "CONTESTANTS", competitionId: competition?.id ?? null }),
-    enabled: Boolean(user),
-  });
-  const profile = useQuery({
-    queryKey: ["my-profile", user?.id ?? "anon"],
-    queryFn: fetchMyProfile,
     enabled: Boolean(user),
   });
 
@@ -224,35 +224,7 @@ function DashboardSectionPage() {
             </div>
           )}
 
-          {section.slug === "profile" && (
-            <div className="space-y-3 text-sm text-muted-foreground">
-              {profile.data && (
-                <dl className="divide-y divide-border/60">
-                  <Row label="Creative name" value={profile.data.display_name ?? ""} />
-                  <Row label="Discipline" value={profile.data.primary_discipline ?? ""} />
-                  <Row label="Location" value={profile.data.location ?? ""} />
-                  <Row
-                    label="Identity link"
-                    value={profile.data.artistrysynk_identity_ref ? "Connected" : "Pending"}
-                  />
-                </dl>
-              )}
-              <ConnectArtistrySynk enabled={Boolean(user)} />
-              <div className="flex flex-wrap items-center gap-4">
-                <Link to="/artistrysynk" className="font-bold text-primary hover:underline">
-                  Open your {ARTISTRYSYNK.brand} portal
-                </Link>
-                <a
-                  href={ARTISTRYSYNK.site}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="font-bold text-primary hover:underline"
-                >
-                  Open {ARTISTRYSYNK.brand}
-                </a>
-              </div>
-            </div>
-          )}
+          {section.slug === "profile" && user && <TalentProfileEditor userId={user.id} />}
 
           {section.slug === "notifications" && (
             <ul className="space-y-2 text-sm text-muted-foreground">

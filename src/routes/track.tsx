@@ -135,7 +135,7 @@ function TrackPage() {
                   className="paper-field"
                   value={code}
                   onChange={(event) => setCode(event.target.value.toUpperCase())}
-                  placeholder="ZGT-XXXXXXXX"
+                  placeholder="ASK-XXXXXXXX"
                   autoComplete="off"
                   spellCheck={false}
                   required

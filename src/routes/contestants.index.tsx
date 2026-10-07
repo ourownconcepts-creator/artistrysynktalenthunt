@@ -17,7 +17,8 @@ export const Route = createFileRoute("/contestants/")({
       { property: "og:title", content: "Contestants | ArtistrySynk Creatives Talent Hunt 1.0" },
       {
         property: "og:description",
-        content: "Meet the creative talent stepping into the spotlight at ArtistrySynk Creatives Talent Hunt 1.0.",
+        content:
+          "Meet the creative talent stepping into the spotlight at ArtistrySynk Creatives Talent Hunt 1.0.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -38,7 +39,11 @@ function Contestants() {
         eyebrow="The talent"
         title="The talent is here"
         intro="Meet the creatives sharing their gifts, telling their stories and competing for their opportunity."
-      />
+      >
+        <Link to="/talent" className="mt-6 inline-block font-bold text-primary hover:underline">
+          Explore the full ArtistrySynk Talent Directory →
+        </Link>
+      </PageHeader>
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
         {contestants.isLoading ? (
           <p className="text-sm text-muted-foreground">Loading contestants…</p>

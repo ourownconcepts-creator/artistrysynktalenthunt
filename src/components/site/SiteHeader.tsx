@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const NAV = [
+  { to: "/talent", label: "Talent" },
   { to: "/competitions", label: "Competition" },
   { to: "/categories", label: "Categories" },
   { to: "/how-it-works", label: "How It Works" },

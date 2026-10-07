@@ -5,7 +5,7 @@ import { ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DASHBOARD_SECTIONS } from "@/domain/navigation";
 import { useSession } from "@/hooks/useSession";
-import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
+import { ARTISTRYSYNK } from "@/config/brand";
 import { fetchMyApplication } from "@/lib/live-data";
 
 export const Route = createFileRoute("/dashboard/")({

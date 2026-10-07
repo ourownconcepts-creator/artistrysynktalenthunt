@@ -622,12 +622,14 @@ export type Database = {
           created_at: string
           current_round_id: string | null
           description: string
+          domain: string
           eligibility: string[]
           ends_at: string | null
           id: string
           is_featured: boolean
           judge_weight: number
           name: string
+          participant_type: string
           prize_pool: string
           public_weight: number
           registration_closes_at: string | null
@@ -638,6 +640,7 @@ export type Database = {
           starts_at: string | null
           status: string
           tagline: string
+          type: string
           updated_at: string
           vote_rate_limit_per_minute: number
           votes_per_user_per_day: number
@@ -651,12 +654,14 @@ export type Database = {
           created_at?: string
           current_round_id?: string | null
           description?: string
+          domain?: string
           eligibility?: string[]
           ends_at?: string | null
           id?: string
           is_featured?: boolean
           judge_weight?: number
           name: string
+          participant_type?: string
           prize_pool?: string
           public_weight?: number
           registration_closes_at?: string | null
@@ -667,6 +672,7 @@ export type Database = {
           starts_at?: string | null
           status?: string
           tagline?: string
+          type?: string
           updated_at?: string
           vote_rate_limit_per_minute?: number
           votes_per_user_per_day?: number
@@ -680,12 +686,14 @@ export type Database = {
           created_at?: string
           current_round_id?: string | null
           description?: string
+          domain?: string
           eligibility?: string[]
           ends_at?: string | null
           id?: string
           is_featured?: boolean
           judge_weight?: number
           name?: string
+          participant_type?: string
           prize_pool?: string
           public_weight?: number
           registration_closes_at?: string | null
@@ -696,6 +704,7 @@ export type Database = {
           starts_at?: string | null
           status?: string
           tagline?: string
+          type?: string
           updated_at?: string
           vote_rate_limit_per_minute?: number
           votes_per_user_per_day?: number
@@ -761,12 +770,19 @@ export type Database = {
           created_at: string
           display_name: string
           email: string | null
+          featured_until: string | null
           handle: string | null
           id: string
+          instagram_url: string | null
           is_public: boolean
           location: string
+          portfolio_url: string | null
           primary_discipline: string
+          secondary_skills: string[]
           updated_at: string
+          verification_status: string
+          website_url: string | null
+          youtube_url: string | null
         }
         Insert: {
           artistrysynk_identity_ref?: string | null
@@ -776,12 +792,19 @@ export type Database = {
           created_at?: string
           display_name?: string
           email?: string | null
+          featured_until?: string | null
           handle?: string | null
           id: string
+          instagram_url?: string | null
           is_public?: boolean
           location?: string
+          portfolio_url?: string | null
           primary_discipline?: string
+          secondary_skills?: string[]
           updated_at?: string
+          verification_status?: string
+          website_url?: string | null
+          youtube_url?: string | null
         }
         Update: {
           artistrysynk_identity_ref?: string | null
@@ -791,12 +814,19 @@ export type Database = {
           created_at?: string
           display_name?: string
           email?: string | null
+          featured_until?: string | null
           handle?: string | null
           id?: string
+          instagram_url?: string | null
           is_public?: boolean
           location?: string
+          portfolio_url?: string | null
           primary_discipline?: string
+          secondary_skills?: string[]
           updated_at?: string
+          verification_status?: string
+          website_url?: string | null
+          youtube_url?: string | null
         }
         Relationships: []
       }
@@ -1437,6 +1467,39 @@ export type Database = {
           votes_today: number
         }[]
       }
+      talent_directory: {
+        Args: {
+          _discipline?: string
+          _featured?: boolean
+          _limit?: number
+          _location?: string
+          _offset?: number
+          _q?: string
+          _verification?: string
+        }
+        Returns: {
+          avatar_url: string
+          bio: string
+          display_name: string
+          featured_until: string
+          handle: string
+          id: string
+          is_featured: boolean
+          location: string
+          primary_discipline: string
+          secondary_skills: string[]
+          total_count: number
+          verification_status: string
+        }[]
+      }
+      talent_disciplines: {
+        Args: never
+        Returns: {
+          name: string
+          talent_count: number
+        }[]
+      }
+      talent_profile: { Args: { _handle: string }; Returns: Json }
       track_application: {
         Args: { _email: string; _reference_code: string }
         Returns: {

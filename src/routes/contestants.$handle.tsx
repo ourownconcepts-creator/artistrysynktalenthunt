@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/useSession";
-import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
+import { ARTISTRYSYNK } from "@/config/brand";
 import { VOTE_MESSAGES, castVote, fetchPublicContestant } from "@/lib/live-data";
 
 export const Route = createFileRoute("/contestants/$handle")({

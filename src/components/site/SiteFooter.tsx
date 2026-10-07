@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 
 import { Wordmark } from "@/components/brand/Wordmark";
 import { SponsorStrip } from "@/components/site/SponsorStrip";
-import { ARTISTRYSYNK } from "@/integrations/artistrysynk";
+import { ARTISTRYSYNK } from "@/config/brand";
 
 export function SiteFooter() {
   return (

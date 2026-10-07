@@ -686,8 +686,6 @@ export interface EntryInput {
   auditionUrl: string;
   auditionNotes: string;
   submissionAnswers: Record<string, string>;
-  identityRef: string | null;
-  identityProvider: string;
 }
 
 /** Persists the signed-in user's entry. Requires an active session. */
@@ -718,9 +716,6 @@ export async function submitEntry(input: EntryInput) {
       location: input.location,
       primary_discipline: category.name,
       is_public: true,
-      // The verified ArtistrySynk reference is written ONLY by the server-side
-      // link routine. Anything sent from the browser is ignored by the
-      // profiles_guard_identity trigger, so we do not send it at all.
       updated_at: new Date().toISOString(),
     },
     { onConflict: "id" },
@@ -760,7 +755,15 @@ export async function submitEntry(input: EntryInput) {
       .select("id, handle")
       .single();
 
-    if (!error) return data;
+    if (!error) {
+      // Give a brand-new talent profile its first handle; never overwrite one.
+      await supabase
+        .from("profiles")
+        .update({ handle: data.handle })
+        .eq("id", user.id)
+        .is("handle", null);
+      return data;
+    }
     lastError = error;
     if (!String(error.message).includes("applications_handle_key")) break;
   }

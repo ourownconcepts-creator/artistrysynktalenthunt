@@ -61,10 +61,6 @@ import {
 import { ROLE_LABELS } from "@/domain/roles";
 import { notifyContestant } from "@/lib/notify";
 import { sendAnnouncementEmail, type EmailSendSummary } from "@/lib/email.functions";
-import {
-  listArtistrySynkConnections,
-  sendArtistrySynkInvite,
-} from "@/lib/artistrysynk-admin.functions";
 
 export const Route = createFileRoute("/admin/$section")({
   staticData: { sitemap: false },
@@ -119,7 +115,6 @@ function AdminSectionPage() {
       )}
       {section.slug === "accounts" && <AccountsPanel />}
       {section.slug === "settings" && <SettingsPanel />}
-      {section.slug === "artistrysynk" && <CreativeIdentitiesPanel />}
     </div>
   );
 }
@@ -1664,13 +1659,16 @@ function AccountsPanel() {
             </div>
             <p className="mt-1 text-xs text-muted-foreground">
               Joined {formatDate(row.created_at)} · Last sign-in {formatDate(row.last_sign_in_at)} ·
-              Roles {row.roles.length ? row.roles.map((r) => ROLE_LABELS[r as never] ?? r).join(", ") : "None"} ·
-              Identity {row.artistrysynk_status === "NOT_LINKED" ? "Not connected" : "Connected"}
+              Roles{" "}
+              {row.roles.length
+                ? row.roles.map((r) => ROLE_LABELS[r as never] ?? r).join(", ")
+                : "None"}
             </p>
             <p className="mt-1 text-xs text-muted-foreground">
               {row.entry_reference
                 ? `Entry ${row.entry_reference} — ${row.entry_name ?? ""} · ${row.entry_category ?? ""} · ${
-                    PROGRESS_STATE_LABELS[row.entry_progress_state ?? ""] ?? row.entry_progress_state
+                    PROGRESS_STATE_LABELS[row.entry_progress_state ?? ""] ??
+                    row.entry_progress_state
                   } · media ${
                     SUBMISSION_STATE_LABELS[row.entry_submission_state ?? ""] ??
                     row.entry_submission_state
@@ -1786,10 +1784,10 @@ function SettingsPanel() {
       >
         <ul className="space-y-3 text-sm">
           <li className="rounded-md border border-border/60 p-3">
-            <p className="font-semibold">ArtistrySynk creative identity</p>
+            <p className="font-semibold">ArtistrySynk talent profile</p>
             <p className="text-xs text-muted-foreground">
-              Contestants connect their own ArtistrySynk account from their dashboard. The Talent
-              Hunt never creates or stores a second identity — only a verified reference.
+              Every account has one permanent ArtistrySynk talent profile, listed in the public
+              Talent Directory when the creative makes it public.
             </p>
           </li>
           <li className="rounded-md border border-border/60 p-3">
@@ -1807,149 +1805,6 @@ function SettingsPanel() {
             </p>
           </li>
         </ul>
-      </Panel>
-    </div>
-  );
-}
-
-/* ----------------------- Creative identities (ArtistrySynk) ----------------------- */
-
-const IDENTITY_STATUS_LABELS: Record<string, string> = {
-  CONNECTED: "Connected",
-  AWAITING_CLAIM: "Awaiting claim",
-  EXPIRED: "Claim expired",
-  REVOKED: "Disconnected",
-  NOT_CONNECTED: "Not connected",
-};
-
-function CreativeIdentitiesPanel() {
-  const rows = useQuery({
-    queryKey: ["artistrysynk-admin"],
-    queryFn: () => listArtistrySynkConnections(),
-    refetchOnWindowFocus: true,
-  });
-  const [invite, setInvite] = useState("");
-  const send = useMutation({
-    mutationFn: (email: string) => sendArtistrySynkInvite({ data: { email } }),
-    onSuccess: (result) =>
-      result.sent
-        ? toast.success("Invitation sent")
-        : toast.error(
-            result.configured ? "The invitation could not be delivered" : "Email is not set up yet",
-          ),
-    onError: () => toast.error("The invitation could not be sent"),
-  });
-
-  const list = rows.data ?? [];
-  const counts = list.reduce<Record<string, number>>((all, row) => {
-    all[row.status] = (all[row.status] ?? 0) + 1;
-    return all;
-  }, {});
-
-  return (
-    <div className="space-y-5">
-      <Panel
-        title="Connection overview"
-        description="Live ArtistrySynk state for everyone who has entered."
-      >
-        <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
-          {Object.keys(IDENTITY_STATUS_LABELS).map((key) => (
-            <div key={key} className="rounded-lg border border-border/60 bg-background/40 p-4">
-              <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                {IDENTITY_STATUS_LABELS[key]}
-              </p>
-              <p className="mt-1 text-2xl font-semibold">{counts[key] ?? 0}</p>
-            </div>
-          ))}
-        </div>
-      </Panel>
-
-      <Panel
-        title="Invite someone to connect"
-        description="Sends the branded connection invitation to one email address."
-      >
-        <div className="flex flex-wrap items-end gap-3">
-          <Field
-            label="Email address"
-            value={invite}
-            onChange={setInvite}
-            placeholder="name@example.com"
-          />
-          <Button
-            className="bg-gold text-primary-foreground hover:opacity-90"
-            disabled={!invite.includes("@") || send.isPending}
-            onClick={() => send.mutate(invite.trim())}
-          >
-            {send.isPending ? "Sending…" : "Send invitation"}
-          </Button>
-        </div>
-      </Panel>
-
-      <Panel title="Entrants" description="Status, pending claim expiry and the linked identity.">
-        {rows.isLoading && <p className="text-sm text-muted-foreground">Loading…</p>}
-        {!rows.isLoading && list.length === 0 && (
-          <p className="text-sm text-muted-foreground">No entries yet.</p>
-        )}
-        {list.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[52rem] text-sm">
-              <thead>
-                <tr className="border-b border-border/60 text-left">
-                  {[
-                    "Contestant",
-                    "Status",
-                    "Linked identity",
-                    "Claim expires",
-                    "Linked",
-                    "Entries",
-                  ].map((head) => (
-                    <th key={head} className="px-3 py-2.5 font-semibold">
-                      {head}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {list.map((row) => (
-                  <tr key={row.userId} className="border-b border-border/40 last:border-0">
-                    <td className="px-3 py-2.5">
-                      <span className="font-semibold">{row.displayName}</span>
-                      <span className="block text-xs text-muted-foreground">
-                        {row.email ?? "no email"}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2.5">
-                      {IDENTITY_STATUS_LABELS[row.status] ?? row.status}
-                    </td>
-                    <td className="px-3 py-2.5 text-muted-foreground">
-                      {row.identityRef ? (
-                        <>
-                          <span className="block font-mono text-xs">{row.identityRef}</span>
-                          {row.identityUsername && (
-                            <span className="block">@{row.identityUsername}</span>
-                          )}
-                        </>
-                      ) : (
-                        "—"
-                      )}
-                    </td>
-                    <td className="px-3 py-2.5 text-muted-foreground">
-                      {row.status === "AWAITING_CLAIM" && row.intentExpiresAt
-                        ? new Date(row.intentExpiresAt).toLocaleString()
-                        : row.status === "EXPIRED" && row.intentExpiresAt
-                          ? `expired ${new Date(row.intentExpiresAt).toLocaleString()}`
-                          : "—"}
-                    </td>
-                    <td className="px-3 py-2.5 text-muted-foreground">
-                      {row.linkedAt ? new Date(row.linkedAt).toLocaleDateString() : "—"}
-                    </td>
-                    <td className="px-3 py-2.5 text-muted-foreground">{row.entries}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
       </Panel>
     </div>
   );
