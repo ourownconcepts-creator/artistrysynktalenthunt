@@ -229,10 +229,8 @@ function DashboardSectionPage() {
                   <Row label="Creative name" value={profile.data.display_name ?? ""} />
                   <Row label="Discipline" value={profile.data.primary_discipline ?? ""} />
                   <Row label="Location" value={profile.data.location ?? ""} />
-                  <Row
-                    label="Identity link"
-                    value={profile.data.artistrysynk_identity_ref ? "Connected" : "Pending"}
-                  />
+                  <Row label="Public profile" value={profile.data.is_public ? "Visible" : "Hidden"} />
+                  <Row label="Profile handle" value={profile.data.handle ?? "Not set"} />
                 </dl>
               )}
 
