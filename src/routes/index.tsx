@@ -152,7 +152,7 @@ function Landing() {
             <h2 className="mt-3 text-3xl sm:text-4xl">Meet the talent</h2>
           </div>
           <Button asChild variant="outline">
-            <Link to="/contestants">Browse the directory</Link>
+            <Link to="/talent">Browse the talent directory</Link>
           </Button>
         </div>
         <div className="mt-9 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
