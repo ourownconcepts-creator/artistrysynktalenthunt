@@ -51,6 +51,7 @@ function Competitions() {
               <article key={competition.id} className="card-stage card-stage-hover p-7">
                 <div className="flex flex-wrap items-center gap-3">
                   <StatusPill status={competition.status} />
+                  <span className="rounded-full border border-border px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest">{competition.domain} · {competition.type.replaceAll("_", " ")}</span>
                   {competition.is_featured && (
                     <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary">
                       Current season
