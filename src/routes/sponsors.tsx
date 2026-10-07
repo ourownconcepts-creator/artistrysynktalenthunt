@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ExternalLink } from "lucide-react";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 import { PageHeader, PublicShell } from "@/components/site/PublicShell";
 import { useCompetition, useSponsors } from "@/hooks/useCompetition";
@@ -69,14 +70,14 @@ function Sponsors() {
                     key={sponsor.id}
                     className="card-stage card-stage-hover p-7"
                   >
-                    {sponsor.logo_url && (
+                    {(sponsor.logo_url || sponsor.name.toLowerCase().includes("artistrysynk")) && (
                       <div className="mb-6 flex min-h-44 items-center justify-center overflow-hidden rounded-md bg-[var(--paper)] p-5 sm:min-h-52">
-                        <img
-                          src={sponsor.logo_url}
+                        {sponsor.name.toLowerCase().includes("artistrysynk") ? <BrandLogo surface="light" className="w-full max-w-md" /> : <img
+                          src={sponsor.logo_url ?? undefined}
                           alt={`${sponsor.name} logo`}
                           className="max-h-40 w-full object-contain sm:max-h-48"
                           loading="lazy"
-                        />
+                        />}
                       </div>
                     )}
                     <h2 className="text-3xl font-bold">{sponsor.name}</h2>
@@ -120,13 +121,13 @@ function FeaturedSponsor({
   return (
     <article className="card-stage card-stage-hover flex h-full flex-col p-7">
       <p className="eyebrow mb-4">{label}</p>
-      {sponsor.logo_url && (
+      {(sponsor.logo_url || sponsor.name.toLowerCase().includes("artistrysynk")) && (
         <div className="mb-6 flex min-h-52 flex-1 items-center justify-center overflow-hidden rounded-md bg-[var(--paper)] p-5 sm:min-h-64">
-          <img
-            src={sponsor.logo_url}
+          {sponsor.name.toLowerCase().includes("artistrysynk") ? <BrandLogo surface="light" className="w-full max-w-md" /> : <img
+            src={sponsor.logo_url ?? undefined}
             alt={`${sponsor.name} logo`}
             className="max-h-52 w-full object-contain sm:max-h-60"
-          />
+          />}
         </div>
       )}
       <h2 className="text-3xl font-bold sm:text-4xl">{sponsor.name}</h2>
