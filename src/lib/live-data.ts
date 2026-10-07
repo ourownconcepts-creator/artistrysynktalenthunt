@@ -17,16 +17,9 @@ export type CompetitionDomain = "CREATIVE" | "SPORT";
 export type CompetitionType = "TALENT_HUNT" | "TOURNAMENT" | "CHALLENGE" | "TRIAL";
 export type ParticipantType = "INDIVIDUAL" | "TEAM";
 
-export type CompetitionDomain = "CREATIVE" | "SPORT";
-export type CompetitionType = "TALENT_HUNT" | "TOURNAMENT" | "CHALLENGE" | "TRIAL";
-export type ParticipantType = "INDIVIDUAL" | "TEAM";
-
 export interface LiveCompetition {
   id: string;
   slug: string;
-  domain: CompetitionDomain;
-  type: CompetitionType;
-  participant_type: ParticipantType;
   domain: CompetitionDomain;
   type: CompetitionType;
   participant_type: ParticipantType;
