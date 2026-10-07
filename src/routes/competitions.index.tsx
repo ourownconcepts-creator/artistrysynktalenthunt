@@ -11,7 +11,7 @@ export const Route = createFileRoute("/competitions/")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "ArtistrySynk Creatives Talent Hunt 1.0 Competition" },
+      { title: "ArtistrySynk Talent Hunt Competition" },
       {
         name: "description",
         content:
@@ -38,7 +38,7 @@ function Competitions() {
   return (
     <PublicShell>
       <PageHeader
-        eyebrow="Where creatives meet opportunity"
+        eyebrow="ArtistrySynk competition directory"
         title="Discover. Showcase. Celebrate."
         intro="Explore the ArtistrySynk Creatives Talent Hunt created to discover and celebrate exceptional creative talent."
       />
