@@ -39,6 +39,8 @@ import { Route as CompetitionsIndexRouteImport } from './routes/competitions.ind
 import { Route as CompetitionsSlugRouteImport } from './routes/competitions.$slug'
 import { Route as ContestantsIndexRouteImport } from './routes/contestants.index'
 import { Route as ContestantsHandleRouteImport } from './routes/contestants.$handle'
+import { Route as TalentIndexRouteImport } from './routes/talent.index'
+import { Route as TalentHandleRouteImport } from './routes/talent.$handle'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardSectionRouteImport } from './routes/dashboard.$section'
 import { Route as AdminEntriesIdRouteImport } from './routes/admin.entries.$id'
@@ -195,6 +197,10 @@ const ContestantsHandleRoute = ContestantsHandleRouteImport.update({
   path: '/contestants/$handle',
   getParentRoute: () => rootRouteImport,
 } as any)
+  getParentRoute: () => rootRouteImport,
+} as any)
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TalentIndexRoute = TalentIndexRouteImport.update({
   id: '/talent/',
   path: '/talent/',
@@ -259,13 +265,15 @@ export interface FileRoutesByFullPath {
   '/competitions/$slug': typeof CompetitionsSlugRoute
   '/contestants/$handle': typeof ContestantsHandleRoute
   '/dashboard/$section': typeof DashboardSectionRoute
+  '/talent/$handle': typeof TalentHandleRoute
+  '/talent/': typeof TalentIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/categories/': typeof CategoriesIndexRoute
   '/competitions/': typeof CompetitionsIndexRoute
   '/contestants/': typeof ContestantsIndexRoute
-  '/talent/$handle': typeof TalentHandleRoute
-  '/talent/': typeof TalentIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/talent/': typeof TalentIndexRoute
+  '/talent/$handle': typeof TalentHandleRoute
   '/admin/entries/$id': typeof AdminEntriesIdRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -300,9 +308,9 @@ export interface FileRoutesByTo {
   '/categories': typeof CategoriesIndexRoute
   '/competitions': typeof CompetitionsIndexRoute
   '/contestants': typeof ContestantsIndexRoute
-  '/talent/$handle': typeof TalentHandleRoute
-  '/talent': typeof TalentIndexRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/talent': typeof TalentIndexRoute
+  '/talent/$handle': typeof TalentHandleRoute
   '/admin/entries/$id': typeof AdminEntriesIdRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -313,7 +321,6 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/announcements': typeof AnnouncementsRoute
-  '/artistrysynk': typeof ArtistrysynkRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/how-it-works': typeof HowItWorksRoute
@@ -356,6 +363,8 @@ export interface FileRouteTypes {
     | '/artistrysynk'
     | '/auth'
     | '/dashboard'
+    | '/talent'
+    | '/talent/$handle'
     | '/how-it-works'
     | '/judge'
     | '/privacy'
@@ -376,16 +385,14 @@ export interface FileRouteTypes {
     | '/categories/$slug'
     | '/competitions/$slug'
     | '/contestants/$handle'
-    | '/talent/$handle'
     | '/dashboard/$section'
     | '/admin/'
     | '/categories/'
     | '/competitions/'
     | '/contestants/'
+    | '/dashboard/'
     | '/talent/'
     | '/talent/$handle'
-    | '/talent/'
-    | '/dashboard/'
     | '/admin/entries/$id'
     | '/oauth/artistrysynk/return'
     | '/lovable/email/auth/preview'
@@ -422,7 +429,6 @@ export interface FileRouteTypes {
     | '/categories'
     | '/competitions'
     | '/contestants'
-    | '/talent/$handle'
     | '/talent'
     | '/dashboard'
     | '/admin/entries/$id'
@@ -531,7 +537,6 @@ declare module '@tanstack/react-router' {
       id: '/artistrysynk'
       path: '/artistrysynk'
       fullPath: '/artistrysynk'
-      preLoaderRoute: typeof ArtistrysynkRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -716,6 +721,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContestantsHandleRouteImport
       parentRoute: typeof rootRouteImport
     }
+      path: '/talent'
+      parentRoute: typeof rootRouteImport
+    }
+      parentRoute: typeof rootRouteImport
+    }
     '/talent/': {
       id: '/talent/'
       path: '/talent'
@@ -755,7 +765,6 @@ declare module '@tanstack/react-router' {
       id: '/oauth/artistrysynk/return'
       path: '/oauth/artistrysynk/return'
       fullPath: '/oauth/artistrysynk/return'
-      preLoaderRoute: typeof OauthArtistrysynkReturnRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lovable/email/auth/preview': {
@@ -835,11 +844,9 @@ const rootRouteChildren: RootRouteChildren = {
   CategoriesSlugRoute: CategoriesSlugRoute,
   CompetitionsSlugRoute: CompetitionsSlugRoute,
   ContestantsHandleRoute: ContestantsHandleRoute,
-  TalentHandleRoute: TalentHandleRoute,
   CategoriesIndexRoute: CategoriesIndexRoute,
   CompetitionsIndexRoute: CompetitionsIndexRoute,
   ContestantsIndexRoute: ContestantsIndexRoute,
-  TalentIndexRoute: TalentIndexRoute,
   TalentHandleRoute: TalentHandleRoute,
   TalentIndexRoute: TalentIndexRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
