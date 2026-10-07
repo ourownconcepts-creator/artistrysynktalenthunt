@@ -95,7 +95,7 @@ function ContestantProfile() {
       >
         <div className="flex flex-wrap items-center gap-3">
           <span className="rounded-full border border-primary/50 bg-primary/15 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-primary">
-            ArtistrySynk Creatives Talent Hunt contestant
+            ArtistrySynk Talent Directory
           </span>
           <span className="text-xs uppercase tracking-widest text-muted-foreground">
             {c.location}
@@ -131,17 +131,10 @@ function ContestantProfile() {
         <article className="card-stage p-6">
           <p className="eyebrow">Talent journey</p>
           <p className="mt-3 text-sm text-muted-foreground">
-            {ARTISTRYSYNK.brand} connects this contestant&rsquo;s creative identity to a wider creative
-            community beyond the competition.
+            This profile is part of the ArtistrySynk Talent Directory. Competition history is the
+            first layer of a permanent creative profile that can grow with skills, portfolio work,
+            achievements and collaboration opportunities.
           </p>
-          <a
-            href={ARTISTRYSYNK.site}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-primary hover:underline"
-          >
-            View on {ARTISTRYSYNK.brand} <ExternalLink className="size-3.5" />
-          </a>
         </article>
 
         <article className="card-stage p-6 lg:col-span-3">
