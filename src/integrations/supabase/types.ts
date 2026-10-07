@@ -754,8 +754,6 @@ export type Database = {
       }
       profiles: {
         Row: {
-          artistrysynk_identity_ref: string | null
-          artistrysynk_provider: string
           avatar_url: string | null
           bio: string
           created_at: string
@@ -769,8 +767,6 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          artistrysynk_identity_ref?: string | null
-          artistrysynk_provider?: string
           avatar_url?: string | null
           bio?: string
           created_at?: string
@@ -784,8 +780,6 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          artistrysynk_identity_ref?: string | null
-          artistrysynk_provider?: string
           avatar_url?: string | null
           bio?: string
           created_at?: string
