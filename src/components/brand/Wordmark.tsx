@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { BrandLogo } from "./BrandLogo";
 
 export function Wordmark({
   className,
@@ -7,16 +8,16 @@ export function Wordmark({
   className?: string;
   size?: "sm" | "md" | "lg";
 }) {
-  const scale = size === "sm" ? "text-sm" : size === "lg" ? "text-2xl" : "text-lg";
+  const scale = size === "sm" ? "w-36" : size === "lg" ? "w-64" : "w-44 sm:w-48";
   const sub = size === "sm" ? "text-[9px]" : size === "lg" ? "text-xs" : "text-[10px]";
 
   return (
     <span className={cn("inline-flex flex-col leading-none font-display", className)}>
-      <span className={cn(scale, "text-gold tracking-tight")}>ARTISTRYSYNK</span>
+      <BrandLogo className={scale} />
       <span
         className={cn(
           sub,
-          "mt-1 font-sans font-extrabold uppercase tracking-[0.3em] text-muted-foreground",
+          "mt-2 font-sans font-extrabold uppercase tracking-normal text-muted-foreground",
         )}
       >
         Creatives Talent Hunt

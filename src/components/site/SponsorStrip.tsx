@@ -1,5 +1,6 @@
 import { useSponsors } from "@/hooks/useCompetition";
 import { cn } from "@/lib/utils";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 /**
  * Sponsors are configuration, never hard-coded markup: this renders whatever
@@ -68,7 +69,9 @@ function SponsorName({
 }) {
   const content = (
     <>
-      {sponsor.logo_url && (
+      {sponsor.name.toLowerCase().includes("artistrysynk") ? (
+        <BrandLogo className={prominent ? "w-56" : "w-36"} />
+      ) : sponsor.logo_url && (
         <span className="rounded-sm bg-[var(--paper)] p-2">
           <img
             src={sponsor.logo_url}
@@ -78,7 +81,7 @@ function SponsorName({
           />
         </span>
       )}
-      {sponsor.name}
+      {!sponsor.name.toLowerCase().includes("artistrysynk") && sponsor.name}
     </>
   );
 

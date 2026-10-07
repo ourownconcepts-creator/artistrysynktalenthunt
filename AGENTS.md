@@ -12,3 +12,4 @@
 - Public talent reads go only through talent_directory / talent_profile / talent_disciplines security-definer routines (src/lib/talent.ts). Why: safe-column projection with database-side filtering and pagination.
 - verification_status and featured_until are guarded by profiles_guard_identity; featured is derived from featured_until, never a verification value. Why: trust fields must not be self-assigned.
 - Profile photos live in the private avatars bucket, stored in avatar_url as `avatars:<path>` and resolved via signed URLs. Why: workspace blocks public buckets.
+- Shared BrandLogo selects artwork by the explicit surface prop; Wordmark reuses it across navigation and account pages. Why: consistent background-specific logo placement without altering sponsor records.
