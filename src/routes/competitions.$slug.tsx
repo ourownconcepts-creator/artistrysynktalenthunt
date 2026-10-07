@@ -31,7 +31,7 @@ export const Route = createFileRoute("/competitions/$slug")({
     const url = `https://artistrysynk.app/talent-hunt/competitions/${params.slug}`;
     return {
       meta: [
-        { title: `${name} | ArtistrySynk Creatives Talent Hunt` },
+        { title: `${name} | ArtistrySynk Talent Hunt` },
         {
           name: "description",
           content: `Dates, categories, rounds and entry information for ${name}, a ArtistrySynk Creatives Talent Hunt competition with ArtistrySynk.`,
