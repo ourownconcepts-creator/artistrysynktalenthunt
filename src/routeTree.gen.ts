@@ -195,6 +195,16 @@ const ContestantsHandleRoute = ContestantsHandleRouteImport.update({
   path: '/contestants/$handle',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TalentIndexRoute = TalentIndexRouteImport.update({
+  id: '/talent/',
+  path: '/talent/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TalentHandleRoute = TalentHandleRouteImport.update({
+  id: '/talent/$handle',
+  path: '/talent/$handle',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -253,6 +263,8 @@ export interface FileRoutesByFullPath {
   '/categories/': typeof CategoriesIndexRoute
   '/competitions/': typeof CompetitionsIndexRoute
   '/contestants/': typeof ContestantsIndexRoute
+  '/talent/$handle': typeof TalentHandleRoute
+  '/talent/': typeof TalentIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/admin/entries/$id': typeof AdminEntriesIdRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -262,7 +274,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/announcements': typeof AnnouncementsRoute
-  '/artistrysynk': typeof ArtistrysynkRoute
   '/auth': typeof AuthRoute
   '/how-it-works': typeof HowItWorksRoute
   '/judge': typeof JudgeRoute
@@ -289,6 +300,8 @@ export interface FileRoutesByTo {
   '/categories': typeof CategoriesIndexRoute
   '/competitions': typeof CompetitionsIndexRoute
   '/contestants': typeof ContestantsIndexRoute
+  '/talent/$handle': typeof TalentHandleRoute
+  '/talent': typeof TalentIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/admin/entries/$id': typeof AdminEntriesIdRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -363,11 +376,15 @@ export interface FileRouteTypes {
     | '/categories/$slug'
     | '/competitions/$slug'
     | '/contestants/$handle'
+    | '/talent/$handle'
     | '/dashboard/$section'
     | '/admin/'
     | '/categories/'
     | '/competitions/'
     | '/contestants/'
+    | '/talent/'
+    | '/talent/$handle'
+    | '/talent/'
     | '/dashboard/'
     | '/admin/entries/$id'
     | '/oauth/artistrysynk/return'
@@ -405,6 +422,8 @@ export interface FileRouteTypes {
     | '/categories'
     | '/competitions'
     | '/contestants'
+    | '/talent/$handle'
+    | '/talent'
     | '/dashboard'
     | '/admin/entries/$id'
     | '/oauth/artistrysynk/return'
@@ -456,7 +475,6 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   AnnouncementsRoute: typeof AnnouncementsRoute
-  ArtistrysynkRoute: typeof ArtistrysynkRoute
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   HowItWorksRoute: typeof HowItWorksRoute
@@ -475,7 +493,6 @@ export interface RootRouteChildren {
   CategoriesIndexRoute: typeof CategoriesIndexRoute
   CompetitionsIndexRoute: typeof CompetitionsIndexRoute
   ContestantsIndexRoute: typeof ContestantsIndexRoute
-  OauthArtistrysynkReturnRoute: typeof OauthArtistrysynkReturnRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
 }
@@ -699,6 +716,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContestantsHandleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/talent/': {
+      id: '/talent/'
+      path: '/talent'
+      fullPath: '/talent/'
+      preLoaderRoute: typeof TalentIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/talent/$handle': {
+      id: '/talent/$handle'
+      path: '/talent/$handle'
+      fullPath: '/talent/$handle'
+      preLoaderRoute: typeof TalentHandleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard/': {
       id: '/dashboard/'
       path: '/'
@@ -789,7 +820,6 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   AnnouncementsRoute: AnnouncementsRoute,
-  ArtistrysynkRoute: ArtistrysynkRoute,
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRouteWithChildren,
   HowItWorksRoute: HowItWorksRoute,
@@ -805,10 +835,13 @@ const rootRouteChildren: RootRouteChildren = {
   CategoriesSlugRoute: CategoriesSlugRoute,
   CompetitionsSlugRoute: CompetitionsSlugRoute,
   ContestantsHandleRoute: ContestantsHandleRoute,
+  TalentHandleRoute: TalentHandleRoute,
   CategoriesIndexRoute: CategoriesIndexRoute,
   CompetitionsIndexRoute: CompetitionsIndexRoute,
   ContestantsIndexRoute: ContestantsIndexRoute,
-  OauthArtistrysynkReturnRoute: OauthArtistrysynkReturnRoute,
+  TalentIndexRoute: TalentIndexRoute,
+  TalentHandleRoute: TalentHandleRoute,
+  TalentIndexRoute: TalentIndexRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
 }
