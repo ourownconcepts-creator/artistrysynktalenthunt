@@ -360,7 +360,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/announcements'
-    | '/artistrysynk'
     | '/auth'
     | '/dashboard'
     | '/talent'
@@ -394,7 +393,6 @@ export interface FileRouteTypes {
     | '/talent/'
     | '/talent/$handle'
     | '/admin/entries/$id'
-    | '/oauth/artistrysynk/return'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
   fileRoutesByTo: FileRoutesByTo
@@ -402,7 +400,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/announcements'
-    | '/artistrysynk'
     | '/auth'
     | '/how-it-works'
     | '/judge'
@@ -432,7 +429,6 @@ export interface FileRouteTypes {
     | '/talent'
     | '/dashboard'
     | '/admin/entries/$id'
-    | '/oauth/artistrysynk/return'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
   id:
@@ -441,7 +437,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/announcements'
-    | '/artistrysynk'
     | '/auth'
     | '/dashboard'
     | '/how-it-works'
@@ -471,7 +466,6 @@ export interface FileRouteTypes {
     | '/contestants/'
     | '/dashboard/'
     | '/admin/entries/$id'
-    | '/oauth/artistrysynk/return'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
   fileRoutesById: FileRoutesById
@@ -533,10 +527,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnnouncementsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/artistrysynk': {
-      id: '/artistrysynk'
-      path: '/artistrysynk'
-      fullPath: '/artistrysynk'
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -721,11 +711,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContestantsHandleRouteImport
       parentRoute: typeof rootRouteImport
     }
-      path: '/talent'
-      parentRoute: typeof rootRouteImport
-    }
-      parentRoute: typeof rootRouteImport
-    }
     '/talent/': {
       id: '/talent/'
       path: '/talent'
@@ -761,10 +746,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEntriesIdRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/oauth/artistrysynk/return': {
-      id: '/oauth/artistrysynk/return'
-      path: '/oauth/artistrysynk/return'
-      fullPath: '/oauth/artistrysynk/return'
       parentRoute: typeof rootRouteImport
     }
     '/lovable/email/auth/preview': {
