@@ -6,7 +6,7 @@
 const SITE_NAME = "ArtistrySynk Creatives Talent Hunt";
 
 function siteUrl(): string {
-  const raw = process.env["ZGT_SITE_URL"] ?? "https://ziksgottalent.com";
+  const raw = process.env["TALENT_SITE_URL"] ?? "https://artistrysynk.app/talent-hunt";
   return raw.replace(/\/$/, "");
 }
 
