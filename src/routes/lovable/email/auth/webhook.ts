@@ -10,9 +10,9 @@ import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 
 // Configuration
 const SITE_NAME = "ArtistrySynk Creatives Talent Hunt"
-const SENDER_DOMAIN = "notify.ziksgottalent.com"
-const ROOT_DOMAIN = "ziksgottalent.com"
-const FROM_DOMAIN = "notify.ziksgottalent.com"
+const SENDER_DOMAIN = "notify.artistrysynk.app"
+const ROOT_DOMAIN = "artistrysynk.app"
+const FROM_DOMAIN = "notify.artistrysynk.app"
 const SITE_URL = `https://${ROOT_DOMAIN}`
 
 // The SDK handler owns verification, dispatch, and retry semantics; this file
