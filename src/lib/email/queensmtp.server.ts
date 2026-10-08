@@ -39,7 +39,7 @@ export function emailConfig() {
     from: env("TALENT_EMAIL_FROM") ?? "noreply@artistrysynk.app",
     fromName: env("TALENT_EMAIL_FROM_NAME") ?? "ArtistrySynk Creatives Talent Hunt",
     replyTo: env("TALENT_EMAIL_REPLY_TO"),
-    adminRecipient: env("TALENT_ADMIN_EMAIL"),
+    adminRecipient: env("TALENT_ADMIN_EMAIL") ?? "admin@artistrysynk.app",
   };
 }
 
