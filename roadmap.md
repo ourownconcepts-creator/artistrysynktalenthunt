@@ -1,82 +1,27 @@
-# Zik's Got Talent — roadmap
+# ArtistrySynk Creatives Talent Hunt — roadmap
 
 ## Done
-- Twelve real contestant entries seeded across categories with judge marks and
-  public votes, so Contestants, Shortlists and Moderation show live records.
-- Contestant portal shows the stage, progress state, decision note and time of
-  the last admin change, refreshing on its own.
-- Admin panel complete: contestant records, round shortlists, moderation
-  (flagged voting, media queue, score corrections) and settings (team roles,
-  integrations) now live alongside the existing admin sections.
-- ArtistrySynk portal at `/artistrysynk`: a connected creative sees their entry,
-  entry code, status and round progress, with links to the fuller dashboard
-  views. Linked from the dashboard profile page.
-- Production return address wired for ArtistrySynk connections.
-- Public entry tracking at `/track` with per-entry reference codes.
-- Stage-change and entry alert emails sent through QueenSMTP.
+- Full rebrand to ArtistrySynk Creatives Talent Hunt; ZGT references and the
+  ArtistrySynk identity/OAuth integration removed from active code.
+- Talent Directory at /talent and /talent/$handle: permanent public profiles,
+  search/filter/pagination (24/page), competition history and real badges only.
+- profiles_guard_identity protects verification_status/featured_until; RLS holds.
+- Email config moved to artistrysynk.app: auth webhook sender/links, entry
+  emails from noreply@artistrysynk.app, admin alerts to admin@artistrysynk.app.
+- Obsolete ZGT_ADMIN_EMAIL / ZGT_EMAIL_FROM secrets deleted.
+- BrandLogo component: dark-lettered logo on light surfaces, white on dark.
 
-- Public contestant portal at `/track` in the gold-on-white look of the entry
-  alerts: category browsing, entry route and code-based stage tracking.
-- Admin "Creative identities" panel: ArtistrySynk status per entrant, pending
-  claim expiry, linked identity, and a one-off invitation sender.
-- Connection invitation emailed to ourownconcepts@gmail.com.
-
-## Open (blocked)
-- Sending from notify.ziksgottalent.com is refused by the email service until
-  that exact subdomain is verified there; entry alerts and the invitation go out
-  from ziksgottalent.com meanwhile.
-- Branded sign-in emails from notify.ziksgottalent.com are built and styled;
-  they start sending as soon as the domain's DNS check finishes.
-- Fresh ArtistrySynk connection test running: old demo account fully deleted; a
-  new confirmed sign-in (zgt.connect.demo@artistrysynk.app) with entry
-  ZGT-DCEGF4DY now has a live claim link awaiting a real person to claim it on
-  ArtistrySynk. Entry stays unapproved until the identity is verified.
-
-## Release Gate 1 (security) — 12 Sep 2026
-- Fixed: artistrysynk_apply_link was executable by any signed-in user with an arbitrary target user (identity hijack). EXECUTE revoked to service_role only.
-- Added profiles_guard_identity trigger: Data API callers cannot write artistrysynk_identity_ref/provider.
-- Unique indexes: one ArtistrySynk identity per ZGT profile; one CONNECTED link per identity.
-- Least privilege: anon is read-only on all tables; writes to user_roles, votes, audit_log, score_corrections, round_results and applications review columns only via guarded routines; artistrysynk_links/intents are service-role only.
-- Launch requirements: enable email confirmation in production auth; verify notify.ziksgottalent.com DNS; no storage buckets exist (audition media is external URLs).
-
-## Release Gate 2 (production configuration) — 12 Sep 2026
-- Email confirmation is now REQUIRED in production: Cloud auth setting
-  auto_confirm_email = false (also: signups open, anonymous sign-in off,
-  leaked-password check on). Verified: signup returns no session,
-  login before confirmation -> email_not_confirmed, login after -> works,
-  expired/invalid link -> /auth explains it, resend rate-limited to 1/min.
-- notify.ziksgottalent.com is VERIFIED with the email provider and auth emails
-  are enabled from it (NS-delegated to Lovable). Delivery test sent + accepted.
-  QueenSMTP cannot send from this subdomain while it is delegated, so entry
-  alerts continue from noreply@ziksgottalent.com.
-- Legal copy: Terms and Privacy now state plainly that auditions are external
-  links and that video access depends on the hosting site's permissions.
-- Cleanup: removed a stand-in identity reference and a revoked test connection.
-- Still open before production: real-person ArtistrySynk claim (fresh sign-up) and
-  existing-account PKCE consent (NOT LIVE-VERIFIED); final legal copy;
-  backup/restore procedure confirmation from the platform.
-
-## 14 Sep 2026
-- Entry review sheet at /admin/entries/{id}: profile, ArtistrySynk connection,
-  audition, per-criterion averages, judge comments, votes and round outcomes.
-  Reachable from "View entry" on each contestant row. Judges and staff only.
-- Demo Connect Act (ZGT-DCEGF4DY) confirmed approved, judged and scored 48/60.
-- Published to ziksgottalent.com so the owner admin can sign in live.
-
-## 15 Sep 2026
-- Public-facing content aligned to the official ZIK’S GOT TALENT 1.0 identity:
-  University of Ibadan campus-wide competition, organized by Zik Hall Royals
-  with the Zik Hall Executive Council, under “Where Talent Meets Opportunity.”
-- Homepage, About, participation journey, categories, sponsors, footer,
-  ArtistrySynk partnership messaging, page titles and social descriptions
-  rewritten without changing functionality or database content.
-- Sponsors page populated with the seven supplied logos and exact displayed
-  names; ArtistrySynk is the sole main sponsor, followed by six supporting sponsors.
-- Sponsor hierarchy refined: ArtistrySynk remains the main sponsor, NEW FLAVA
-  Restaurant is featured beside it under “Proudly supported by,” and MIAMI
-  MERCENARIES is corrected throughout.
-
-## Open questions (user skipped)
-- "Connect Act" branding/entries: unclear whether it is a new competition, a
-  rename, or just the demo entry's name. Real entries need real sign-ups.
-- Entry forms already exist at /register; unclear what is missing.
+## Open (blocked on user)
+- Email domain: artistrysynk.app not yet selected as this project's email
+  domain — user picks it via the email-setup button, then branded sign-in
+  emails and a real send test can be done.
+- QueenSMTP: noreply@artistrysynk.app must be approved as a sender in the
+  QueenSMTP account, or entry emails will be refused.
+- Six ARTISTRYSYNK_* secrets (client ID/secret pairs) unread by active code —
+  awaiting user's go-ahead to delete.
+- GitHub sync: user must connect the repo in Lovable and switch the editor to
+  remove-zgt-integration; not verifiable from here until then.
+- Migration numbering: profile migration applied as 0012 (0011 was last);
+  renumbering to 0014 would break the journal — decision pending.
+- No creative accounts exist yet — the first real entry is the first true
+  end-to-end test.
